@@ -10,16 +10,18 @@ Last supervisor update: 2026-09-21
 | G0.4 | PASS | ADR-0001, ADR-0002, ADR-0003 committed |
 | G0.5 | PASS | provider-neutral rendering contracts and guarded MPTAdapter committed |
 | G0.6 | PASS | architecture/contract tests implemented; exact mirrored content executed locally: 9 passed |
-| G0.7 | IN_PROGRESS | upstream CI extended; GitHub Actions has not produced a workflow run on this fork yet |
-| G0.8 | BLOCKED | full upstream baseline requires executable CI/local runtime evidence |
+| G0.7 | PASS | upstream CI extended and structurally verified: Python 3.11/3.13, Redis, compile, ruff, upstream pytest/coverage, architecture tests, Windows smoke |
+| G0.8 | BLOCKED | GitHub has produced no workflow run for the fork; full upstream baseline still requires executable CI/local runtime evidence |
 | G0.9 | PASS | `UPSTREAM_SYNC.md` committed |
 | G0.10 | PASS | `CONNECTORS.md` committed |
 | G0.11 | PASS | draft PR #1 opened from foundation branch to main |
-| G0.12 | BLOCKED | human review waits for G0.7/G0.8 verification |
+| G0.12 | BLOCKED | human review waits for G0.8 PASS |
 
 ## Current blocker
 
-After opening PR #1, GitHub reported zero workflow runs for the fork. Until Actions executes, the Supervisor will not claim the extended CI or upstream baseline as verified.
+PR #1 is open and subsequent commits are reaching its head, but GitHub currently reports zero workflow runs and no commit statuses for the fork. The Supervisor will not claim the full MoneyPrinterTurbo baseline as verified until that execution evidence exists.
+
+For a newly created fork, verify that GitHub Actions/workflows are enabled in the repository Actions tab/settings. Once enabled, a new synchronize event (a new commit) can trigger the existing pull-request workflow.
 
 ## Local verification performed
 
@@ -34,4 +36,18 @@ python -m pytest -q tests/architecture
 9 passed in 0.06s
 ```
 
-This evidence closes G0.6 only. It does not substitute for the full MoneyPrinterTurbo upstream baseline required by G0.8.
+This evidence closes G0.6 only.
+
+## CI structural verification
+
+The committed `.github/workflows/ci.yml` was read back from GitHub and verified to retain and/or include:
+
+- pull-request trigger and push-to-main trigger
+- Python 3.11 and 3.13 matrix
+- Redis 7 service
+- upstream compile/lint/test/coverage flow
+- compile and lint coverage for `extensions` and `tests/architecture`
+- Content Studio architecture tests
+- Windows smoke tests
+
+This closes G0.7. Successful runtime execution of the complete workflow remains the acceptance evidence for G0.8.
