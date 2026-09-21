@@ -11,23 +11,19 @@ Last supervisor update: 2026-09-21
 | G0.5 | PASS | provider-neutral rendering contracts and guarded MPTAdapter committed |
 | G0.6 | PASS | architecture/contract tests implemented; exact mirrored content executed locally: 9 passed |
 | G0.7 | PASS | upstream CI extended and structurally verified: Python 3.11/3.13, Redis, compile, ruff, upstream pytest/coverage, architecture tests, Windows smoke |
-| G0.8 | BLOCKED | GitHub has produced no workflow run for the fork; full upstream baseline still requires executable CI/local runtime evidence |
+| G0.8 | IN_PROGRESS | GitHub Actions enabled; a new synchronize commit has been created to trigger runtime baseline verification |
 | G0.9 | PASS | `UPSTREAM_SYNC.md` committed |
 | G0.10 | PASS | `CONNECTORS.md` committed |
 | G0.11 | PASS | draft PR #1 opened from foundation branch to main |
 | G0.12 | BLOCKED | human review waits for G0.8 PASS |
 
-## Current blocker
+## Current verification
 
-PR #1 is open and subsequent commits are reaching its head, but GitHub currently reports zero workflow runs and no commit statuses for the fork. The Supervisor will not claim the full MoneyPrinterTurbo baseline as verified until that execution evidence exists.
+GitHub Actions has been enabled for the fork. This commit intentionally updates only governance state so the open PR receives a new synchronize event without changing runtime behavior.
 
-For a newly created fork, verify that GitHub Actions/workflows are enabled in the repository Actions tab/settings. Once enabled, a new synchronize event (a new commit) can trigger the existing pull-request workflow.
+The Supervisor will inspect the resulting workflow run before deciding G0.8.
 
 ## Local verification performed
-
-The Content Studio provider-neutral contracts, MPT boundary architecture tests, and rendering contract tests were mirrored from the committed content into an isolated validation directory.
-
-Results:
 
 ```text
 python -m compileall -q extensions tests/architecture
@@ -36,11 +32,9 @@ python -m pytest -q tests/architecture
 9 passed in 0.06s
 ```
 
-This evidence closes G0.6 only.
-
 ## CI structural verification
 
-The committed `.github/workflows/ci.yml` was read back from GitHub and verified to retain and/or include:
+The committed `.github/workflows/ci.yml` retains and/or includes:
 
 - pull-request trigger and push-to-main trigger
 - Python 3.11 and 3.13 matrix
@@ -49,5 +43,3 @@ The committed `.github/workflows/ci.yml` was read back from GitHub and verified 
 - compile and lint coverage for `extensions` and `tests/architecture`
 - Content Studio architecture tests
 - Windows smoke tests
-
-This closes G0.7. Successful runtime execution of the complete workflow remains the acceptance evidence for G0.8.
