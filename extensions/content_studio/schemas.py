@@ -191,6 +191,207 @@ SCHEMAS: dict[str, dict[str, Any]] = {
 }
 
 
+SCHEMAS.update(
+    {
+        "CharacterProfile": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": (
+                f"{_SCHEMA_BASE}/character-profile/"
+                f"{SCHEMA_VERSION}"
+            ),
+            "title": "CharacterProfile",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "character_id",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "character_id": {
+                    "type": "string",
+                    "pattern": _ID_PATTERN,
+                },
+                "aliases": {
+                    "type": "array",
+                    "items": {"type": "string", "minLength": 1},
+                    "uniqueItems": True,
+                },
+                "signature_features": {
+                    "type": "array",
+                    "items": {"type": "string", "minLength": 1},
+                    "uniqueItems": True,
+                },
+                "wardrobe": {
+                    "type": "array",
+                    "items": {"type": "string", "minLength": 1},
+                    "uniqueItems": True,
+                },
+                "personality_notes": {
+                    "type": "array",
+                    "items": {"type": "string", "minLength": 1},
+                    "uniqueItems": True,
+                },
+                "voice_consistency": {
+                    "type": "array",
+                    "items": {"type": "string", "minLength": 1},
+                    "uniqueItems": True,
+                },
+                "forbidden_changes": {
+                    "type": "array",
+                    "items": {"type": "string", "minLength": 1},
+                    "uniqueItems": True,
+                },
+                "reference_asset_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "pattern": _ID_PATTERN,
+                    },
+                    "uniqueItems": True,
+                },
+                "notes": {
+                    "type": ["string", "null"],
+                    "minLength": 1,
+                },
+                "metadata": _METADATA,
+            },
+        },
+        "CharacterBible": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": (
+                f"{_SCHEMA_BASE}/character-bible/"
+                f"{SCHEMA_VERSION}"
+            ),
+            "title": "CharacterBible",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "project_id",
+                "profiles",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "project_id": {
+                    "type": "string",
+                    "pattern": _ID_PATTERN,
+                },
+                "profiles": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "$ref": (
+                            f"{_SCHEMA_BASE}/character-profile/"
+                            f"{SCHEMA_VERSION}"
+                        )
+                    },
+                },
+                "metadata": _METADATA,
+            },
+        },
+        "LocationProfile": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": (
+                f"{_SCHEMA_BASE}/location-profile/"
+                f"{SCHEMA_VERSION}"
+            ),
+            "title": "LocationProfile",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "location_id",
+                "description",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "location_id": {
+                    "type": "string",
+                    "pattern": _ID_PATTERN,
+                },
+                "aliases": {
+                    "type": "array",
+                    "items": {"type": "string", "minLength": 1},
+                    "uniqueItems": True,
+                },
+                "description": {
+                    "type": "string",
+                    "minLength": 1,
+                },
+                "visual_traits": {
+                    "type": "array",
+                    "items": {"type": "string", "minLength": 1},
+                    "uniqueItems": True,
+                },
+                "ambience": {
+                    "type": "array",
+                    "items": {"type": "string", "minLength": 1},
+                    "uniqueItems": True,
+                },
+                "consistency_rules": {
+                    "type": "array",
+                    "items": {"type": "string", "minLength": 1},
+                    "uniqueItems": True,
+                },
+                "forbidden_changes": {
+                    "type": "array",
+                    "items": {"type": "string", "minLength": 1},
+                    "uniqueItems": True,
+                },
+                "reference_asset_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "pattern": _ID_PATTERN,
+                    },
+                    "uniqueItems": True,
+                },
+                "metadata": _METADATA,
+            },
+        },
+        "UniverseBible": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": (
+                f"{_SCHEMA_BASE}/universe-bible/"
+                f"{SCHEMA_VERSION}"
+            ),
+            "title": "UniverseBible",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "project_id",
+                "locations",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "project_id": {
+                    "type": "string",
+                    "pattern": _ID_PATTERN,
+                },
+                "locations": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "$ref": (
+                            f"{_SCHEMA_BASE}/location-profile/"
+                            f"{SCHEMA_VERSION}"
+                        )
+                    },
+                },
+                "world_rules": {
+                    "type": "array",
+                    "items": {"type": "string", "minLength": 1},
+                    "uniqueItems": True,
+                },
+                "metadata": _METADATA,
+            },
+        },
+    }
+)
+
+
 def schema_for(contract_name: str) -> dict[str, Any]:
     """Return an isolated JSON-compatible schema for a canonical contract."""
     try:
