@@ -1,0 +1,81 @@
+{
+  "schema_version": "1.0.0",
+  "project_id": "generic-demo",
+  "title": "Generic Core Example",
+  "language": "en-US",
+  "target_platforms": [
+    "short-video"
+  ],
+  "aspect_ratio": "9:16",
+  "resolution": "1080x1920",
+  "characters": [
+    {
+      "schema_version": "1.0.0",
+      "character_id": "guide-1",
+      "name": "Guide",
+      "description": "A neutral presenter for a generic short-form episode.",
+      "visual_traits": [
+        "blue jacket",
+        "simple studio styling"
+      ],
+      "personality_traits": [
+        "calm",
+        "clear"
+      ],
+      "voice_hint": "clear adult voice",
+      "metadata": {}
+    }
+  ],
+  "episodes": [
+    {
+      "schema_version": "1.0.0",
+      "episode_id": "episode-1",
+      "project_id": "generic-demo",
+      "title": "Pilot",
+      "language": "en-US",
+      "duration_target_seconds": 30,
+      "character_ids": [
+        "guide-1"
+      ],
+      "lesson": null,
+      "scenes": [
+        {
+          "schema_version": "1.0.0",
+          "scene_id": "scene-1",
+          "order": 1,
+          "duration_seconds": 10,
+          "location": "studio",
+          "action": "The guide introduces the topic.",
+          "character_ids": [
+            "guide-1"
+          ],
+          "dialogue": "Welcome.",
+          "camera": "medium shot",
+          "emotion": "friendly",
+          "transition": "cut",
+          "metadata": {}
+        },
+        {
+          "schema_version": "1.0.0",
+          "scene_id": "scene-2",
+          "order": 2,
+          "duration_seconds": 20,
+          "location": "studio",
+          "action": "The guide explains the main idea and closes the episode.",
+          "character_ids": [
+            "guide-1"
+          ],
+          "dialogue": null,
+          "camera": "medium close-up",
+          "emotion": "confident",
+          "transition": "fade",
+          "metadata": {}
+        }
+      ],
+      "metadata": {}
+    }
+  ],
+  "metadata": {
+    "example": true
+  }
+}
