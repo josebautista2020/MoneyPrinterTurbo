@@ -11,8 +11,8 @@ from typing import Any, ClassVar, Mapping, Self
 SCHEMA_VERSION = "1.0.0"
 
 _ID_RE = re.compile(r"^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$")
-_ASPECT_RATIO_RE = re.compile(r"^[1-9]\\d*:[1-9]\\d*$")
-_RESOLUTION_RE = re.compile(r"^[1-9]\\d*x[1-9]\\d*$")
+_ASPECT_RATIO_RE = re.compile(r"^[1-9][0-9]*:[1-9][0-9]*$")
+_RESOLUTION_RE = re.compile(r"^[1-9][0-9]*x[1-9][0-9]*$")
 
 
 class DomainValidationError(ValueError):
