@@ -1,0 +1,179 @@
+{
+  "schema_version": "1.0.0",
+  "story_id": "kids-story-ep0002",
+  "project_id": "kids-puppies-demo",
+  "episode_id": "ep0002",
+  "scenes": [
+    {
+      "schema_version": "1.0.0",
+      "scene_id": "sb-s01",
+      "beat_id": "s01",
+      "order": 1,
+      "location_id": "parque",
+      "character_ids": ["toby"],
+      "shots": [
+        {
+          "schema_version": "1.0.0",
+          "shot_id": "ep0002-s01-a",
+          "order": 1,
+          "duration_seconds": 6,
+          "visual_action": "Toby notices a bright ball beside the swing and trots toward it.",
+          "framing": "wide to medium shot",
+          "character_ids": ["toby"],
+          "camera_angle": "puppy eye level",
+          "camera_movement": "gentle follow",
+          "composition_notes": ["keep the red ball clearly visible"],
+          "continuity_notes": ["Toby keeps golden fur, blue hoodie and red backpack"],
+          "metadata": {}
+        }
+      ],
+      "metadata": {"vertical": "kids_puppies"}
+    },
+    {
+      "schema_version": "1.0.0",
+      "scene_id": "sb-s02",
+      "beat_id": "s02",
+      "order": 2,
+      "location_id": "parque",
+      "character_ids": ["toby", "luna"],
+      "shots": [
+        {
+          "schema_version": "1.0.0",
+          "shot_id": "ep0002-s02-a",
+          "order": 1,
+          "duration_seconds": 5,
+          "visual_action": "Luna approaches Toby and looks at the ball tag.",
+          "framing": "two-shot",
+          "character_ids": ["toby", "luna"],
+          "camera_angle": "eye level",
+          "camera_movement": null,
+          "composition_notes": ["Toby left, Luna right, ball between them"],
+          "continuity_notes": ["Luna keeps cream fur and purple bandana"],
+          "metadata": {}
+        },
+        {
+          "schema_version": "1.0.0",
+          "shot_id": "ep0002-s02-b",
+          "order": 2,
+          "duration_seconds": 7,
+          "visual_action": "Toby studies the tag and becomes thoughtful.",
+          "framing": "medium close-up",
+          "character_ids": ["toby"],
+          "camera_angle": "eye level",
+          "camera_movement": "slow push in",
+          "composition_notes": ["ball remains in frame"],
+          "continuity_notes": ["same park position and wardrobe"],
+          "metadata": {}
+        }
+      ],
+      "metadata": {"vertical": "kids_puppies"}
+    },
+    {
+      "schema_version": "1.0.0",
+      "scene_id": "sb-s03",
+      "beat_id": "s03",
+      "order": 3,
+      "location_id": "parque",
+      "character_ids": ["toby", "luna"],
+      "shots": [
+        {
+          "schema_version": "1.0.0",
+          "shot_id": "ep0002-s03-a",
+          "order": 1,
+          "duration_seconds": 10,
+          "visual_action": "Toby and Luna walk together through the playground looking for the owner.",
+          "framing": "wide tracking shot",
+          "character_ids": ["toby", "luna"],
+          "camera_angle": "eye level",
+          "camera_movement": "gentle tracking",
+          "composition_notes": ["show recognizable playground landmarks"],
+          "continuity_notes": ["keep ball with Toby"],
+          "metadata": {}
+        },
+        {
+          "schema_version": "1.0.0",
+          "shot_id": "ep0002-s03-b",
+          "order": 2,
+          "duration_seconds": 10,
+          "visual_action": "They politely ask nearby park friends while continuing the search.",
+          "framing": "medium two-shot",
+          "character_ids": ["toby", "luna"],
+          "camera_angle": "eye level",
+          "camera_movement": null,
+          "composition_notes": ["friendly open body language"],
+          "continuity_notes": ["preserve park layout and safe sight lines"],
+          "metadata": {}
+        }
+      ],
+      "metadata": {"vertical": "kids_puppies"}
+    },
+    {
+      "schema_version": "1.0.0",
+      "scene_id": "sb-s04",
+      "beat_id": "s04",
+      "order": 4,
+      "location_id": "parque",
+      "character_ids": ["toby", "luna"],
+      "shots": [
+        {
+          "schema_version": "1.0.0",
+          "shot_id": "ep0002-s04-a",
+          "order": 1,
+          "duration_seconds": 6,
+          "visual_action": "Toby recognizes the owner and steps forward with the ball.",
+          "framing": "medium shot",
+          "character_ids": ["toby", "luna"],
+          "camera_angle": "eye level",
+          "camera_movement": null,
+          "composition_notes": ["focus on Toby offering the ball"],
+          "continuity_notes": ["same costumes and red ball"],
+          "metadata": {}
+        },
+        {
+          "schema_version": "1.0.0",
+          "shot_id": "ep0002-s04-b",
+          "order": 2,
+          "duration_seconds": 6,
+          "visual_action": "Toby returns the ball and smiles while Luna looks proud.",
+          "framing": "close two-shot",
+          "character_ids": ["toby", "luna"],
+          "camera_angle": "eye level",
+          "camera_movement": "small push in",
+          "composition_notes": ["warm facial expressions"],
+          "continuity_notes": ["ball leaves Toby only at the handoff"],
+          "metadata": {}
+        }
+      ],
+      "metadata": {"vertical": "kids_puppies"}
+    },
+    {
+      "schema_version": "1.0.0",
+      "scene_id": "sb-s05",
+      "beat_id": "s05",
+      "order": 5,
+      "location_id": "parque",
+      "character_ids": ["toby", "luna"],
+      "shots": [
+        {
+          "schema_version": "1.0.0",
+          "shot_id": "ep0002-s05-a",
+          "order": 1,
+          "duration_seconds": 10,
+          "visual_action": "Toby and Luna run back toward the playground together, happy with their choice.",
+          "framing": "wide closing shot",
+          "character_ids": ["toby", "luna"],
+          "camera_angle": "slightly low",
+          "camera_movement": "gentle pull back",
+          "composition_notes": ["end on bright open playground"],
+          "continuity_notes": ["preserve established park colors and character features"],
+          "metadata": {}
+        }
+      ],
+      "metadata": {"vertical": "kids_puppies"}
+    }
+  ],
+  "metadata": {
+    "vertical": "kids_puppies",
+    "original_ip": true
+  }
+}
