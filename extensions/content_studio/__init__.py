@@ -10,6 +10,14 @@ from extensions.content_studio.bibles import (
     LocationProfile,
     UniverseBible,
 )
+from extensions.content_studio.story import (
+    StoryBeat,
+    StoryBrief,
+    StoryContext,
+    StoryEngine,
+    StoryPlan,
+    generate_story,
+)
 from extensions.content_studio.domain import (
     CharacterSpec,
     DomainValidationError,
@@ -30,4 +38,10 @@ __all__ = [
     "SCHEMA_VERSION",
     "SceneSpec",
     "UniverseBible",
+    "StoryBeat",
+    "StoryBrief",
+    "StoryContext",
+    "StoryEngine",
+    "StoryPlan",
+    "generate_story",
 ]
