@@ -374,36 +374,12 @@ class StoryPlan(JsonContract):
         character_bible: CharacterBible,
         universe_bible: UniverseBible,
     ) -> None:
-        brief = self.brief
-        if project.project_id != brief.project_id:
-            raise DomainValidationError(
-                "StoryBrief project_id does not match ProjectSpec"
-            )
-        if character_bible.project_id != project.project_id:
-            raise DomainValidationError(
-                "CharacterBible project_id does not match ProjectSpec"
-            )
-        if universe_bible.project_id != project.project_id:
-            raise DomainValidationError(
-                "UniverseBible project_id does not match ProjectSpec"
-            )
-
-        project_characters = {
-            character.character_id for character in project.characters
-        }
-        unknown_characters = sorted(
-            set(brief.character_ids) - project_characters
+        _validate_brief_context(
+            self.brief,
+            project,
+            character_bible,
+            universe_bible,
         )
-        if unknown_characters:
-            raise DomainValidationError(
-                "StoryBrief references unknown project characters: "
-                f"{unknown_characters}"
-            )
-        for character_id in brief.character_ids:
-            character_bible.resolve(character_id)
-
-        for location_id in brief.location_ids:
-            universe_bible.resolve(location_id)
 
     def to_episode_spec(self) -> EpisodeSpec:
         scenes = tuple(
@@ -441,6 +417,43 @@ class StoryPlan(JsonContract):
         )
 
 
+def _validate_brief_context(
+    brief: StoryBrief,
+    project: ProjectSpec,
+    character_bible: CharacterBible,
+    universe_bible: UniverseBible,
+) -> None:
+    if project.project_id != brief.project_id:
+        raise DomainValidationError(
+            "StoryBrief project_id does not match ProjectSpec"
+        )
+    if character_bible.project_id != project.project_id:
+        raise DomainValidationError(
+            "CharacterBible project_id does not match ProjectSpec"
+        )
+    if universe_bible.project_id != project.project_id:
+        raise DomainValidationError(
+            "UniverseBible project_id does not match ProjectSpec"
+        )
+
+    project_characters = {
+        character.character_id for character in project.characters
+    }
+    unknown_characters = sorted(
+        set(brief.character_ids) - project_characters
+    )
+    if unknown_characters:
+        raise DomainValidationError(
+            "StoryBrief references unknown project characters: "
+            f"{unknown_characters}"
+        )
+
+    for character_id in brief.character_ids:
+        character_bible.resolve(character_id)
+    for location_id in brief.location_ids:
+        universe_bible.resolve(location_id)
+
+
 @dataclass(frozen=True, slots=True)
 class StoryContext:
     """Non-serialized runtime context used to validate story generation."""
@@ -450,21 +463,8 @@ class StoryContext:
     universe_bible: UniverseBible
 
     def validate_brief(self, brief: StoryBrief) -> None:
-        empty_plan = StoryPlan(
-            brief=brief,
-            beats=(
-                StoryBeat(
-                    beat_id="validation",
-                    order=1,
-                    purpose="validation",
-                    summary="Validation placeholder.",
-                    duration_seconds=1,
-                    location_id=brief.location_ids[0],
-                    character_ids=(),
-                ),
-            ),
-        )
-        empty_plan.validate_context(
+        _validate_brief_context(
+            brief,
             self.project,
             self.character_bible,
             self.universe_bible,
