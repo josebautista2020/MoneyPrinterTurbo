@@ -1,0 +1,80 @@
+{
+  "schema_version": "1.0.0",
+  "project_id": "kids-puppies-demo",
+  "profiles": [
+    {
+      "schema_version": "1.0.0",
+      "character_id": "toby",
+      "aliases": [
+        "Toby"
+      ],
+      "signature_features": [
+        "golden fur",
+        "brown eyes",
+        "blue hoodie",
+        "red backpack"
+      ],
+      "wardrobe": [
+        "blue hoodie",
+        "red backpack"
+      ],
+      "personality_notes": [
+        "curious",
+        "friendly",
+        "impulsive",
+        "optimistic"
+      ],
+      "voice_consistency": [
+        "energetic childlike delivery",
+        "warm and expressive"
+      ],
+      "forbidden_changes": [
+        "do not change fur color",
+        "do not remove the blue hoodie in standard episodes"
+      ],
+      "reference_asset_ids": [],
+      "notes": "Original Content Studio character.",
+      "metadata": {
+        "vertical": "kids_puppies",
+        "original_ip": true
+      }
+    },
+    {
+      "schema_version": "1.0.0",
+      "character_id": "luna",
+      "aliases": [
+        "Luna"
+      ],
+      "signature_features": [
+        "cream fur",
+        "purple bandana"
+      ],
+      "wardrobe": [
+        "purple bandana"
+      ],
+      "personality_notes": [
+        "patient",
+        "empathetic",
+        "supportive"
+      ],
+      "voice_consistency": [
+        "warm childlike delivery",
+        "gentle pacing"
+      ],
+      "forbidden_changes": [
+        "do not change fur color",
+        "keep the purple bandana in standard episodes"
+      ],
+      "reference_asset_ids": [],
+      "notes": "Original Content Studio character.",
+      "metadata": {
+        "vertical": "kids_puppies",
+        "original_ip": true
+      }
+    }
+  ],
+  "metadata": {
+    "vertical": "kids_puppies",
+    "original_ip": true
+  }
+}

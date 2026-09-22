@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0.0",
+  "project_id": "generic-demo",
+  "profiles": [
+    {
+      "schema_version": "1.0.0",
+      "character_id": "guide-1",
+      "aliases": [
+        "presenter"
+      ],
+      "signature_features": [
+        "blue jacket",
+        "clean studio silhouette"
+      ],
+      "wardrobe": [
+        "blue jacket"
+      ],
+      "personality_notes": [
+        "calm",
+        "clear",
+        "professional"
+      ],
+      "voice_consistency": [
+        "steady pace",
+        "clear articulation"
+      ],
+      "forbidden_changes": [
+        "do not change jacket color without an explicit project revision"
+      ],
+      "reference_asset_ids": [],
+      "notes": "Provider-neutral example profile.",
+      "metadata": {
+        "example": true
+      }
+    }
+  ],
+  "metadata": {
+    "example": true
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0.0",
+  "project_id": "kids-puppies-demo",
+  "locations": [
+    {
+      "schema_version": "1.0.0",
+      "location_id": "parque",
+      "aliases": [
+        "puppy-park"
+      ],
+      "description": "A bright neighborhood park where the puppy friends play and learn together.",
+      "visual_traits": [
+        "green grass",
+        "colorful playground",
+        "red ball",
+        "friendly neighborhood backdrop"
+      ],
+      "ambience": [
+        "cheerful",
+        "safe",
+        "daytime"
+      ],
+      "consistency_rules": [
+        "keep the playground layout recognizable across scenes",
+        "preserve child-safe open sight lines"
+      ],
+      "forbidden_changes": [
+        "no dangerous traffic inside the play area",
+        "no frightening environmental hazards"
+      ],
+      "reference_asset_ids": [],
+      "metadata": {
+        "vertical": "kids_puppies",
+        "original_ip": true
+      }
+    }
+  ],
+  "world_rules": [
+    "Locations must remain visually friendly and age-appropriate.",
+    "Environmental conflict must not rely on graphic danger or fear."
+  ],
+  "metadata": {
+    "vertical": "kids_puppies",
+    "original_ip": true
+  }
+}
