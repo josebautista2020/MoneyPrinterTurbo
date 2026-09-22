@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.0.0",
+  "brief": {
+    "schema_version": "1.0.0",
+    "story_id": "kids-story-ep0002",
+    "project_id": "kids-puppies-demo",
+    "episode_id": "ep0002",
+    "title": "Toby y la pelota perdida",
+    "premise": "Toby encuentra una pelota que no es suya y aprende a devolverla con ayuda de Luna.",
+    "language": "es-CO",
+    "duration_target_seconds": 60,
+    "location_ids": ["parque"],
+    "character_ids": ["toby", "luna"],
+    "tone": ["alegre", "cálido", "seguro"],
+    "lesson": "Devolver lo que encontramos demuestra honestidad y consideración por los demás.",
+    "metadata": {"vertical": "kids_puppies", "original_ip": true}
+  },
+  "beats": [
+    {
+      "schema_version": "1.0.0",
+      "beat_id": "s01",
+      "order": 1,
+      "purpose": "hook",
+      "summary": "Toby descubre una pelota brillante junto al columpio y piensa que puede quedársela.",
+      "duration_seconds": 6,
+      "location_id": "parque",
+      "character_ids": ["toby"],
+      "dialogue_hint": "¡Qué pelota tan bonita!",
+      "emotion": "emocionado",
+      "metadata": {}
+    },
+    {
+      "schema_version": "1.0.0",
+      "beat_id": "s02",
+      "order": 2,
+      "purpose": "problem",
+      "summary": "Luna nota una pequeña etiqueta en la pelota y le pregunta a Toby si alguien podría estar buscándola.",
+      "duration_seconds": 12,
+      "location_id": "parque",
+      "character_ids": ["toby", "luna"],
+      "dialogue_hint": "¿Y si su dueño la está buscando?",
+      "emotion": "pensativo",
+      "metadata": {}
+    },
+    {
+      "schema_version": "1.0.0",
+      "beat_id": "s03",
+      "order": 3,
+      "purpose": "action",
+      "summary": "Toby y Luna recorren juntos el parque preguntando de forma amable por la pelota perdida.",
+      "duration_seconds": 20,
+      "location_id": "parque",
+      "character_ids": ["toby", "luna"],
+      "dialogue_hint": null,
+      "emotion": "decidido",
+      "metadata": {}
+    },
+    {
+      "schema_version": "1.0.0",
+      "beat_id": "s04",
+      "order": 4,
+      "purpose": "resolution",
+      "summary": "Encuentran a quien la había perdido y Toby decide devolverla con una sonrisa.",
+      "duration_seconds": 12,
+      "location_id": "parque",
+      "character_ids": ["toby", "luna"],
+      "dialogue_hint": "Creo que esto es tuyo.",
+      "emotion": "orgulloso",
+      "metadata": {}
+    },
+    {
+      "schema_version": "1.0.0",
+      "beat_id": "s05",
+      "order": 5,
+      "purpose": "payoff",
+      "summary": "Toby y Luna siguen jugando y recuerdan que hacer lo correcto también puede hacerte sentir bien.",
+      "duration_seconds": 10,
+      "location_id": "parque",
+      "character_ids": ["toby", "luna"],
+      "dialogue_hint": "¡Ahora juguemos juntos!",
+      "emotion": "feliz",
+      "metadata": {}
+    }
+  ],
+  "metadata": {"vertical": "kids_puppies", "original_ip": true}
+}
