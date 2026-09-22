@@ -520,6 +520,132 @@ SCHEMAS.update(
     }
 )
 
+
+SCHEMAS.update(
+    {
+        "StoryboardShot": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/storyboard-shot/{SCHEMA_VERSION}",
+            "title": "StoryboardShot",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "shot_id",
+                "order",
+                "duration_seconds",
+                "visual_action",
+                "framing",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "shot_id": {"type": "string", "pattern": _ID_PATTERN},
+                "order": {"type": "integer", "minimum": 1},
+                "duration_seconds": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                },
+                "visual_action": {"type": "string", "minLength": 1},
+                "framing": {"type": "string", "minLength": 1},
+                "character_ids": {
+                    "type": "array",
+                    "items": {"type": "string", "pattern": _ID_PATTERN},
+                    "uniqueItems": True,
+                },
+                "camera_angle": {
+                    "type": ["string", "null"],
+                    "minLength": 1,
+                },
+                "camera_movement": {
+                    "type": ["string", "null"],
+                    "minLength": 1,
+                },
+                "composition_notes": {
+                    "type": "array",
+                    "items": {"type": "string", "minLength": 1},
+                    "uniqueItems": True,
+                },
+                "continuity_notes": {
+                    "type": "array",
+                    "items": {"type": "string", "minLength": 1},
+                    "uniqueItems": True,
+                },
+                "metadata": _METADATA,
+            },
+        },
+        "StoryboardScene": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/storyboard-scene/{SCHEMA_VERSION}",
+            "title": "StoryboardScene",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "scene_id",
+                "beat_id",
+                "order",
+                "location_id",
+                "character_ids",
+                "shots",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "scene_id": {"type": "string", "pattern": _ID_PATTERN},
+                "beat_id": {"type": "string", "pattern": _ID_PATTERN},
+                "order": {"type": "integer", "minimum": 1},
+                "location_id": {"type": "string", "pattern": _ID_PATTERN},
+                "character_ids": {
+                    "type": "array",
+                    "items": {"type": "string", "pattern": _ID_PATTERN},
+                    "uniqueItems": True,
+                },
+                "shots": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "$ref": (
+                            f"{_SCHEMA_BASE}/storyboard-shot/"
+                            f"{SCHEMA_VERSION}"
+                        )
+                    },
+                },
+                "metadata": _METADATA,
+            },
+        },
+        "StoryboardPlan": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/storyboard-plan/{SCHEMA_VERSION}",
+            "title": "StoryboardPlan",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "story_id",
+                "project_id",
+                "episode_id",
+                "scenes",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "story_id": {"type": "string", "pattern": _ID_PATTERN},
+                "project_id": {"type": "string", "pattern": _ID_PATTERN},
+                "episode_id": {"type": "string", "pattern": _ID_PATTERN},
+                "scenes": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "$ref": (
+                            f"{_SCHEMA_BASE}/storyboard-scene/"
+                            f"{SCHEMA_VERSION}"
+                        )
+                    },
+                },
+                "metadata": _METADATA,
+            },
+        },
+    }
+)
+
 def schema_for(contract_name: str) -> dict[str, Any]:
     """Return an isolated JSON-compatible schema for a canonical contract."""
     try:
