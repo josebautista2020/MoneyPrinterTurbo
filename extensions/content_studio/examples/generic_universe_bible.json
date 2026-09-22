@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0.0",
+  "project_id": "generic-demo",
+  "locations": [
+    {
+      "schema_version": "1.0.0",
+      "location_id": "studio",
+      "aliases": [
+        "main-studio"
+      ],
+      "description": "A neutral production studio used by the generic example.",
+      "visual_traits": [
+        "clean background",
+        "soft practical lighting"
+      ],
+      "ambience": [
+        "quiet",
+        "controlled"
+      ],
+      "consistency_rules": [
+        "keep the main presentation wall in the same position"
+      ],
+      "forbidden_changes": [
+        "do not introduce branded elements"
+      ],
+      "reference_asset_ids": [],
+      "metadata": {
+        "example": true
+      }
+    }
+  ],
+  "world_rules": [
+    "The generic example must remain provider-neutral and brand-neutral."
+  ],
+  "metadata": {
+    "example": true
+  }
+}
