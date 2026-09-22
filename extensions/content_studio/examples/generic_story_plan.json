@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0.0",
+  "brief": {
+    "schema_version": "1.0.0",
+    "story_id": "generic-story-2",
+    "project_id": "generic-demo",
+    "episode_id": "episode-2",
+    "title": "A Clear Explanation",
+    "premise": "A guide introduces one idea, explains it clearly, and closes with a concise takeaway.",
+    "language": "en-US",
+    "duration_target_seconds": 30,
+    "location_ids": ["studio"],
+    "character_ids": ["guide-1"],
+    "tone": ["calm", "clear"],
+    "lesson": null,
+    "metadata": {"example": true}
+  },
+  "beats": [
+    {
+      "schema_version": "1.0.0",
+      "beat_id": "scene-1",
+      "order": 1,
+      "purpose": "hook",
+      "summary": "The guide opens with a concise question that frames the topic.",
+      "duration_seconds": 5,
+      "location_id": "studio",
+      "character_ids": ["guide-1"],
+      "dialogue_hint": "What makes this idea useful?",
+      "emotion": "curious",
+      "metadata": {}
+    },
+    {
+      "schema_version": "1.0.0",
+      "beat_id": "scene-2",
+      "order": 2,
+      "purpose": "explanation",
+      "summary": "The guide explains the core idea with one simple example.",
+      "duration_seconds": 15,
+      "location_id": "studio",
+      "character_ids": ["guide-1"],
+      "dialogue_hint": null,
+      "emotion": "confident",
+      "metadata": {}
+    },
+    {
+      "schema_version": "1.0.0",
+      "beat_id": "scene-3",
+      "order": 3,
+      "purpose": "payoff",
+      "summary": "The guide summarizes the takeaway and closes the episode.",
+      "duration_seconds": 10,
+      "location_id": "studio",
+      "character_ids": ["guide-1"],
+      "dialogue_hint": "That is the idea in one sentence.",
+      "emotion": "friendly",
+      "metadata": {}
+    }
+  ],
+  "metadata": {"example": true}
+}

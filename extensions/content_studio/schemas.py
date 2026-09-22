@@ -392,6 +392,134 @@ SCHEMAS.update(
 )
 
 
+
+SCHEMAS.update(
+    {
+        "StoryBrief": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/story-brief/{SCHEMA_VERSION}",
+            "title": "StoryBrief",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "story_id",
+                "project_id",
+                "episode_id",
+                "title",
+                "premise",
+                "language",
+                "duration_target_seconds",
+                "location_ids",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "story_id": {"type": "string", "pattern": _ID_PATTERN},
+                "project_id": {"type": "string", "pattern": _ID_PATTERN},
+                "episode_id": {"type": "string", "pattern": _ID_PATTERN},
+                "title": {"type": "string", "minLength": 1},
+                "premise": {"type": "string", "minLength": 1},
+                "language": {"type": "string", "minLength": 1},
+                "duration_target_seconds": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                },
+                "location_ids": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {"type": "string", "pattern": _ID_PATTERN},
+                    "uniqueItems": True,
+                },
+                "character_ids": {
+                    "type": "array",
+                    "items": {"type": "string", "pattern": _ID_PATTERN},
+                    "uniqueItems": True,
+                },
+                "tone": {
+                    "type": "array",
+                    "items": {"type": "string", "minLength": 1},
+                    "uniqueItems": True,
+                },
+                "lesson": {"type": ["string", "null"], "minLength": 1},
+                "metadata": _METADATA,
+            },
+        },
+        "StoryBeat": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/story-beat/{SCHEMA_VERSION}",
+            "title": "StoryBeat",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "beat_id",
+                "order",
+                "purpose",
+                "summary",
+                "duration_seconds",
+                "location_id",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "beat_id": {"type": "string", "pattern": _ID_PATTERN},
+                "order": {"type": "integer", "minimum": 1},
+                "purpose": {"type": "string", "minLength": 1},
+                "summary": {"type": "string", "minLength": 1},
+                "duration_seconds": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                },
+                "location_id": {
+                    "type": "string",
+                    "pattern": _ID_PATTERN,
+                },
+                "character_ids": {
+                    "type": "array",
+                    "items": {"type": "string", "pattern": _ID_PATTERN},
+                    "uniqueItems": True,
+                },
+                "dialogue_hint": {
+                    "type": ["string", "null"],
+                    "minLength": 1,
+                },
+                "emotion": {
+                    "type": ["string", "null"],
+                    "minLength": 1,
+                },
+                "metadata": _METADATA,
+            },
+        },
+        "StoryPlan": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/story-plan/{SCHEMA_VERSION}",
+            "title": "StoryPlan",
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["schema_version", "brief", "beats"],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "brief": {
+                    "$ref": (
+                        f"{_SCHEMA_BASE}/story-brief/"
+                        f"{SCHEMA_VERSION}"
+                    )
+                },
+                "beats": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "$ref": (
+                            f"{_SCHEMA_BASE}/story-beat/"
+                            f"{SCHEMA_VERSION}"
+                        )
+                    },
+                },
+                "metadata": _METADATA,
+            },
+        },
+    }
+)
+
 def schema_for(contract_name: str) -> dict[str, Any]:
     """Return an isolated JSON-compatible schema for a canonical contract."""
     try:
