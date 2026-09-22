@@ -422,7 +422,7 @@ class EpisodeSpec(JsonContract):
         return sum(scene.duration_seconds for scene in self.scenes)
 
     def to_dict(self) -> dict[str, Any]:
-        payload = super().to_dict()
+        payload = JsonContract.to_dict(self)
         payload["scenes"] = [scene.to_dict() for scene in self.scenes]
         return payload
 
@@ -545,7 +545,7 @@ class ProjectSpec(JsonContract):
         object.__setattr__(self, "metadata", _require_metadata(self.metadata))
 
     def to_dict(self) -> dict[str, Any]:
-        payload = super().to_dict()
+        payload = JsonContract.to_dict(self)
         payload["characters"] = [
             character.to_dict() for character in self.characters
         ]
