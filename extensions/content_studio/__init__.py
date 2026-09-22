@@ -4,6 +4,12 @@ This package must remain vertical-agnostic. Vertical-specific behavior belongs u
 ``verticals/`` and integrations with MoneyPrinterTurbo belong behind adapters.
 """
 
+from extensions.content_studio.bibles import (
+    CharacterBible,
+    CharacterProfile,
+    LocationProfile,
+    UniverseBible,
+)
 from extensions.content_studio.domain import (
     CharacterSpec,
     DomainValidationError,
@@ -14,10 +20,14 @@ from extensions.content_studio.domain import (
 )
 
 __all__ = [
+    "CharacterBible",
+    "CharacterProfile",
     "CharacterSpec",
     "DomainValidationError",
     "EpisodeSpec",
+    "LocationProfile",
     "ProjectSpec",
     "SCHEMA_VERSION",
     "SceneSpec",
+    "UniverseBible",
 ]
