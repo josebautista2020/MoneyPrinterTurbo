@@ -10,8 +10,8 @@ from extensions.content_studio.domain import SCHEMA_VERSION
 _SCHEMA_BASE = "https://content-studio.ai/schemas"
 
 _ID_PATTERN = r"^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$"
-_ASPECT_RATIO_PATTERN = r"^[1-9]\\d*:[1-9]\\d*$"
-_RESOLUTION_PATTERN = r"^[1-9]\\d*x[1-9]\\d*$"
+_ASPECT_RATIO_PATTERN = r"^[1-9][0-9]*:[1-9][0-9]*$"
+_RESOLUTION_PATTERN = r"^[1-9][0-9]*x[1-9][0-9]*$"
 
 _METADATA = {
     "type": "object",
