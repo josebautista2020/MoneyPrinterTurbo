@@ -1,0 +1,107 @@
+{
+  "schema_version": "1.0.0",
+  "project_id": "kids-puppies-demo",
+  "title": "Paw Pals Demo",
+  "language": "es-CO",
+  "target_platforms": [
+    "youtube_shorts",
+    "tiktok",
+    "instagram_reels"
+  ],
+  "aspect_ratio": "9:16",
+  "resolution": "1080x1920",
+  "characters": [
+    {
+      "schema_version": "1.0.0",
+      "character_id": "toby",
+      "name": "Toby",
+      "description": "An original golden puppy who is curious, friendly and impulsive.",
+      "visual_traits": [
+        "golden fur",
+        "brown eyes",
+        "blue hoodie",
+        "red backpack"
+      ],
+      "personality_traits": [
+        "curious",
+        "friendly",
+        "optimistic"
+      ],
+      "voice_hint": "energetic childlike voice",
+      "metadata": {}
+    },
+    {
+      "schema_version": "1.0.0",
+      "character_id": "luna",
+      "name": "Luna",
+      "description": "An original puppy friend who is patient and empathetic.",
+      "visual_traits": [
+        "cream fur",
+        "purple bandana"
+      ],
+      "personality_traits": [
+        "patient",
+        "empathetic"
+      ],
+      "voice_hint": "warm childlike voice",
+      "metadata": {}
+    }
+  ],
+  "episodes": [
+    {
+      "schema_version": "1.0.0",
+      "episode_id": "ep0001",
+      "project_id": "kids-puppies-demo",
+      "title": "Toby aprende a compartir",
+      "language": "es-CO",
+      "duration_target_seconds": 60,
+      "character_ids": [
+        "toby",
+        "luna"
+      ],
+      "lesson": "Compartir hace que el juego sea mejor para todos.",
+      "scenes": [
+        {
+          "schema_version": "1.0.0",
+          "scene_id": "s01",
+          "order": 1,
+          "duration_seconds": 6,
+          "location": "parque",
+          "action": "Toby encuentra una pelota roja y corre hacia ella.",
+          "character_ids": [
+            "toby"
+          ],
+          "dialogue": "¡La encontré!",
+          "camera": "wide shot",
+          "emotion": "excited",
+          "transition": "cut",
+          "metadata": {}
+        },
+        {
+          "schema_version": "1.0.0",
+          "scene_id": "s02",
+          "order": 2,
+          "duration_seconds": 8,
+          "location": "parque",
+          "action": "Luna se acerca y pregunta si pueden jugar juntos.",
+          "character_ids": [
+            "toby",
+            "luna"
+          ],
+          "dialogue": "¿Jugamos juntos?",
+          "camera": "medium shot",
+          "emotion": "hopeful",
+          "transition": "cut",
+          "metadata": {}
+        }
+      ],
+      "metadata": {
+        "vertical": "kids_puppies"
+      }
+    }
+  ],
+  "metadata": {
+    "vertical": "kids_puppies",
+    "original_ip": true
+  }
+}
