@@ -27,7 +27,9 @@
       "forbidden_changes": [
         "do not change jacket color without an explicit project revision"
       ],
-      "reference_asset_ids": [],
+      "reference_asset_ids": [
+        "guide-ref-v1"
+      ],
       "notes": "Provider-neutral example profile.",
       "metadata": {
         "example": true
