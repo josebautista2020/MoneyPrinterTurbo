@@ -1,0 +1,187 @@
+{
+  "schema_version": "1.0.0",
+  "project_id": "kids-puppies-demo",
+  "story_id": "kids-story-ep0002",
+  "episode_id": "ep0002",
+  "prompts": [
+    {
+      "schema_version": "1.0.0",
+      "prompt_id": "ep0002-s01-a",
+      "scene_id": "sb-s01",
+      "shot_id": "ep0002-s01-a",
+      "location_id": "parque",
+      "duration_seconds": 6,
+      "character_ids": ["toby"],
+      "visual_prompt": "Toby notices a bright ball beside the swing; preserve the established park and Toby visual identity.",
+      "negative_constraints": [
+        "no dangerous traffic inside the play area",
+        "no frightening environmental hazards",
+        "do not change fur color",
+        "do not remove the blue hoodie in standard episodes"
+      ],
+      "reference_asset_ids": [],
+      "metadata": {
+        "compiler": "canonical",
+        "vertical": "kids_puppies"
+      }
+    },
+    {
+      "schema_version": "1.0.0",
+      "prompt_id": "ep0002-s02-a",
+      "scene_id": "sb-s02",
+      "shot_id": "ep0002-s02-a",
+      "location_id": "parque",
+      "duration_seconds": 5,
+      "character_ids": ["toby", "luna"],
+      "visual_prompt": "Luna approaches Toby and looks at the ball tag; maintain both established character designs and the recognizable park.",
+      "negative_constraints": [
+        "no dangerous traffic inside the play area",
+        "no frightening environmental hazards",
+        "do not change fur color",
+        "do not remove the blue hoodie in standard episodes",
+        "keep the purple bandana in standard episodes"
+      ],
+      "reference_asset_ids": [],
+      "metadata": {
+        "compiler": "canonical",
+        "vertical": "kids_puppies"
+      }
+    },
+    {
+      "schema_version": "1.0.0",
+      "prompt_id": "ep0002-s02-b",
+      "scene_id": "sb-s02",
+      "shot_id": "ep0002-s02-b",
+      "location_id": "parque",
+      "duration_seconds": 7,
+      "character_ids": ["toby"],
+      "visual_prompt": "Toby studies the tag and becomes thoughtful; keep the ball and established visual continuity.",
+      "negative_constraints": [
+        "no dangerous traffic inside the play area",
+        "no frightening environmental hazards",
+        "do not change fur color",
+        "do not remove the blue hoodie in standard episodes"
+      ],
+      "reference_asset_ids": [],
+      "metadata": {
+        "compiler": "canonical",
+        "vertical": "kids_puppies"
+      }
+    },
+    {
+      "schema_version": "1.0.0",
+      "prompt_id": "ep0002-s03-a",
+      "scene_id": "sb-s03",
+      "shot_id": "ep0002-s03-a",
+      "location_id": "parque",
+      "duration_seconds": 10,
+      "character_ids": ["toby", "luna"],
+      "visual_prompt": "Toby and Luna walk through the playground looking for the owner; maintain the established characters and park landmarks.",
+      "negative_constraints": [
+        "no dangerous traffic inside the play area",
+        "no frightening environmental hazards",
+        "do not change fur color",
+        "do not remove the blue hoodie in standard episodes",
+        "keep the purple bandana in standard episodes"
+      ],
+      "reference_asset_ids": [],
+      "metadata": {
+        "compiler": "canonical",
+        "vertical": "kids_puppies"
+      }
+    },
+    {
+      "schema_version": "1.0.0",
+      "prompt_id": "ep0002-s03-b",
+      "scene_id": "sb-s03",
+      "shot_id": "ep0002-s03-b",
+      "location_id": "parque",
+      "duration_seconds": 10,
+      "character_ids": ["toby", "luna"],
+      "visual_prompt": "Toby and Luna politely ask nearby friends while continuing the search; keep friendly visual continuity.",
+      "negative_constraints": [
+        "no dangerous traffic inside the play area",
+        "no frightening environmental hazards",
+        "do not change fur color",
+        "do not remove the blue hoodie in standard episodes",
+        "keep the purple bandana in standard episodes"
+      ],
+      "reference_asset_ids": [],
+      "metadata": {
+        "compiler": "canonical",
+        "vertical": "kids_puppies"
+      }
+    },
+    {
+      "schema_version": "1.0.0",
+      "prompt_id": "ep0002-s04-a",
+      "scene_id": "sb-s04",
+      "shot_id": "ep0002-s04-a",
+      "location_id": "parque",
+      "duration_seconds": 6,
+      "character_ids": ["toby", "luna"],
+      "visual_prompt": "Toby recognizes the owner and steps forward with the ball while Luna stays beside him.",
+      "negative_constraints": [
+        "no dangerous traffic inside the play area",
+        "no frightening environmental hazards",
+        "do not change fur color",
+        "do not remove the blue hoodie in standard episodes",
+        "keep the purple bandana in standard episodes"
+      ],
+      "reference_asset_ids": [],
+      "metadata": {
+        "compiler": "canonical",
+        "vertical": "kids_puppies"
+      }
+    },
+    {
+      "schema_version": "1.0.0",
+      "prompt_id": "ep0002-s04-b",
+      "scene_id": "sb-s04",
+      "shot_id": "ep0002-s04-b",
+      "location_id": "parque",
+      "duration_seconds": 6,
+      "character_ids": ["toby", "luna"],
+      "visual_prompt": "Toby returns the ball and smiles while Luna looks proud; preserve warm expressions and established designs.",
+      "negative_constraints": [
+        "no dangerous traffic inside the play area",
+        "no frightening environmental hazards",
+        "do not change fur color",
+        "do not remove the blue hoodie in standard episodes",
+        "keep the purple bandana in standard episodes"
+      ],
+      "reference_asset_ids": [],
+      "metadata": {
+        "compiler": "canonical",
+        "vertical": "kids_puppies"
+      }
+    },
+    {
+      "schema_version": "1.0.0",
+      "prompt_id": "ep0002-s05-a",
+      "scene_id": "sb-s05",
+      "shot_id": "ep0002-s05-a",
+      "location_id": "parque",
+      "duration_seconds": 10,
+      "character_ids": ["toby", "luna"],
+      "visual_prompt": "Toby and Luna run back toward the playground together; preserve the bright park and established character features.",
+      "negative_constraints": [
+        "no dangerous traffic inside the play area",
+        "no frightening environmental hazards",
+        "do not change fur color",
+        "do not remove the blue hoodie in standard episodes",
+        "keep the purple bandana in standard episodes"
+      ],
+      "reference_asset_ids": [],
+      "metadata": {
+        "compiler": "canonical",
+        "vertical": "kids_puppies"
+      }
+    }
+  ],
+  "metadata": {
+    "compiler": "canonical",
+    "vertical": "kids_puppies",
+    "original_ip": true
+  }
+}
