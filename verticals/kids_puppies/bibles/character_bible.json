@@ -32,7 +32,9 @@
         "do not change fur color",
         "do not remove the blue hoodie in standard episodes"
       ],
-      "reference_asset_ids": [],
+      "reference_asset_ids": [
+        "toby-ref-v1"
+      ],
       "notes": "Original Content Studio character.",
       "metadata": {
         "vertical": "kids_puppies",
@@ -65,7 +67,9 @@
         "do not change fur color",
         "keep the purple bandana in standard episodes"
       ],
-      "reference_asset_ids": [],
+      "reference_asset_ids": [
+        "luna-ref-v1"
+      ],
       "notes": "Original Content Studio character.",
       "metadata": {
         "vertical": "kids_puppies",

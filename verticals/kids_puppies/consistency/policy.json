@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0.0",
+  "minimum_overall_score": 0.9,
+  "minimum_identity_score": 0.92,
+  "max_attempts": 3,
+  "require_references_for_characters": true,
+  "metadata": {
+    "vertical": "kids_puppies",
+    "target": "character_consistency"
+  }
+}

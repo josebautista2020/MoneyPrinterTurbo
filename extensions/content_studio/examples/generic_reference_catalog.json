@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0.0",
+  "project_id": "generic-demo",
+  "assets": [
+    {
+      "schema_version": "1.0.0",
+      "reference_asset_id": "guide-ref-v1",
+      "uri": "asset://generic/characters/guide/v1",
+      "media_type": "image/png",
+      "character_id": "guide-1",
+      "location_id": null,
+      "metadata": {
+        "example": true,
+        "placeholder": true
+      }
+    },
+    {
+      "schema_version": "1.0.0",
+      "reference_asset_id": "studio-ref-v1",
+      "uri": "asset://generic/locations/studio/v1",
+      "media_type": "image/png",
+      "character_id": null,
+      "location_id": "studio",
+      "metadata": {
+        "example": true,
+        "placeholder": true
+      }
+    }
+  ],
+  "metadata": {
+    "example": true,
+    "placeholder_uris": true
+  }
+}
