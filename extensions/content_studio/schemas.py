@@ -646,6 +646,88 @@ SCHEMAS.update(
     }
 )
 
+
+SCHEMAS.update(
+    {
+        "ShotPrompt": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/shot-prompt/{SCHEMA_VERSION}",
+            "title": "ShotPrompt",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "prompt_id",
+                "scene_id",
+                "shot_id",
+                "location_id",
+                "duration_seconds",
+                "character_ids",
+                "visual_prompt",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "prompt_id": {"type": "string", "pattern": _ID_PATTERN},
+                "scene_id": {"type": "string", "pattern": _ID_PATTERN},
+                "shot_id": {"type": "string", "pattern": _ID_PATTERN},
+                "location_id": {"type": "string", "pattern": _ID_PATTERN},
+                "duration_seconds": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                },
+                "character_ids": {
+                    "type": "array",
+                    "items": {"type": "string", "pattern": _ID_PATTERN},
+                    "uniqueItems": True,
+                },
+                "visual_prompt": {"type": "string", "minLength": 1},
+                "negative_constraints": {
+                    "type": "array",
+                    "items": {"type": "string", "minLength": 1},
+                    "uniqueItems": True,
+                },
+                "reference_asset_ids": {
+                    "type": "array",
+                    "items": {"type": "string", "pattern": _ID_PATTERN},
+                    "uniqueItems": True,
+                },
+                "metadata": _METADATA,
+            },
+        },
+        "PromptPlan": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/prompt-plan/{SCHEMA_VERSION}",
+            "title": "PromptPlan",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "project_id",
+                "story_id",
+                "episode_id",
+                "prompts",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "project_id": {"type": "string", "pattern": _ID_PATTERN},
+                "story_id": {"type": "string", "pattern": _ID_PATTERN},
+                "episode_id": {"type": "string", "pattern": _ID_PATTERN},
+                "prompts": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "$ref": (
+                            f"{_SCHEMA_BASE}/shot-prompt/"
+                            f"{SCHEMA_VERSION}"
+                        )
+                    },
+                },
+                "metadata": _METADATA,
+            },
+        },
+    }
+)
+
 def schema_for(contract_name: str) -> dict[str, Any]:
     """Return an isolated JSON-compatible schema for a canonical contract."""
     try:
