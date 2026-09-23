@@ -18,6 +18,16 @@ from extensions.content_studio.prompting import (
     ShotPrompt,
     compile_prompts,
 )
+from extensions.content_studio.visual_generation import (
+    VisualArtifact,
+    VisualGenerationPlan,
+    VisualGenerationReport,
+    VisualGenerator,
+    VisualRequest,
+    VisualResult,
+    build_visual_generation_plan,
+    generate_visuals,
+)
 from extensions.content_studio.story import (
     StoryBeat,
     StoryBrief,
@@ -72,4 +82,12 @@ __all__ = [
     "PromptPlan",
     "ShotPrompt",
     "compile_prompts",
+    "VisualArtifact",
+    "VisualGenerationPlan",
+    "VisualGenerationReport",
+    "VisualGenerator",
+    "VisualRequest",
+    "VisualResult",
+    "build_visual_generation_plan",
+    "generate_visuals",
 ]
