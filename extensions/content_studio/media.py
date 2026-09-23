@@ -143,6 +143,7 @@ class MediaAssemblyPlan(JsonContract):
     language: str
     voice_name: str
     visual_uris: tuple[str, ...]
+    visual_durations_seconds: tuple[float, ...]
     aspect_ratio: str
     resolution: str
     output_uri: str
@@ -189,6 +190,19 @@ class MediaAssemblyPlan(JsonContract):
             self,
             "visual_uris",
             _unique_texts(self.visual_uris, "visual_uris", required=True),
+        )
+        durations = tuple(
+            _positive_number(value, "visual_durations_seconds")
+            for value in self.visual_durations_seconds
+        )
+        if len(durations) != len(self.visual_uris):
+            raise DomainValidationError(
+                "visual_durations_seconds must align one-to-one with visual_uris"
+            )
+        object.__setattr__(
+            self,
+            "visual_durations_seconds",
+            durations,
         )
         if (
             not isinstance(self.aspect_ratio, str)
@@ -285,6 +299,7 @@ class MediaAssemblyPlan(JsonContract):
                 "language",
                 "voice_name",
                 "visual_uris",
+                "visual_durations_seconds",
                 "aspect_ratio",
                 "resolution",
                 "output_uri",
@@ -307,6 +322,9 @@ class MediaAssemblyPlan(JsonContract):
             },
         )
         data["visual_uris"] = tuple(data.get("visual_uris", ()))
+        data["visual_durations_seconds"] = tuple(
+            data.get("visual_durations_seconds", ())
+        )
         try:
             return cls(**data)
         except TypeError as exc:
@@ -579,6 +597,7 @@ def build_media_assembly_plan(
         )
 
     visual_uris = []
+    visual_durations = []
     for result in consistency_report.results:
         attempt = result.final_attempt
         if not attempt.visual_result.success:
@@ -591,6 +610,12 @@ def build_media_assembly_plan(
                 "accepted consistency result has no visual artifact"
             )
         visual_uris.append(artifacts[0].uri)
+        duration = artifacts[0].duration_seconds
+        if duration is None:
+            raise DomainValidationError(
+                "accepted visual artifact is missing duration_seconds"
+            )
+        visual_durations.append(duration)
 
     return MediaAssemblyPlan(
         assembly_id=assembly_id,
@@ -601,6 +626,7 @@ def build_media_assembly_plan(
         language=language,
         voice_name=voice_name,
         visual_uris=tuple(visual_uris),
+        visual_durations_seconds=tuple(visual_durations),
         aspect_ratio=project.aspect_ratio,
         resolution=project.resolution,
         output_uri=output_uri,
