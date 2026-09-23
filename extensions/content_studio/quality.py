@@ -240,6 +240,26 @@ def evaluate_render_qa(
                 "render duration must be inside configured QA bounds",
             )
         )
+        sync_ok = (
+            media.audio is not None
+            and abs(media.audio.duration_seconds - video.duration_seconds)
+            <= policy.duration_tolerance_seconds
+        )
+        checks.append(
+            QACheck(
+                "audio-video-sync",
+                sync_ok,
+                "audio and video durations must stay within configured tolerance",
+            )
+        )
+
+    checks.append(
+        QACheck(
+            "publication-not-performed",
+            media.metadata.get("publication_performed") is not True,
+            "QA candidate must not already be published",
+        )
+    )
 
     return RenderQAReport(
         project_id=project.project_id,
