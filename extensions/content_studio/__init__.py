@@ -18,6 +18,14 @@ from extensions.content_studio.story import (
     StoryPlan,
     generate_story,
 )
+from extensions.content_studio.storyboard import (
+    StoryboardContext,
+    StoryboardEngine,
+    StoryboardPlan,
+    StoryboardScene,
+    StoryboardShot,
+    generate_storyboard,
+)
 from extensions.content_studio.domain import (
     CharacterSpec,
     DomainValidationError,
@@ -44,4 +52,10 @@ __all__ = [
     "StoryEngine",
     "StoryPlan",
     "generate_story",
+    "StoryboardContext",
+    "StoryboardEngine",
+    "StoryboardPlan",
+    "StoryboardScene",
+    "StoryboardShot",
+    "generate_storyboard",
 ]
