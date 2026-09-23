@@ -28,7 +28,9 @@
         "no dangerous traffic inside the play area",
         "no frightening environmental hazards"
       ],
-      "reference_asset_ids": [],
+      "reference_asset_ids": [
+        "park-ref-v1"
+      ],
       "metadata": {
         "vertical": "kids_puppies",
         "original_ip": true
