@@ -10,6 +10,19 @@ from extensions.content_studio.bibles import (
     LocationProfile,
     UniverseBible,
 )
+from extensions.content_studio.consistency import (
+    ConsistencyAssessment,
+    ConsistencyAttempt,
+    ConsistencyEvaluator,
+    ConsistencyPolicy,
+    ConsistencyReport,
+    ConsistentVisualResult,
+    ReferenceAsset,
+    ReferenceAwareVisualGenerator,
+    ReferenceCatalog,
+    bind_consistency_references,
+    generate_consistent_visuals,
+)
 from extensions.content_studio.prompting import (
     CanonicalPromptCompiler,
     PromptCompiler,
@@ -90,4 +103,15 @@ __all__ = [
     "VisualResult",
     "build_visual_generation_plan",
     "generate_visuals",
+    "ConsistencyAssessment",
+    "ConsistencyAttempt",
+    "ConsistencyEvaluator",
+    "ConsistencyPolicy",
+    "ConsistencyReport",
+    "ConsistentVisualResult",
+    "ReferenceAsset",
+    "ReferenceAwareVisualGenerator",
+    "ReferenceCatalog",
+    "bind_consistency_references",
+    "generate_consistent_visuals",
 ]
