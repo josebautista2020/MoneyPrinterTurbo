@@ -583,6 +583,26 @@ class ConsistencyReport(JsonContract):
     def cost_complete(self) -> bool:
         return all(result.cost_complete for result in self.results)
 
+    def validate_plan(self, plan: VisualGenerationPlan) -> None:
+        if (
+            self.project_id != plan.project_id
+            or self.story_id != plan.story_id
+            or self.episode_id != plan.episode_id
+        ):
+            raise DomainValidationError(
+                "ConsistencyReport identity does not match "
+                "VisualGenerationPlan"
+            )
+        expected = {request.request_id for request in plan.requests}
+        actual = {result.request_id for result in self.results}
+        missing = sorted(expected - actual)
+        unknown = sorted(actual - expected)
+        if missing or unknown:
+            raise DomainValidationError(
+                "ConsistencyReport request coverage mismatch: "
+                f"missing={missing}, unknown={unknown}"
+            )
+
     def to_dict(self) -> dict[str, Any]:
         payload = JsonContract.to_dict(self)
         payload["results"] = [result.to_dict() for result in self.results]
