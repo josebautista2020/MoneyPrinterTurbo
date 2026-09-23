@@ -728,6 +728,218 @@ SCHEMAS.update(
     }
 )
 
+
+SCHEMAS.update(
+    {
+        "VisualRequest": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/visual-request/{SCHEMA_VERSION}",
+            "title": "VisualRequest",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "request_id",
+                "project_id",
+                "story_id",
+                "episode_id",
+                "scene_id",
+                "shot_id",
+                "prompt",
+                "aspect_ratio",
+                "resolution",
+                "duration_seconds",
+                "asset_kind",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "request_id": {"type": "string", "pattern": _ID_PATTERN},
+                "project_id": {"type": "string", "pattern": _ID_PATTERN},
+                "story_id": {"type": "string", "pattern": _ID_PATTERN},
+                "episode_id": {"type": "string", "pattern": _ID_PATTERN},
+                "scene_id": {"type": "string", "pattern": _ID_PATTERN},
+                "shot_id": {"type": "string", "pattern": _ID_PATTERN},
+                "prompt": {"type": "string", "minLength": 1},
+                "aspect_ratio": {
+                    "type": "string",
+                    "pattern": _ASPECT_RATIO_PATTERN,
+                },
+                "resolution": {
+                    "type": "string",
+                    "pattern": _RESOLUTION_PATTERN,
+                },
+                "duration_seconds": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                },
+                "character_ids": {
+                    "type": "array",
+                    "items": {"type": "string", "pattern": _ID_PATTERN},
+                    "uniqueItems": True,
+                },
+                "negative_constraints": {
+                    "type": "array",
+                    "items": {"type": "string", "minLength": 1},
+                    "uniqueItems": True,
+                },
+                "reference_asset_ids": {
+                    "type": "array",
+                    "items": {"type": "string", "pattern": _ID_PATTERN},
+                    "uniqueItems": True,
+                },
+                "asset_kind": {
+                    "type": "string",
+                    "enum": ["image", "video"],
+                },
+                "metadata": _METADATA,
+            },
+        },
+        "VisualGenerationPlan": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/visual-generation-plan/{SCHEMA_VERSION}",
+            "title": "VisualGenerationPlan",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "project_id",
+                "story_id",
+                "episode_id",
+                "requests",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "project_id": {"type": "string", "pattern": _ID_PATTERN},
+                "story_id": {"type": "string", "pattern": _ID_PATTERN},
+                "episode_id": {"type": "string", "pattern": _ID_PATTERN},
+                "requests": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "$ref": (
+                            f"{_SCHEMA_BASE}/visual-request/"
+                            f"{SCHEMA_VERSION}"
+                        )
+                    },
+                },
+                "metadata": _METADATA,
+            },
+        },
+        "VisualArtifact": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/visual-artifact/{SCHEMA_VERSION}",
+            "title": "VisualArtifact",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "asset_id",
+                "request_id",
+                "shot_id",
+                "asset_kind",
+                "uri",
+                "engine",
+                "provider",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "asset_id": {"type": "string", "pattern": _ID_PATTERN},
+                "request_id": {"type": "string", "pattern": _ID_PATTERN},
+                "shot_id": {"type": "string", "pattern": _ID_PATTERN},
+                "asset_kind": {
+                    "type": "string",
+                    "enum": ["image", "video"],
+                },
+                "uri": {"type": "string", "minLength": 1},
+                "engine": {"type": "string", "minLength": 1},
+                "provider": {"type": "string", "minLength": 1},
+                "width": {
+                    "type": ["integer", "null"],
+                    "minimum": 1,
+                },
+                "height": {
+                    "type": ["integer", "null"],
+                    "minimum": 1,
+                },
+                "duration_seconds": {
+                    "type": ["number", "null"],
+                    "exclusiveMinimum": 0,
+                },
+                "metadata": _METADATA,
+            },
+        },
+        "VisualResult": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/visual-result/{SCHEMA_VERSION}",
+            "title": "VisualResult",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "request_id",
+                "engine",
+                "success",
+                "artifacts",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "request_id": {"type": "string", "pattern": _ID_PATTERN},
+                "engine": {"type": "string", "minLength": 1},
+                "success": {"type": "boolean"},
+                "artifacts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": (
+                            f"{_SCHEMA_BASE}/visual-artifact/"
+                            f"{SCHEMA_VERSION}"
+                        )
+                    },
+                },
+                "error": {
+                    "type": ["string", "null"],
+                    "minLength": 1,
+                },
+                "cost_usd": {
+                    "type": ["number", "null"],
+                    "minimum": 0,
+                },
+                "metadata": _METADATA,
+            },
+        },
+        "VisualGenerationReport": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/visual-generation-report/{SCHEMA_VERSION}",
+            "title": "VisualGenerationReport",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "project_id",
+                "story_id",
+                "episode_id",
+                "results",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "project_id": {"type": "string", "pattern": _ID_PATTERN},
+                "story_id": {"type": "string", "pattern": _ID_PATTERN},
+                "episode_id": {"type": "string", "pattern": _ID_PATTERN},
+                "results": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "$ref": (
+                            f"{_SCHEMA_BASE}/visual-result/"
+                            f"{SCHEMA_VERSION}"
+                        )
+                    },
+                },
+                "metadata": _METADATA,
+            },
+        },
+    }
+)
+
 def schema_for(contract_name: str) -> dict[str, Any]:
     """Return an isolated JSON-compatible schema for a canonical contract."""
     try:

@@ -1,18 +1,27 @@
 # Sprint 5 Gate Status
 
-Last supervisor update: 2026-09-22
+Final status: **COMPLETED — 10/10 PASS**
+
+Human approval and merge completed on 2026-09-22.
 
 | Gate | Status | Evidence |
 | --- | --- | --- |
-| S5.1 | PASS | `feat/sprint-5-prompt-compiler` exists and is identical to merged Sprint 4 `main` at start |
-| S5.2 | IN_PROGRESS | ShotPrompt, PromptPlan, PromptContext and PromptCompiler implemented; CI pending |
-| S5.3 | IN_PROGRESS | CanonicalPromptCompiler assembles storyboard/bible continuity into provider-neutral prompts; CI pending |
-| S5.4 | IN_PROGRESS | one-prompt-per-shot and identity/location/character/duration invariants implemented; CI pending |
-| S5.5 | IN_PROGRESS | JSON round-trip and versioned prompt schemas implemented; CI pending |
-| S5.6 | PASS | generic Core and isolated kids-puppies prompt-plan examples committed |
-| S5.7 | IN_PROGRESS | unit/schema/architecture/provider-neutral tests committed; CI pending |
-| S5.8 | PASS | Prompt Compiler architecture/invariants documented; Sprint 4 status finalized |
-| S5.9 | PENDING | full GitHub Actions baseline not yet executed for Sprint 5 |
-| S5.10 | PENDING | Sprint 5 PR not yet opened |
+| S5.1 | PASS | `feat/sprint-5-prompt-compiler` used for Sprint 5 work |
+| S5.2 | PASS | ShotPrompt, PromptPlan, PromptContext and PromptCompiler implemented |
+| S5.3 | PASS | deterministic CanonicalPromptCompiler implemented |
+| S5.4 | PASS | one-prompt-per-shot identity/location/character/duration invariants implemented |
+| S5.5 | PASS | JSON round-trip and versioned prompt schemas implemented |
+| S5.6 | PASS | generic Core and isolated kids-puppies prompt examples committed |
+| S5.7 | PASS | unit/schema/architecture/provider-neutral tests verified |
+| S5.8 | PASS | Prompt Compiler architecture documented and Sprint 4 status finalized |
+| S5.9 | PASS | GitHub Actions run #14 completed successfully |
+| S5.10 | PASS | PR #6 ready, explicitly approved by user, and merged |
 
-Sprint 6 Visual Generation remains blocked until Sprint 5 is green, reviewed and merged.
+PR #6:
+`https://github.com/josebautista2020/MoneyPrinterTurbo/pull/6`
+
+Successful CI:
+`https://github.com/josebautista2020/MoneyPrinterTurbo/actions/runs/35810353577`
+
+Merge commit:
+`5e6ad1fc5a280de3224689f2b12b21021e8346f6`
