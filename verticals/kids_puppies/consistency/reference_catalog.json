@@ -1,0 +1,50 @@
+{
+  "schema_version": "1.0.0",
+  "project_id": "kids-puppies-demo",
+  "assets": [
+    {
+      "schema_version": "1.0.0",
+      "reference_asset_id": "toby-ref-v1",
+      "uri": "asset://kids-puppies/characters/toby/v1",
+      "media_type": "image/png",
+      "character_id": "toby",
+      "location_id": null,
+      "metadata": {
+        "vertical": "kids_puppies",
+        "original_ip": true,
+        "placeholder": true
+      }
+    },
+    {
+      "schema_version": "1.0.0",
+      "reference_asset_id": "luna-ref-v1",
+      "uri": "asset://kids-puppies/characters/luna/v1",
+      "media_type": "image/png",
+      "character_id": "luna",
+      "location_id": null,
+      "metadata": {
+        "vertical": "kids_puppies",
+        "original_ip": true,
+        "placeholder": true
+      }
+    },
+    {
+      "schema_version": "1.0.0",
+      "reference_asset_id": "park-ref-v1",
+      "uri": "asset://kids-puppies/locations/park/v1",
+      "media_type": "image/png",
+      "character_id": null,
+      "location_id": "parque",
+      "metadata": {
+        "vertical": "kids_puppies",
+        "original_ip": true,
+        "placeholder": true
+      }
+    }
+  ],
+  "metadata": {
+    "vertical": "kids_puppies",
+    "original_ip": true,
+    "placeholder_uris": true
+  }
+}
