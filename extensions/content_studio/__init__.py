@@ -23,6 +23,16 @@ from extensions.content_studio.consistency import (
     bind_consistency_references,
     generate_consistent_visuals,
 )
+from extensions.content_studio.media import (
+    AudioArtifact,
+    MediaAssembler,
+    MediaAssemblyPlan,
+    MediaAssemblyResult,
+    RenderArtifact,
+    SubtitleArtifact,
+    assemble_media,
+    build_media_assembly_plan,
+)
 from extensions.content_studio.prompting import (
     CanonicalPromptCompiler,
     PromptCompiler,
@@ -114,4 +124,12 @@ __all__ = [
     "ReferenceCatalog",
     "bind_consistency_references",
     "generate_consistent_visuals",
+    "AudioArtifact",
+    "MediaAssembler",
+    "MediaAssemblyPlan",
+    "MediaAssemblyResult",
+    "RenderArtifact",
+    "SubtitleArtifact",
+    "assemble_media",
+    "build_media_assembly_plan",
 ]

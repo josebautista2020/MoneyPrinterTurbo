@@ -2,5 +2,6 @@
 
 from .adapter import MPTAdapter
 from .visual import MPTImageVisualGenerator
+from .media import MPTMediaAssembler
 
-__all__ = ["MPTAdapter", "MPTImageVisualGenerator"]
+__all__ = ["MPTAdapter", "MPTImageVisualGenerator", "MPTMediaAssembler"]

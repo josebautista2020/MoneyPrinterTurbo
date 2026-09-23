@@ -1181,6 +1181,146 @@ SCHEMAS.update(
     }
 )
 
+
+SCHEMAS.update(
+    {
+        "MediaAssemblyPlan": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/media-assembly-plan/{SCHEMA_VERSION}",
+            "title": "MediaAssemblyPlan",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version", "assembly_id", "project_id", "story_id",
+                "episode_id", "script", "language", "voice_name",
+                "visual_uris", "visual_kinds", "visual_durations_seconds",
+                "aspect_ratio", "resolution", "output_uri"
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "assembly_id": {"type": "string", "pattern": _ID_PATTERN},
+                "project_id": {"type": "string", "pattern": _ID_PATTERN},
+                "story_id": {"type": "string", "pattern": _ID_PATTERN},
+                "episode_id": {"type": "string", "pattern": _ID_PATTERN},
+                "script": {"type": "string", "minLength": 1},
+                "language": {"type": "string", "minLength": 1},
+                "voice_name": {"type": "string", "minLength": 1},
+                "visual_uris": {
+                    "type": "array", "minItems": 1,
+                    "items": {"type": "string", "minLength": 1}
+                },
+                "visual_kinds": {
+                    "type": "array", "minItems": 1,
+                    "items": {"type": "string", "enum": ["image", "video"]}
+                },
+                "visual_durations_seconds": {
+                    "type": "array", "minItems": 1,
+                    "items": {"type": "number", "exclusiveMinimum": 0}
+                },
+                "aspect_ratio": {"type": "string", "pattern": _ASPECT_RATIO_PATTERN},
+                "resolution": {"type": "string", "pattern": _RESOLUTION_PATTERN},
+                "output_uri": {"type": "string", "minLength": 1},
+                "voice_rate": {"type": "number", "exclusiveMinimum": 0},
+                "voice_volume": {"type": "number", "exclusiveMinimum": 0},
+                "subtitle_enabled": {"type": "boolean"},
+                "subtitle_mode": {"type": "string", "enum": ["sentence", "word_by_word"]},
+                "subtitle_position": {
+                    "type": "string",
+                    "enum": ["top", "bottom", "center", "custom", "two_thirds_bottom"]
+                },
+                "font_name": {"type": "string", "minLength": 1},
+                "font_size": {"type": "integer", "minimum": 1},
+                "text_color": {"type": "string", "minLength": 1},
+                "background_color": {"type": ["string", "null"], "minLength": 1},
+                "rounded_subtitle_background": {"type": "boolean"},
+                "stroke_color": {"type": "string", "minLength": 1},
+                "stroke_width": {"type": "number", "minimum": 0},
+                "clip_duration_seconds": {"type": "integer", "minimum": 1},
+                "fit_mode": {"type": "string", "enum": ["cover", "contain"]},
+                "transition": {
+                    "type": "string",
+                    "enum": ["none", "fade_in", "fade_out", "slide_in", "slide_out", "zoom_in", "zoom_out", "shuffle"]
+                },
+                "metadata": _METADATA
+            }
+        },
+        "AudioArtifact": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/audio-artifact/{SCHEMA_VERSION}",
+            "title": "AudioArtifact",
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["schema_version", "audio_id", "uri", "duration_seconds", "engine", "provider"],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "audio_id": {"type": "string", "pattern": _ID_PATTERN},
+                "uri": {"type": "string", "minLength": 1},
+                "duration_seconds": {"type": "number", "exclusiveMinimum": 0},
+                "engine": {"type": "string", "minLength": 1},
+                "provider": {"type": "string", "minLength": 1},
+                "metadata": _METADATA
+            }
+        },
+        "SubtitleArtifact": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/subtitle-artifact/{SCHEMA_VERSION}",
+            "title": "SubtitleArtifact",
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["schema_version", "subtitle_id", "uri", "format", "cue_count", "engine", "provider"],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "subtitle_id": {"type": "string", "pattern": _ID_PATTERN},
+                "uri": {"type": "string", "minLength": 1},
+                "format": {"type": "string", "minLength": 1},
+                "cue_count": {"type": "integer", "minimum": 1},
+                "engine": {"type": "string", "minLength": 1},
+                "provider": {"type": "string", "minLength": 1},
+                "metadata": _METADATA
+            }
+        },
+        "RenderArtifact": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/render-artifact/{SCHEMA_VERSION}",
+            "title": "RenderArtifact",
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["schema_version", "render_id", "uri", "engine", "provider", "width", "height", "duration_seconds"],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "render_id": {"type": "string", "pattern": _ID_PATTERN},
+                "uri": {"type": "string", "minLength": 1},
+                "engine": {"type": "string", "minLength": 1},
+                "provider": {"type": "string", "minLength": 1},
+                "width": {"type": "integer", "minimum": 1},
+                "height": {"type": "integer", "minimum": 1},
+                "duration_seconds": {"type": "number", "exclusiveMinimum": 0},
+                "metadata": _METADATA
+            }
+        },
+        "MediaAssemblyResult": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/media-assembly-result/{SCHEMA_VERSION}",
+            "title": "MediaAssemblyResult",
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["schema_version", "assembly_id", "engine", "success"],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "assembly_id": {"type": "string", "pattern": _ID_PATTERN},
+                "engine": {"type": "string", "minLength": 1},
+                "success": {"type": "boolean"},
+                "audio": {"anyOf": [{"$ref": f"{_SCHEMA_BASE}/audio-artifact/{SCHEMA_VERSION}"}, {"type": "null"}]},
+                "subtitle": {"anyOf": [{"$ref": f"{_SCHEMA_BASE}/subtitle-artifact/{SCHEMA_VERSION}"}, {"type": "null"}]},
+                "video": {"anyOf": [{"$ref": f"{_SCHEMA_BASE}/render-artifact/{SCHEMA_VERSION}"}, {"type": "null"}]},
+                "error": {"type": ["string", "null"], "minLength": 1},
+                "cost_usd": {"type": ["number", "null"], "minimum": 0},
+                "metadata": _METADATA
+            }
+        }
+    }
+)
+
 def schema_for(contract_name: str) -> dict[str, Any]:
     """Return an isolated JSON-compatible schema for a canonical contract."""
     try:

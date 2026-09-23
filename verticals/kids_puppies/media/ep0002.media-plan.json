@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0.0",
+  "assembly_id": "kids-ep0002-assembly",
+  "project_id": "kids-puppies-demo",
+  "story_id": "kids-story-ep0002",
+  "episode_id": "ep0002",
+  "script": "Toby encuentra una pelota en el parque. Luna le recuerda que alguien podría estar buscándola. Juntos encuentran a su dueño, la devuelven y aprenden que hacer lo correcto también se siente bien.",
+  "language": "es-CO",
+  "voice_name": "kids-demo-voice",
+  "visual_uris": [
+    "generated/kids_puppies/ep0002-s01-a.png",
+    "generated/kids_puppies/ep0002-s02-a.png",
+    "generated/kids_puppies/ep0002-s02-b.png",
+    "generated/kids_puppies/ep0002-s03-a.png",
+    "generated/kids_puppies/ep0002-s03-b.png",
+    "generated/kids_puppies/ep0002-s04-a.png",
+    "generated/kids_puppies/ep0002-s04-b.png",
+    "generated/kids_puppies/ep0002-s05-a.png"
+  ],
+  "visual_kinds": [
+    "image",
+    "image",
+    "image",
+    "image",
+    "image",
+    "image",
+    "image",
+    "image"
+  ],
+  "visual_durations_seconds": [
+    6,
+    5,
+    7,
+    10,
+    10,
+    6,
+    6,
+    10
+  ],
+  "aspect_ratio": "9:16",
+  "resolution": "1080x1920",
+  "output_uri": "generated/kids_puppies/ep0002/master.mp4",
+  "voice_rate": 1,
+  "voice_volume": 1,
+  "subtitle_enabled": true,
+  "subtitle_mode": "sentence",
+  "subtitle_position": "bottom",
+  "font_name": "STHeitiMedium.ttc",
+  "font_size": 60,
+  "text_color": "#FFFFFF",
+  "background_color": "#000000",
+  "rounded_subtitle_background": true,
+  "stroke_color": "#000000",
+  "stroke_width": 1.5,
+  "clip_duration_seconds": 5,
+  "fit_mode": "cover",
+  "transition": "none",
+  "metadata": {
+    "vertical": "kids_puppies",
+    "original_ip": true
+  }
+}

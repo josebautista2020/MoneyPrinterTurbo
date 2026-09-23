@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "assembly_id": "generic-assembly-1",
+  "project_id": "generic-demo",
+  "story_id": "generic-story-2",
+  "episode_id": "episode-2",
+  "script": "A clear explanation introduces one useful idea, shows a simple example, and closes with the main takeaway.",
+  "language": "en-US",
+  "voice_name": "example-voice",
+  "visual_uris": [
+    "generated/generic/shot-1.png",
+    "generated/generic/shot-2a.png",
+    "generated/generic/shot-2b.png",
+    "generated/generic/shot-3.png"
+  ],
+  "visual_kinds": [
+    "image",
+    "image",
+    "image",
+    "image"
+  ],
+  "visual_durations_seconds": [
+    5,
+    7,
+    8,
+    10
+  ],
+  "aspect_ratio": "9:16",
+  "resolution": "1080x1920",
+  "output_uri": "generated/generic/final.mp4",
+  "voice_rate": 1,
+  "voice_volume": 1,
+  "subtitle_enabled": true,
+  "subtitle_mode": "sentence",
+  "subtitle_position": "bottom",
+  "font_name": "STHeitiMedium.ttc",
+  "font_size": 60,
+  "text_color": "#FFFFFF",
+  "background_color": null,
+  "rounded_subtitle_background": false,
+  "stroke_color": "#000000",
+  "stroke_width": 1.5,
+  "clip_duration_seconds": 5,
+  "fit_mode": "cover",
+  "transition": "none",
+  "metadata": {
+    "example": true
+  }
+}
