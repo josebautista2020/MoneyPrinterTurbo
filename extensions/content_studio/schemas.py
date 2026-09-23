@@ -1557,7 +1557,7 @@ SCHEMAS.update(
                 "safety_blocked": {"type": "boolean"},
                 "render_qa_passed": {"type": "boolean"},
                 "eligible_for_human_review": {"type": "boolean"},
-                "publication_allowed": {"const": false},
+                "publication_allowed": {"const": False},
                 "missing_safety_modalities": {
                     "type": "array",
                     "uniqueItems": True,
