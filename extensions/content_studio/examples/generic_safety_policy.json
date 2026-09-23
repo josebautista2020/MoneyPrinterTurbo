@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0.0",
+  "policy_id": "generic-safety-v1",
+  "audience_min_age": 13,
+  "audience_max_age": 99,
+  "rules": [
+    {
+      "schema_version": "1.0.0",
+      "rule_id": "generic-graphic-violence",
+      "category": "graphic_violence",
+      "severity": "block",
+      "terms": [
+        "gore",
+        "decapitation"
+      ],
+      "description": "Blocks explicit graphic violence in the generic example."
+    },
+    {
+      "schema_version": "1.0.0",
+      "rule_id": "generic-self-harm",
+      "category": "self_harm",
+      "severity": "block",
+      "terms": [
+        "suicide",
+        "self-harm"
+      ],
+      "description": "Blocks explicit self-harm references in the generic example."
+    }
+  ],
+  "required_modalities": [
+    "script",
+    "subtitle",
+    "audio",
+    "visual"
+  ],
+  "metadata": {
+    "example": true,
+    "preflight_rules_not_exhaustive": true
+  }
+}
