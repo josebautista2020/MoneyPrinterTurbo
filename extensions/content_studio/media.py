@@ -96,6 +96,18 @@ def _unique_texts(
     return normalized
 
 
+def _texts(
+    values: tuple[str, ...] | list[str],
+    field_name: str,
+    *,
+    required: bool = False,
+) -> tuple[str, ...]:
+    normalized = tuple(_require_text(value, field_name) for value in values)
+    if required and not normalized:
+        raise DomainValidationError(f"{field_name} must contain at least one value")
+    return normalized
+
+
 def _metadata(value: Mapping[str, Any]) -> dict[str, Any]:
     if not isinstance(value, Mapping):
         raise DomainValidationError("metadata must be a mapping")
@@ -143,6 +155,7 @@ class MediaAssemblyPlan(JsonContract):
     language: str
     voice_name: str
     visual_uris: tuple[str, ...]
+    visual_kinds: tuple[str, ...]
     visual_durations_seconds: tuple[float, ...]
     aspect_ratio: str
     resolution: str
@@ -189,8 +202,21 @@ class MediaAssemblyPlan(JsonContract):
         object.__setattr__(
             self,
             "visual_uris",
-            _unique_texts(self.visual_uris, "visual_uris", required=True),
+            _texts(self.visual_uris, "visual_uris", required=True),
         )
+        visual_kinds = tuple(
+            _require_text(value, "visual_kinds")
+            for value in self.visual_kinds
+        )
+        if len(visual_kinds) != len(self.visual_uris):
+            raise DomainValidationError(
+                "visual_kinds must align one-to-one with visual_uris"
+            )
+        if any(kind not in {"image", "video"} for kind in visual_kinds):
+            raise DomainValidationError(
+                "visual_kinds values must be 'image' or 'video'"
+            )
+        object.__setattr__(self, "visual_kinds", visual_kinds)
         durations = tuple(
             _positive_number(value, "visual_durations_seconds")
             for value in self.visual_durations_seconds
@@ -299,6 +325,7 @@ class MediaAssemblyPlan(JsonContract):
                 "language",
                 "voice_name",
                 "visual_uris",
+                "visual_kinds",
                 "visual_durations_seconds",
                 "aspect_ratio",
                 "resolution",
@@ -322,6 +349,7 @@ class MediaAssemblyPlan(JsonContract):
             },
         )
         data["visual_uris"] = tuple(data.get("visual_uris", ()))
+        data["visual_kinds"] = tuple(data.get("visual_kinds", ()))
         data["visual_durations_seconds"] = tuple(
             data.get("visual_durations_seconds", ())
         )
@@ -597,6 +625,7 @@ def build_media_assembly_plan(
         )
 
     visual_uris = []
+    visual_kinds = []
     visual_durations = []
     for result in consistency_report.results:
         attempt = result.final_attempt
@@ -610,6 +639,7 @@ def build_media_assembly_plan(
                 "accepted consistency result has no visual artifact"
             )
         visual_uris.append(artifacts[0].uri)
+        visual_kinds.append(artifacts[0].asset_kind)
         duration = artifacts[0].duration_seconds
         if duration is None:
             raise DomainValidationError(
@@ -626,6 +656,7 @@ def build_media_assembly_plan(
         language=language,
         voice_name=voice_name,
         visual_uris=tuple(visual_uris),
+        visual_kinds=tuple(visual_kinds),
         visual_durations_seconds=tuple(visual_durations),
         aspect_ratio=project.aspect_ratio,
         resolution=project.resolution,
