@@ -112,6 +112,11 @@ def _joined(values: tuple[str, ...]) -> str:
     return ", ".join(values)
 
 
+def _clause(label: str, value: str) -> str:
+    normalized = value.strip().rstrip(".")
+    return f"{label}: {normalized}."
+
+
 @dataclass(frozen=True, slots=True)
 class ShotPrompt(JsonContract):
     """Provider-neutral compiled prompt for one storyboard shot."""
@@ -369,16 +374,18 @@ class CanonicalPromptCompiler:
                 ]
 
                 clauses = [
-                    f"Action: {shot.visual_action}.",
-                    f"Framing: {shot.framing}.",
-                    f"Location: {location.description}.",
+                    _clause("Action", shot.visual_action),
+                    _clause("Framing", shot.framing),
+                    _clause("Location", location.description),
                 ]
 
                 if shot.camera_angle:
-                    clauses.append(f"Camera angle: {shot.camera_angle}.")
+                    clauses.append(
+                        _clause("Camera angle", shot.camera_angle)
+                    )
                 if shot.camera_movement:
                     clauses.append(
-                        f"Camera movement: {shot.camera_movement}."
+                        _clause("Camera movement", shot.camera_movement)
                     )
                 if location.visual_traits:
                     clauses.append(
