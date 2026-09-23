@@ -940,6 +940,247 @@ SCHEMAS.update(
     }
 )
 
+
+SCHEMAS.update(
+    {
+        "ReferenceAsset": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/reference-asset/{SCHEMA_VERSION}",
+            "title": "ReferenceAsset",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "reference_asset_id",
+                "uri",
+                "media_type",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "reference_asset_id": {
+                    "type": "string",
+                    "pattern": _ID_PATTERN,
+                },
+                "uri": {"type": "string", "minLength": 1},
+                "media_type": {"type": "string", "minLength": 1},
+                "character_id": {
+                    "type": ["string", "null"],
+                    "pattern": _ID_PATTERN,
+                },
+                "location_id": {
+                    "type": ["string", "null"],
+                    "pattern": _ID_PATTERN,
+                },
+                "metadata": _METADATA,
+            },
+        },
+        "ReferenceCatalog": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/reference-catalog/{SCHEMA_VERSION}",
+            "title": "ReferenceCatalog",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "project_id",
+                "assets",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "project_id": {"type": "string", "pattern": _ID_PATTERN},
+                "assets": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "$ref": (
+                            f"{_SCHEMA_BASE}/reference-asset/"
+                            f"{SCHEMA_VERSION}"
+                        )
+                    },
+                },
+                "metadata": _METADATA,
+            },
+        },
+        "ConsistencyAssessment": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": (
+                f"{_SCHEMA_BASE}/consistency-assessment/"
+                f"{SCHEMA_VERSION}"
+            ),
+            "title": "ConsistencyAssessment",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "request_id",
+                "evaluator",
+                "identity_score",
+                "appearance_score",
+                "wardrobe_score",
+                "environment_score",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "request_id": {"type": "string", "pattern": _ID_PATTERN},
+                "evaluator": {"type": "string", "minLength": 1},
+                "identity_score": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                },
+                "appearance_score": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                },
+                "wardrobe_score": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                },
+                "environment_score": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                },
+                "notes": {
+                    "type": "array",
+                    "items": {"type": "string", "minLength": 1},
+                    "uniqueItems": True,
+                },
+                "metadata": _METADATA,
+            },
+        },
+        "ConsistencyPolicy": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/consistency-policy/{SCHEMA_VERSION}",
+            "title": "ConsistencyPolicy",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "minimum_overall_score",
+                "minimum_identity_score",
+                "max_attempts",
+                "require_references_for_characters",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "minimum_overall_score": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                },
+                "minimum_identity_score": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                },
+                "max_attempts": {"type": "integer", "minimum": 1},
+                "require_references_for_characters": {"type": "boolean"},
+                "metadata": _METADATA,
+            },
+        },
+        "ConsistencyAttempt": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/consistency-attempt/{SCHEMA_VERSION}",
+            "title": "ConsistencyAttempt",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "attempt_number",
+                "visual_result",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "attempt_number": {"type": "integer", "minimum": 1},
+                "visual_result": {
+                    "$ref": (
+                        f"{_SCHEMA_BASE}/visual-result/"
+                        f"{SCHEMA_VERSION}"
+                    )
+                },
+                "assessment": {
+                    "anyOf": [
+                        {
+                            "$ref": (
+                                f"{_SCHEMA_BASE}/consistency-assessment/"
+                                f"{SCHEMA_VERSION}"
+                            )
+                        },
+                        {"type": "null"},
+                    ]
+                },
+                "metadata": _METADATA,
+            },
+        },
+        "ConsistentVisualResult": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": (
+                f"{_SCHEMA_BASE}/consistent-visual-result/"
+                f"{SCHEMA_VERSION}"
+            ),
+            "title": "ConsistentVisualResult",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "request_id",
+                "accepted",
+                "attempts",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "request_id": {"type": "string", "pattern": _ID_PATTERN},
+                "accepted": {"type": "boolean"},
+                "attempts": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "$ref": (
+                            f"{_SCHEMA_BASE}/consistency-attempt/"
+                            f"{SCHEMA_VERSION}"
+                        )
+                    },
+                },
+                "metadata": _METADATA,
+            },
+        },
+        "ConsistencyReport": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/consistency-report/{SCHEMA_VERSION}",
+            "title": "ConsistencyReport",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "project_id",
+                "story_id",
+                "episode_id",
+                "results",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "project_id": {"type": "string", "pattern": _ID_PATTERN},
+                "story_id": {"type": "string", "pattern": _ID_PATTERN},
+                "episode_id": {"type": "string", "pattern": _ID_PATTERN},
+                "results": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "$ref": (
+                            f"{_SCHEMA_BASE}/consistent-visual-result/"
+                            f"{SCHEMA_VERSION}"
+                        )
+                    },
+                },
+                "metadata": _METADATA,
+            },
+        },
+    }
+)
+
 def schema_for(contract_name: str) -> dict[str, Any]:
     """Return an isolated JSON-compatible schema for a canonical contract."""
     try:
