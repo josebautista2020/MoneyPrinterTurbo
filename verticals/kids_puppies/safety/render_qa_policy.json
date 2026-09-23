@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0.0",
+  "minimum_duration_seconds": 55,
+  "maximum_duration_seconds": 80,
+  "duration_tolerance_seconds": 1,
+  "require_audio": true,
+  "require_subtitles": true,
+  "require_consistency_pass": true,
+  "metadata": {
+    "vertical": "kids_puppies",
+    "target_duration_seconds": "60-75",
+    "human_review_required": true
+  }
+}

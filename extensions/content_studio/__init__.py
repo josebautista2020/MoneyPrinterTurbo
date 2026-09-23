@@ -51,6 +51,24 @@ from extensions.content_studio.visual_generation import (
     build_visual_generation_plan,
     generate_visuals,
 )
+from extensions.content_studio.safety import (
+    SafetyAssessment,
+    SafetyFinding,
+    SafetyPolicy,
+    SafetyReviewRequest,
+    SafetyReviewer,
+    SafetyRule,
+    TextRuleSafetyReviewer,
+    evaluate_safety_coverage,
+)
+from extensions.content_studio.quality import (
+    HumanReviewGate,
+    QACheck,
+    RenderQAPolicy,
+    RenderQAReport,
+    build_human_review_gate,
+    evaluate_render_qa,
+)
 from extensions.content_studio.story import (
     StoryBeat,
     StoryBrief,
@@ -132,4 +150,18 @@ __all__ = [
     "SubtitleArtifact",
     "assemble_media",
     "build_media_assembly_plan",
+    "SafetyAssessment",
+    "SafetyFinding",
+    "SafetyPolicy",
+    "SafetyReviewRequest",
+    "SafetyReviewer",
+    "SafetyRule",
+    "TextRuleSafetyReviewer",
+    "evaluate_safety_coverage",
+    "HumanReviewGate",
+    "QACheck",
+    "RenderQAPolicy",
+    "RenderQAReport",
+    "build_human_review_gate",
+    "evaluate_render_qa",
 ]

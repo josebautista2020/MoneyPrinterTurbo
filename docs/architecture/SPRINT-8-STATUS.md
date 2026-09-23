@@ -1,18 +1,32 @@
 # Sprint 8 Gate Status
 
-Last supervisor update: 2026-09-23
+Final status: **COMPLETED — 10/10 PASS**
+
+Human approval and protected merge completed on 2026-09-23.
 
 | Gate | Status | Evidence |
 | --- | --- | --- |
-| S8.1 | PASS | `feat/sprint-8-audio-subtitles-render` active from merged Sprint 7 main |
-| S8.2 | IN_PROGRESS | MediaAssemblyPlan/artifacts/result/MediaAssembler implemented; CI pending |
-| S8.3 | IN_PROGRESS | build_media_assembly_plan requires accepted ConsistencyReport and preserves visual kinds/durations; CI pending |
-| S8.4 | IN_PROGRESS | MPTMediaAssembler uses real voice/subtitle/video services behind ACL; CI pending |
-| S8.5 | IN_PROGRESS | fail-closed external generation and max-cost preflight implemented; CI pending |
-| S8.6 | PASS | versioned schemas plus generic and kids-puppies media-plan examples committed |
-| S8.7 | IN_PROGRESS | core/schema/budget/adapter/architecture tests committed with heavy/external calls mocked; CI pending |
-| S8.8 | PASS | Audio/Subtitles/Render architecture documented; Sprint 7 status finalized |
-| S8.9 | PENDING | full GitHub Actions baseline not yet executed |
-| S8.10 | PENDING | Sprint 8 PR not yet opened |
+| S8.1 | PASS | `feat/sprint-8-audio-subtitles-render` used for Sprint 8 work |
+| S8.2 | PASS | MediaAssemblyPlan/artifacts/result/MediaAssembler implemented |
+| S8.3 | PASS | accepted ConsistencyReport -> MediaAssemblyPlan traceability implemented |
+| S8.4 | PASS | MPTMediaAssembler uses real MPT voice/subtitle/video services behind ACL |
+| S8.5 | PASS | fail-closed external generation and max-cost preflight implemented |
+| S8.6 | PASS | versioned schemas plus generic and kids-puppies examples committed |
+| S8.7 | PASS | core/schema/budget/adapter/architecture tests verified |
+| S8.8 | PASS | Audio/Subtitles/Render architecture documented |
+| S8.9 | PASS | GitHub Actions run #20 completed successfully |
+| S8.10 | PASS | PR #9 ready, explicitly approved by user, and merged |
 
-Sprint 9 Kids Safety + QA remains blocked until Sprint 8 is green, reviewed and merged.
+PR #9:
+`https://github.com/josebautista2020/MoneyPrinterTurbo/pull/9`
+
+Successful CI:
+`https://github.com/josebautista2020/MoneyPrinterTurbo/actions/runs/35860558455`
+
+CI evidence:
+- Python 3.11: 1311 upstream passed, 16 skipped, 10616 subtests passed; 162 Content Studio tests; 81% coverage
+- Python 3.13: 1311 upstream passed, 16 skipped, 10616 subtests passed; 162 Content Studio tests; 81% coverage
+- Windows: 168 smoke tests passed, 4 skipped, 64 subtests passed; 162 Content Studio tests
+
+Merge commit:
+`d921afee60399324df0a5e38003773dd5b1fd891`

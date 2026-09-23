@@ -1321,6 +1321,257 @@ SCHEMAS.update(
     }
 )
 
+
+SCHEMAS.update(
+    {
+        "SafetyRule": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/safety-rule/{SCHEMA_VERSION}",
+            "title": "SafetyRule",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version", "rule_id", "category",
+                "severity", "terms", "description"
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "rule_id": {"type": "string", "pattern": _ID_PATTERN},
+                "category": {"type": "string", "pattern": _ID_PATTERN},
+                "severity": {
+                    "type": "string",
+                    "enum": ["info", "warning", "block"]
+                },
+                "terms": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": True,
+                    "items": {"type": "string", "minLength": 1}
+                },
+                "description": {"type": "string", "minLength": 1}
+            }
+        },
+        "SafetyPolicy": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/safety-policy/{SCHEMA_VERSION}",
+            "title": "SafetyPolicy",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version", "policy_id", "audience_min_age",
+                "audience_max_age", "rules", "required_modalities"
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "policy_id": {"type": "string", "pattern": _ID_PATTERN},
+                "audience_min_age": {"type": "integer", "minimum": 0},
+                "audience_max_age": {"type": "integer", "minimum": 0},
+                "rules": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "$ref": (
+                            f"{_SCHEMA_BASE}/safety-rule/"
+                            f"{SCHEMA_VERSION}"
+                        )
+                    }
+                },
+                "required_modalities": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": True,
+                    "items": {
+                        "type": "string",
+                        "enum": ["script", "subtitle", "audio", "visual", "metadata"]
+                    }
+                },
+                "metadata": _METADATA
+            }
+        },
+        "SafetyReviewRequest": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/safety-review-request/{SCHEMA_VERSION}",
+            "title": "SafetyReviewRequest",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version", "request_id", "project_id",
+                "episode_id", "script"
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "request_id": {"type": "string", "pattern": _ID_PATTERN},
+                "project_id": {"type": "string", "pattern": _ID_PATTERN},
+                "episode_id": {"type": "string", "pattern": _ID_PATTERN},
+                "script": {"type": "string", "minLength": 1},
+                "subtitle_text": {"type": "string"},
+                "audio_uri": {"type": ["string", "null"], "minLength": 1},
+                "visual_uris": {
+                    "type": "array",
+                    "uniqueItems": True,
+                    "items": {"type": "string", "minLength": 1}
+                },
+                "metadata": _METADATA
+            }
+        },
+        "SafetyFinding": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/safety-finding/{SCHEMA_VERSION}",
+            "title": "SafetyFinding",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version", "finding_id", "category",
+                "severity", "modality", "evidence"
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "finding_id": {"type": "string", "pattern": _ID_PATTERN},
+                "category": {"type": "string", "pattern": _ID_PATTERN},
+                "severity": {
+                    "type": "string",
+                    "enum": ["info", "warning", "block"]
+                },
+                "modality": {
+                    "type": "string",
+                    "enum": ["script", "subtitle", "audio", "visual", "metadata"]
+                },
+                "evidence": {"type": "string", "minLength": 1},
+                "rule_id": {
+                    "type": ["string", "null"],
+                    "pattern": _ID_PATTERN
+                },
+                "metadata": _METADATA
+            }
+        },
+        "SafetyAssessment": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/safety-assessment/{SCHEMA_VERSION}",
+            "title": "SafetyAssessment",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version", "request_id", "reviewer",
+                "reviewed_modalities", "findings"
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "request_id": {"type": "string", "pattern": _ID_PATTERN},
+                "reviewer": {"type": "string", "minLength": 1},
+                "reviewed_modalities": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": True,
+                    "items": {
+                        "type": "string",
+                        "enum": ["script", "subtitle", "audio", "visual", "metadata"]
+                    }
+                },
+                "findings": {
+                    "type": "array",
+                    "items": {
+                        "$ref": (
+                            f"{_SCHEMA_BASE}/safety-finding/"
+                            f"{SCHEMA_VERSION}"
+                        )
+                    }
+                },
+                "metadata": _METADATA
+            }
+        },
+        "RenderQAPolicy": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/render-qa-policy/{SCHEMA_VERSION}",
+            "title": "RenderQAPolicy",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version", "minimum_duration_seconds",
+                "maximum_duration_seconds", "duration_tolerance_seconds",
+                "require_audio", "require_subtitles",
+                "require_consistency_pass"
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "minimum_duration_seconds": {"type": "number", "minimum": 0},
+                "maximum_duration_seconds": {"type": "number", "minimum": 0},
+                "duration_tolerance_seconds": {"type": "number", "minimum": 0},
+                "require_audio": {"type": "boolean"},
+                "require_subtitles": {"type": "boolean"},
+                "require_consistency_pass": {"type": "boolean"},
+                "metadata": _METADATA
+            }
+        },
+        "QACheck": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/qa-check/{SCHEMA_VERSION}",
+            "title": "QACheck",
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["schema_version", "check_id", "passed", "message"],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "check_id": {"type": "string", "minLength": 1},
+                "passed": {"type": "boolean"},
+                "message": {"type": "string", "minLength": 1}
+            }
+        },
+        "RenderQAReport": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/render-qa-report/{SCHEMA_VERSION}",
+            "title": "RenderQAReport",
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["schema_version", "project_id", "episode_id", "checks"],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "project_id": {"type": "string", "minLength": 1},
+                "episode_id": {"type": "string", "minLength": 1},
+                "checks": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "$ref": f"{_SCHEMA_BASE}/qa-check/{SCHEMA_VERSION}"
+                    }
+                },
+                "metadata": _METADATA
+            }
+        },
+        "HumanReviewGate": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/human-review-gate/{SCHEMA_VERSION}",
+            "title": "HumanReviewGate",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version", "project_id", "episode_id",
+                "safety_complete", "safety_blocked",
+                "render_qa_passed", "eligible_for_human_review",
+                "publication_allowed", "missing_safety_modalities"
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "project_id": {"type": "string", "minLength": 1},
+                "episode_id": {"type": "string", "minLength": 1},
+                "safety_complete": {"type": "boolean"},
+                "safety_blocked": {"type": "boolean"},
+                "render_qa_passed": {"type": "boolean"},
+                "eligible_for_human_review": {"type": "boolean"},
+                "publication_allowed": {"const": False},
+                "missing_safety_modalities": {
+                    "type": "array",
+                    "uniqueItems": True,
+                    "items": {
+                        "type": "string",
+                        "enum": ["script", "subtitle", "audio", "visual", "metadata"]
+                    }
+                },
+                "metadata": _METADATA
+            }
+        }
+    }
+)
+
 def schema_for(contract_name: str) -> dict[str, Any]:
     """Return an isolated JSON-compatible schema for a canonical contract."""
     try:

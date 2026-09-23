@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0.0",
+  "minimum_duration_seconds": 5,
+  "maximum_duration_seconds": 120,
+  "duration_tolerance_seconds": 1,
+  "require_audio": true,
+  "require_subtitles": true,
+  "require_consistency_pass": true,
+  "metadata": {
+    "example": true
+  }
+}
