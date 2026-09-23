@@ -15,13 +15,13 @@ if str(root_dir) in sys.path:
     sys.path.remove(str(root_dir))
 sys.path.insert(0, str(root_dir))
 
-from extensions.content_studio.domain import DomainValidationError
-from extensions.content_studio.review import (
+from extensions.content_studio.domain import DomainValidationError  # noqa: E402
+from extensions.content_studio.review import (  # noqa: E402
     ReviewDecision,
     ReviewPackage,
     validate_review_decision,
 )
-from extensions.human_review_ui.store import JsonlReviewDecisionStore
+from extensions.human_review_ui.store import JsonlReviewDecisionStore  # noqa: E402
 
 st.set_page_config(
     page_title="Content Studio — Human Review",
