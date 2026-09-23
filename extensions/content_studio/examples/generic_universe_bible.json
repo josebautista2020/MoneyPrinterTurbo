@@ -23,7 +23,9 @@
       "forbidden_changes": [
         "do not introduce branded elements"
       ],
-      "reference_asset_ids": [],
+      "reference_asset_ids": [
+        "studio-ref-v1"
+      ],
       "metadata": {
         "example": true
       }
