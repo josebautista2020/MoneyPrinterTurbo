@@ -10,6 +10,14 @@ from extensions.content_studio.bibles import (
     LocationProfile,
     UniverseBible,
 )
+from extensions.content_studio.prompting import (
+    CanonicalPromptCompiler,
+    PromptCompiler,
+    PromptContext,
+    PromptPlan,
+    ShotPrompt,
+    compile_prompts,
+)
 from extensions.content_studio.story import (
     StoryBeat,
     StoryBrief,
@@ -58,4 +66,10 @@ __all__ = [
     "StoryboardScene",
     "StoryboardShot",
     "generate_storyboard",
+    "CanonicalPromptCompiler",
+    "PromptCompiler",
+    "PromptContext",
+    "PromptPlan",
+    "ShotPrompt",
+    "compile_prompts",
 ]
