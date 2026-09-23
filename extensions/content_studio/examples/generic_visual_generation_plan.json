@@ -1,0 +1,120 @@
+{
+  "schema_version": "1.0.0",
+  "project_id": "generic-demo",
+  "story_id": "generic-story-2",
+  "episode_id": "episode-2",
+  "requests": [
+    {
+      "schema_version": "1.0.0",
+      "request_id": "shot-1",
+      "project_id": "generic-demo",
+      "story_id": "generic-story-2",
+      "episode_id": "episode-2",
+      "scene_id": "sb-scene-1",
+      "shot_id": "shot-1",
+      "prompt": "Action: The guide faces camera and introduces the topic. Framing: medium shot. Location: A neutral production studio used by the generic example. Camera angle: eye level. Location visual traits: clean background, soft practical lighting. Ambience: quiet, controlled. Location continuity: keep the main presentation wall in the same position. World continuity: The generic example must remain provider-neutral and brand-neutral. Character guide-1: signature features blue jacket, clean studio silhouette; wardrobe blue jacket. Composition: keep the guide centered. Shot continuity: preserve blue jacket and studio wall.",
+      "aspect_ratio": "9:16",
+      "resolution": "1080x1920",
+      "duration_seconds": 5,
+      "character_ids": [
+        "guide-1"
+      ],
+      "negative_constraints": [
+        "do not introduce branded elements",
+        "do not change jacket color without an explicit project revision"
+      ],
+      "reference_asset_ids": [],
+      "asset_kind": "image",
+      "metadata": {
+        "source_prompt_id": "shot-1",
+        "location_id": "studio",
+        "example": true
+      }
+    },
+    {
+      "schema_version": "1.0.0",
+      "request_id": "shot-2a",
+      "project_id": "generic-demo",
+      "story_id": "generic-story-2",
+      "episode_id": "episode-2",
+      "scene_id": "sb-scene-2",
+      "shot_id": "shot-2a",
+      "prompt": "Action: The guide introduces a simple visual example. Framing: medium shot. Location: A neutral production studio used by the generic example. Camera angle: eye level. Location visual traits: clean background, soft practical lighting. Ambience: quiet, controlled. Location continuity: keep the main presentation wall in the same position. World continuity: The generic example must remain provider-neutral and brand-neutral. Character guide-1: signature features blue jacket, clean studio silhouette; wardrobe blue jacket. Composition: leave negative space for the example. Shot continuity: keep the presentation wall fixed.",
+      "aspect_ratio": "9:16",
+      "resolution": "1080x1920",
+      "duration_seconds": 7,
+      "character_ids": [
+        "guide-1"
+      ],
+      "negative_constraints": [
+        "do not introduce branded elements",
+        "do not change jacket color without an explicit project revision"
+      ],
+      "reference_asset_ids": [],
+      "asset_kind": "image",
+      "metadata": {
+        "source_prompt_id": "shot-2a",
+        "location_id": "studio",
+        "example": true
+      }
+    },
+    {
+      "schema_version": "1.0.0",
+      "request_id": "shot-2b",
+      "project_id": "generic-demo",
+      "story_id": "generic-story-2",
+      "episode_id": "episode-2",
+      "scene_id": "sb-scene-2",
+      "shot_id": "shot-2b",
+      "prompt": "Action: The guide completes the explanation and returns focus to camera. Framing: medium close-up. Location: A neutral production studio used by the generic example. Camera angle: eye level. Camera movement: slow push in. Location visual traits: clean background, soft practical lighting. Ambience: quiet, controlled. Location continuity: keep the main presentation wall in the same position. World continuity: The generic example must remain provider-neutral and brand-neutral. Character guide-1: signature features blue jacket, clean studio silhouette; wardrobe blue jacket. Composition: guide remains primary focal point. Shot continuity: same wardrobe and studio layout.",
+      "aspect_ratio": "9:16",
+      "resolution": "1080x1920",
+      "duration_seconds": 8,
+      "character_ids": [
+        "guide-1"
+      ],
+      "negative_constraints": [
+        "do not introduce branded elements",
+        "do not change jacket color without an explicit project revision"
+      ],
+      "reference_asset_ids": [],
+      "asset_kind": "image",
+      "metadata": {
+        "source_prompt_id": "shot-2b",
+        "location_id": "studio",
+        "example": true
+      }
+    },
+    {
+      "schema_version": "1.0.0",
+      "request_id": "shot-3",
+      "project_id": "generic-demo",
+      "story_id": "generic-story-2",
+      "episode_id": "episode-2",
+      "scene_id": "sb-scene-3",
+      "shot_id": "shot-3",
+      "prompt": "Action: The guide gives the closing takeaway with a friendly expression. Framing: medium close-up. Location: A neutral production studio used by the generic example. Camera angle: eye level. Location visual traits: clean background, soft practical lighting. Ambience: quiet, controlled. Location continuity: keep the main presentation wall in the same position. World continuity: The generic example must remain provider-neutral and brand-neutral. Character guide-1: signature features blue jacket, clean studio silhouette; wardrobe blue jacket. Composition: simple uncluttered frame. Shot continuity: maintain established lighting and wardrobe.",
+      "aspect_ratio": "9:16",
+      "resolution": "1080x1920",
+      "duration_seconds": 10,
+      "character_ids": [
+        "guide-1"
+      ],
+      "negative_constraints": [
+        "do not introduce branded elements",
+        "do not change jacket color without an explicit project revision"
+      ],
+      "reference_asset_ids": [],
+      "asset_kind": "image",
+      "metadata": {
+        "source_prompt_id": "shot-3",
+        "location_id": "studio",
+        "example": true
+      }
+    }
+  ],
+  "metadata": {
+    "source": "PromptPlan",
+    "example": true
+  }
+}
