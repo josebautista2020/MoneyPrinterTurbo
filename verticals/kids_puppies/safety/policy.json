@@ -1,0 +1,114 @@
+{
+  "schema_version": "1.0.0",
+  "policy_id": "kids-puppies-safety-v1",
+  "audience_min_age": 4,
+  "audience_max_age": 9,
+  "rules": [
+    {
+      "schema_version": "1.0.0",
+      "rule_id": "kids-graphic-violence",
+      "category": "graphic_violence",
+      "severity": "block",
+      "terms": [
+        "gore",
+        "decapitation",
+        "blood everywhere"
+      ],
+      "description": "Block explicit or graphic violence for the child audience."
+    },
+    {
+      "schema_version": "1.0.0",
+      "rule_id": "kids-sexual-content",
+      "category": "sexual_content",
+      "severity": "block",
+      "terms": [
+        "explicit sexual",
+        "pornography"
+      ],
+      "description": "Block sexual content for the child audience."
+    },
+    {
+      "schema_version": "1.0.0",
+      "rule_id": "kids-self-harm",
+      "category": "self_harm",
+      "severity": "block",
+      "terms": [
+        "suicide",
+        "kill myself",
+        "self-harm"
+      ],
+      "description": "Block self-harm or suicide references."
+    },
+    {
+      "schema_version": "1.0.0",
+      "rule_id": "kids-substances",
+      "category": "substances",
+      "severity": "block",
+      "terms": [
+        "cigarette",
+        "vape",
+        "whiskey",
+        "beer"
+      ],
+      "description": "Block tobacco, vaping and alcohol references in this vertical."
+    },
+    {
+      "schema_version": "1.0.0",
+      "rule_id": "kids-gambling",
+      "category": "gambling",
+      "severity": "block",
+      "terms": [
+        "casino",
+        "bet money"
+      ],
+      "description": "Block gambling references."
+    },
+    {
+      "schema_version": "1.0.0",
+      "rule_id": "kids-frightening-content",
+      "category": "frightening_content",
+      "severity": "warning",
+      "terms": [
+        "zombie",
+        "demon",
+        "terrifying nightmare"
+      ],
+      "description": "Escalate potentially frightening material for review."
+    },
+    {
+      "schema_version": "1.0.0",
+      "rule_id": "kids-dangerous-imitation",
+      "category": "dangerous_imitation",
+      "severity": "warning",
+      "terms": [
+        "play with fire",
+        "run into traffic",
+        "climb on the roof"
+      ],
+      "description": "Escalate behavior a child could imitate dangerously."
+    },
+    {
+      "schema_version": "1.0.0",
+      "rule_id": "kids-bullying",
+      "category": "bullying",
+      "severity": "warning",
+      "terms": [
+        "everyone hates you",
+        "you are worthless"
+      ],
+      "description": "Escalate humiliating or bullying language."
+    }
+  ],
+  "required_modalities": [
+    "script",
+    "subtitle",
+    "audio",
+    "visual"
+  ],
+  "metadata": {
+    "vertical": "kids_puppies",
+    "original_ip": true,
+    "text_rules_are_preflight_only": true,
+    "human_review_required": true
+  }
+}
