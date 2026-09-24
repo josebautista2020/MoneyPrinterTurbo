@@ -33,6 +33,7 @@ class AdapterDescriptor:
     allowed_options: frozenset[str]
     required_options: frozenset[str] = frozenset()
     required_secret_refs: tuple[str, ...] = ()
+    paid_authorization_required: bool = False
 
 
 class EnvironmentSecretAvailability(SecretAvailability):
@@ -58,6 +59,7 @@ class RuntimeProviderRegistry:
                 allowed_options=frozenset(
                     {"cost_per_image_usd", "save_dir"}
                 ),
+                paid_authorization_required=True,
             ),
             "openai-reference-image": AdapterDescriptor(
                 adapter="openai-reference-image",
@@ -75,6 +77,7 @@ class RuntimeProviderRegistry:
                     {"response_model", "image_model", "reference_catalog_path"}
                 ),
                 required_secret_refs=("env:OPENAI_API_KEY",),
+                paid_authorization_required=True,
             ),
             "mpt-media": AdapterDescriptor(
                 adapter="mpt-media",
@@ -158,6 +161,54 @@ class RuntimeProviderRegistry:
                 )
         return descriptor
 
+
+    @staticmethod
+    def _string_option(
+        options: Mapping[str, Any],
+        name: str,
+        *,
+        default: str | None = None,
+    ) -> str:
+        value = options.get(name, default)
+        if not isinstance(value, str) or not value.strip():
+            raise DomainValidationError(
+                f"runtime option {name!r} must be a non-empty string"
+            )
+        return value.strip()
+
+    @staticmethod
+    def _number_option(
+        options: Mapping[str, Any],
+        name: str,
+    ) -> float | None:
+        value = options.get(name)
+        if value is None:
+            return None
+        if isinstance(value, bool) or not isinstance(value, (int, float)):
+            raise DomainValidationError(
+                f"runtime option {name!r} must be a number or null"
+            )
+        value = float(value)
+        if value < 0:
+            raise DomainValidationError(
+                f"runtime option {name!r} must be non-negative"
+            )
+        return value
+
+    @staticmethod
+    def _bool_option(
+        options: Mapping[str, Any],
+        name: str,
+        *,
+        default: bool,
+    ) -> bool:
+        value = options.get(name, default)
+        if not isinstance(value, bool):
+            raise DomainValidationError(
+                f"runtime option {name!r} must be boolean"
+            )
+        return value
+
     def build_visual_generator(
         self,
         binding: RuntimeProviderBinding,
@@ -170,20 +221,46 @@ class RuntimeProviderRegistry:
             require_capability(binding, CAP_VISUAL_IMAGE)
             return MPTImageVisualGenerator(
                 allow_paid_generation=binding.paid_calls_enabled,
-                cost_per_image_usd=options.get("cost_per_image_usd"),
-                save_dir=str(options.get("save_dir", "")),
+                cost_per_image_usd=self._number_option(
+                    options,
+                    "cost_per_image_usd",
+                ),
+                save_dir=(
+                    self._string_option(
+                        options,
+                        "save_dir",
+                        default=".",
+                    )
+                    if "save_dir" in options
+                    else ""
+                ),
             )
 
         if descriptor.adapter == "openai-reference-image":
             require_capability(binding, CAP_VISUAL_REFERENCE_IMAGE)
             return OpenAIReferenceVisualGenerator(
-                response_model=str(options["response_model"]),
-                image_model=str(options["image_model"]),
-                allow_paid_generation=binding.paid_calls_enabled,
-                cost_per_generation_usd=options.get(
-                    "cost_per_generation_usd"
+                response_model=self._string_option(
+                    options,
+                    "response_model",
                 ),
-                output_dir=str(options.get("output_dir", "")),
+                image_model=self._string_option(
+                    options,
+                    "image_model",
+                ),
+                allow_paid_generation=binding.paid_calls_enabled,
+                cost_per_generation_usd=self._number_option(
+                    options,
+                    "cost_per_generation_usd",
+                ),
+                output_dir=(
+                    self._string_option(
+                        options,
+                        "output_dir",
+                        default=".",
+                    )
+                    if "output_dir" in options
+                    else ""
+                ),
             )
 
         raise DomainValidationError(
@@ -204,8 +281,19 @@ class RuntimeProviderRegistry:
         options = dict(binding.options)
         return MPTMediaAssembler(
             allow_external_generation=binding.external_calls_enabled,
-            estimated_cost_usd=options.get("estimated_cost_usd"),
-            work_dir=str(options.get("work_dir", "")),
+            estimated_cost_usd=self._number_option(
+                options,
+                "estimated_cost_usd",
+            ),
+            work_dir=(
+                self._string_option(
+                    options,
+                    "work_dir",
+                    default=".",
+                )
+                if "work_dir" in options
+                else ""
+            ),
         )
 
     def build_rendering_engine(
@@ -234,6 +322,9 @@ class RuntimeProviderRegistry:
                 "required_options": sorted(descriptor.required_options),
                 "required_secret_refs": list(
                     descriptor.required_secret_refs
+                ),
+                "paid_authorization_required": (
+                    descriptor.paid_authorization_required
                 ),
             }
             for descriptor in sorted(
