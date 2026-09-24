@@ -1,18 +1,34 @@
 # Sprint 11 Gate Status
 
-Last supervisor update: 2026-09-23
+Final status: **COMPLETED — 10/10 PASS**
+
+Human approval and protected merge completed on 2026-09-23.
 
 | Gate | Status | Evidence |
 | --- | --- | --- |
-| S11.1 | PASS | `feat/sprint-11-publishing-gateway` created from merged Sprint 10 main |
-| S11.2 | IN_PROGRESS | provider-neutral PublishRequest/Result/Policy/Publisher/audit contracts implemented; CI pending |
-| S11.3 | IN_PROGRESS | exact render + audited latest approval authorization chain implemented; CI pending |
-| S11.4 | IN_PROGRESS | default-deny, dry-run, allowlist, idempotency and hourly live rate limit implemented; CI pending |
-| S11.5 | IN_PROGRESS | guarded MPTUploadPostPublisher + append-only JsonlPublicationLedger implemented; CI pending |
-| S11.6 | PASS | versioned schemas plus generic and kids-puppies dry-run examples committed |
-| S11.7 | IN_PROGRESS | governance/idempotency/rate-limit/ledger/MPT adapter tests committed; CI pending |
-| S11.8 | PASS | Governed Publishing Gateway architecture documented; Sprint 10 finalized |
-| S11.9 | PENDING | full GitHub Actions baseline not yet executed |
-| S11.10 | PENDING | Sprint 11 PR not yet opened |
+| S11.1 | PASS | `feat/sprint-11-publishing-gateway` used for Sprint 11 work |
+| S11.2 | PASS | provider-neutral publishing contracts implemented |
+| S11.3 | PASS | exact render + audited latest approval authorization implemented |
+| S11.4 | PASS | default-deny, dry-run, allowlist, idempotency and hourly rate limit implemented |
+| S11.5 | PASS | guarded MPTUploadPostPublisher + append-only publication ledger implemented |
+| S11.6 | PASS | versioned schemas plus generic/kids-puppies dry-run examples committed |
+| S11.7 | PASS | governance/idempotency/rate-limit/ledger/adapter tests verified |
+| S11.8 | PASS | Governed Publishing Gateway architecture documented |
+| S11.9 | PASS | GitHub Actions run #27 completed successfully |
+| S11.10 | PASS | PR #12 ready, explicitly approved by user, and merged |
 
-No live publication is authorized by this Sprint status.
+PR #12:
+`https://github.com/josebautista2020/MoneyPrinterTurbo/pull/12`
+
+Successful CI:
+`https://github.com/josebautista2020/MoneyPrinterTurbo/actions/runs/35944640732`
+
+CI evidence:
+- Python 3.11: compile + ruff PASS; 1311 upstream passed, 16 skipped, 10616 subtests; 232 Content Studio tests; 81% coverage
+- Python 3.13: 1311 upstream passed, 16 skipped, 10616 subtests; 232 Content Studio tests; 81% coverage
+- Windows: 168 smoke tests passed, 4 skipped, 64 subtests; 232 Content Studio tests
+
+Merge commit:
+`01ee997d7b34adc69b5ef825b014eff79b5efd2a`
+
+No live publication was executed while closing Sprint 11.

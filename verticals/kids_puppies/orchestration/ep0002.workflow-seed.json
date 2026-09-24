@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0.0",
+  "workflow_id": "kids-ep0002-workflow",
+  "project_id": "kids-puppies-demo",
+  "episode_id": "ep0002",
+  "revision": 1,
+  "records": [],
+  "max_cost_usd": 5,
+  "metadata": {
+    "vertical": "kids_puppies",
+    "original_ip": true,
+    "offline_seed": true,
+    "human_review_required": true,
+    "final_stage": "publish_dry_run",
+    "live_publication": false
+  }
+}

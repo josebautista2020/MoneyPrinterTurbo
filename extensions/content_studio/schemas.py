@@ -1969,6 +1969,199 @@ SCHEMAS.update(
     }
 )
 
+
+SCHEMAS.update(
+    {
+        "WorkflowArtifact": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/workflow-artifact/{SCHEMA_VERSION}",
+            "title": "WorkflowArtifact",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "artifact_id",
+                "artifact_type",
+                "payload",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "artifact_id": {"type": "string", "pattern": _ID_PATTERN},
+                "artifact_type": {"type": "string", "minLength": 1},
+                "payload": {"type": "object"},
+                "uri": {"type": ["string", "null"], "minLength": 1},
+                "metadata": _METADATA,
+            },
+        },
+        "StageExecutionResult": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/stage-execution-result/{SCHEMA_VERSION}",
+            "title": "StageExecutionResult",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "stage",
+                "status",
+                "artifacts",
+                "cost_usd",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "stage": {
+                    "type": "string",
+                    "enum": ["project_episode","bibles","story","storyboard","prompts","visuals","consistency","media","safety_qa","review_package","human_review","publish_dry_run"],
+                },
+                "status": {
+                    "type": "string",
+                    "enum": ["PASS", "FAIL", "BLOCKED"],
+                },
+                "artifacts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": f"{_SCHEMA_BASE}/workflow-artifact/{SCHEMA_VERSION}"
+                    },
+                },
+                "cost_usd": {
+                    "type": ["number", "null"],
+                    "minimum": 0,
+                },
+                "error": {
+                    "type": ["string", "null"],
+                    "minLength": 1,
+                },
+                "metadata": _METADATA,
+            },
+        },
+        "WorkflowStageRecord": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/workflow-stage-record/{SCHEMA_VERSION}",
+            "title": "WorkflowStageRecord",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "record_id",
+                "stage",
+                "status",
+                "attempt",
+                "execution_key",
+                "revision",
+                "started_at",
+                "artifacts",
+                "cost_usd",
+                "superseded",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "record_id": {"type": "string", "pattern": _ID_PATTERN},
+                "stage": {
+                    "type": "string",
+                    "enum": ["project_episode","bibles","story","storyboard","prompts","visuals","consistency","media","safety_qa","review_package","human_review","publish_dry_run"],
+                },
+                "status": {
+                    "type": "string",
+                    "enum": ["PENDING","IN_PROGRESS","BLOCKED","PASS","FAIL","WAIVED_BY_ADR"],
+                },
+                "attempt": {"type": "integer", "minimum": 1},
+                "execution_key": {"type": "string", "pattern": _ID_PATTERN},
+                "revision": {"type": "integer", "minimum": 1},
+                "started_at": {"type": "string", "format": "date-time"},
+                "finished_at": {
+                    "type": ["string", "null"],
+                    "format": "date-time",
+                },
+                "artifacts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": f"{_SCHEMA_BASE}/workflow-artifact/{SCHEMA_VERSION}"
+                    },
+                },
+                "cost_usd": {
+                    "type": ["number", "null"],
+                    "minimum": 0,
+                },
+                "error": {
+                    "type": ["string", "null"],
+                    "minLength": 1,
+                },
+                "superseded": {"type": "boolean"},
+                "metadata": _METADATA,
+            },
+        },
+        "EpisodeWorkflowState": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/episode-workflow-state/{SCHEMA_VERSION}",
+            "title": "EpisodeWorkflowState",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "workflow_id",
+                "project_id",
+                "episode_id",
+                "revision",
+                "records",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "workflow_id": {"type": "string", "pattern": _ID_PATTERN},
+                "project_id": {"type": "string", "pattern": _ID_PATTERN},
+                "episode_id": {"type": "string", "pattern": _ID_PATTERN},
+                "revision": {"type": "integer", "minimum": 1},
+                "records": {
+                    "type": "array",
+                    "items": {
+                        "$ref": (
+                            f"{_SCHEMA_BASE}/workflow-stage-record/"
+                            f"{SCHEMA_VERSION}"
+                        )
+                    },
+                },
+                "max_cost_usd": {
+                    "type": ["number", "null"],
+                    "minimum": 0,
+                },
+                "metadata": _METADATA,
+            },
+        },
+        "EpisodeReleaseCandidate": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/episode-release-candidate/{SCHEMA_VERSION}",
+            "title": "EpisodeReleaseCandidate",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "workflow_id",
+                "revision",
+                "project_id",
+                "episode_id",
+                "render_uri",
+                "review_decision_id",
+                "publish_request_id",
+                "publication_record_id",
+                "total_cost_usd",
+                "publication_status",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "workflow_id": {"type": "string", "pattern": _ID_PATTERN},
+                "revision": {"type": "integer", "minimum": 1},
+                "project_id": {"type": "string", "pattern": _ID_PATTERN},
+                "episode_id": {"type": "string", "pattern": _ID_PATTERN},
+                "render_uri": {"type": "string", "minLength": 1},
+                "review_decision_id": {"type": "string", "pattern": _ID_PATTERN},
+                "publish_request_id": {"type": "string", "pattern": _ID_PATTERN},
+                "publication_record_id": {"type": "string", "pattern": _ID_PATTERN},
+                "total_cost_usd": {"type": "number", "minimum": 0},
+                "publication_status": {"const": "dry_run_validated"},
+                "metadata": _METADATA,
+            },
+        },
+    }
+)
+
 def schema_for(contract_name: str) -> dict[str, Any]:
     """Return an isolated JSON-compatible schema for a canonical contract."""
     try:

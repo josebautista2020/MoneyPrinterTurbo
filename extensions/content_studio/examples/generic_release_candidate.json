@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0.0",
+  "workflow_id": "generic-episode-2-workflow",
+  "revision": 1,
+  "project_id": "generic-demo",
+  "episode_id": "episode-2",
+  "render_uri": "generated/generic/final.mp4",
+  "review_decision_id": "generic-approve-1",
+  "publish_request_id": "generic-publish-episode-2",
+  "publication_record_id": "generic-publication-record-1",
+  "total_cost_usd": 0.11,
+  "publication_status": "dry_run_validated",
+  "metadata": {
+    "example": true,
+    "offline": true,
+    "publication_performed": false
+  }
+}

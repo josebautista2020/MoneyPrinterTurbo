@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0.0",
+  "workflow_id": "generic-episode-2-workflow",
+  "project_id": "generic-demo",
+  "episode_id": "episode-2",
+  "revision": 1,
+  "records": [],
+  "max_cost_usd": 1,
+  "metadata": {
+    "example": true,
+    "offline": true,
+    "final_stage": "publish_dry_run",
+    "live_publication": false
+  }
+}
