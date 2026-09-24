@@ -175,6 +175,43 @@ with tab_actions:
             type=["json"],
             key="stage-result",
         )
+        stage_bundle_file = st.file_uploader(
+            "Optional stage bundle JSON array",
+            type=["json"],
+            key="stage-bundle",
+            help=(
+                "Apply sequential canonical results until the bundle ends "
+                "or a governed/failed stage stops progress."
+            ),
+        )
+        if st.button(
+            "Apply stage bundle",
+            disabled=stage_bundle_file is None,
+            use_container_width=True,
+        ):
+            try:
+                decoded = __import__("json").loads(
+                    _uploaded_text(stage_bundle_file)
+                )
+                if not isinstance(decoded, list):
+                    raise DomainValidationError(
+                        "stage bundle JSON must be an array"
+                    )
+                results = tuple(
+                    StageExecutionResult.from_dict(item)
+                    for item in decoded
+                )
+                service.apply_stage_results(selected, results)
+            except (
+                UnicodeDecodeError,
+                ValueError,
+                DomainValidationError,
+            ) as exc:
+                st.error(str(exc))
+            else:
+                st.success("Stage bundle processed.")
+                _rerun()
+
         if st.button(
             f"Apply result to {next_stage}",
             disabled=stage_result_file is None,
