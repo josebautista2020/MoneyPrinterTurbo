@@ -18,7 +18,7 @@ from extensions.content_studio.domain import (
     ProjectSpec,
     SCHEMA_VERSION,
 )
-from extensions.content_studio.media import MediaAssemblyResult
+from extensions.content_studio.media import MediaAssemblyPlan, MediaAssemblyResult
 from extensions.content_studio.prompting import PromptPlan
 from extensions.content_studio.publishing import (
     PublicationAuditTrail,
@@ -77,6 +77,7 @@ _CONTRACT_TYPES: dict[str, type[JsonContract]] = {
         VisualGenerationPlan,
         VisualGenerationReport,
         ConsistencyReport,
+        MediaAssemblyPlan,
         MediaAssemblyResult,
         SafetyAssessment,
         RenderQAReport,
@@ -100,7 +101,10 @@ _STAGE_REQUIREMENTS: dict[str, dict[str, int]] = {
         "VisualGenerationReport": 1,
     },
     "consistency": {"ConsistencyReport": 1},
-    "media": {"MediaAssemblyResult": 1},
+    "media": {
+        "MediaAssemblyPlan": 1,
+        "MediaAssemblyResult": 1,
+    },
     "safety_qa": {
         "SafetyAssessment": 1,
         "RenderQAReport": 1,
@@ -745,19 +749,78 @@ def validate_stage_artifacts(
                 "ProjectSpec must contain the exact EpisodeSpec artifact"
             )
 
+    if stage == "bibles":
+        project = state.require_one("ProjectSpec")
+        if not isinstance(project, ProjectSpec):
+            raise DomainValidationError("ProjectSpec artifact is invalid")
+        character_bible = next(
+            item for item in contracts if isinstance(item, CharacterBible)
+        )
+        universe_bible = next(
+            item for item in contracts if isinstance(item, UniverseBible)
+        )
+        character_bible.validate_project(project)
+        universe_bible.validate_project(project)
+
+    if stage == "storyboard":
+        story = state.require_one("StoryPlan")
+        storyboard = next(
+            item for item in contracts if isinstance(item, StoryboardPlan)
+        )
+        if not isinstance(story, StoryPlan):
+            raise DomainValidationError("StoryPlan artifact is invalid")
+        storyboard.validate_story(story)
+
+    if stage == "prompts":
+        storyboard = state.require_one("StoryboardPlan")
+        prompt_plan = next(
+            item for item in contracts if isinstance(item, PromptPlan)
+        )
+        if not isinstance(storyboard, StoryboardPlan):
+            raise DomainValidationError("StoryboardPlan artifact is invalid")
+        prompt_plan.validate_storyboard(storyboard)
+
+    if stage == "visuals":
+        prompt_plan = state.require_one("PromptPlan")
+        visual_plan = next(
+            item for item in contracts if isinstance(item, VisualGenerationPlan)
+        )
+        visual_report = next(
+            item for item in contracts
+            if isinstance(item, VisualGenerationReport)
+        )
+        if not isinstance(prompt_plan, PromptPlan):
+            raise DomainValidationError("PromptPlan artifact is invalid")
+        visual_plan.validate_prompt_plan(prompt_plan)
+        visual_report.validate_plan(visual_plan)
+        if not visual_report.success:
+            raise DomainValidationError(
+                "visuals stage PASS requires successful VisualGenerationReport"
+            )
+
     if stage == "consistency":
+        visual_plan = state.require_one("VisualGenerationPlan")
         report = next(
             item for item in contracts if isinstance(item, ConsistencyReport)
         )
+        if not isinstance(visual_plan, VisualGenerationPlan):
+            raise DomainValidationError(
+                "VisualGenerationPlan artifact is invalid"
+            )
+        report.validate_plan(visual_plan)
         if not report.success:
             raise DomainValidationError(
                 "consistency stage PASS requires successful ConsistencyReport"
             )
 
     if stage == "media":
+        plan = next(
+            item for item in contracts if isinstance(item, MediaAssemblyPlan)
+        )
         media = next(
             item for item in contracts if isinstance(item, MediaAssemblyResult)
         )
+        media.validate_plan(plan)
         if not media.success:
             raise DomainValidationError(
                 "media stage PASS requires successful MediaAssemblyResult"
@@ -773,6 +836,51 @@ def validate_stage_artifacts(
         if not qa.passed or not gate.eligible_for_human_review:
             raise DomainValidationError(
                 "safety_qa PASS requires passing QA and human-review eligibility"
+            )
+
+    if stage == "review_package":
+        package = next(
+            item for item in contracts if isinstance(item, ReviewPackage)
+        )
+        media = state.require_one("MediaAssemblyResult")
+        consistency = state.require_one("ConsistencyReport")
+        qa = state.require_one("RenderQAReport")
+        gate = state.require_one("HumanReviewGate")
+        safety = tuple(
+            item.to_contract()
+            for item in state.artifacts("SafetyAssessment")
+        )
+        if (
+            not isinstance(media, MediaAssemblyResult)
+            or media.video is None
+        ):
+            raise DomainValidationError(
+                "review package requires successful media render"
+            )
+        if not isinstance(consistency, ConsistencyReport):
+            raise DomainValidationError("ConsistencyReport artifact is invalid")
+        if not isinstance(qa, RenderQAReport):
+            raise DomainValidationError("RenderQAReport artifact is invalid")
+        if not isinstance(gate, HumanReviewGate):
+            raise DomainValidationError("HumanReviewGate artifact is invalid")
+        if package.render_uri != media.video.uri:
+            raise DomainValidationError(
+                "ReviewPackage render_uri does not match assembled render"
+            )
+        if package.render_qa != qa or package.gate != gate:
+            raise DomainValidationError(
+                "ReviewPackage QA/gate evidence does not match workflow"
+            )
+        if package.safety_assessments != safety:
+            raise DomainValidationError(
+                "ReviewPackage safety evidence does not match workflow"
+            )
+        expected_shots = tuple(
+            item.request_id for item in consistency.results
+        )
+        if package.shot_ids != expected_shots:
+            raise DomainValidationError(
+                "ReviewPackage shot_ids do not match ConsistencyReport"
             )
 
     if stage == "human_review":
@@ -823,6 +931,24 @@ def validate_stage_artifacts(
         if latest.result.request_id != result.request_id:
             raise DomainValidationError(
                 "PublishResult does not match latest publication audit record"
+            )
+        package = state.require_one("ReviewPackage")
+        decision = state.require_one("ReviewDecision")
+        if not isinstance(package, ReviewPackage):
+            raise DomainValidationError("ReviewPackage artifact is invalid")
+        if not isinstance(decision, ReviewDecision):
+            raise DomainValidationError("ReviewDecision artifact is invalid")
+        if latest.request.package_id != package.package_id:
+            raise DomainValidationError(
+                "dry-run PublishRequest package_id does not match ReviewPackage"
+            )
+        if latest.request.decision_id != decision.decision_id:
+            raise DomainValidationError(
+                "dry-run PublishRequest decision_id does not match approval"
+            )
+        if latest.request.video_uri != package.render_uri:
+            raise DomainValidationError(
+                "dry-run PublishRequest video_uri does not match approved render"
             )
 
 
