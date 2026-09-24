@@ -1135,12 +1135,6 @@ class EpisodeOrchestrator:
                 raise DomainValidationError(
                     "stage executor returned result for different stage"
                 )
-            if result.status == "PASS":
-                validate_stage_artifacts(
-                    working,
-                    stage,
-                    result.artifacts,
-                )
         except Exception as exc:
             result = StageExecutionResult(
                 stage=stage,
@@ -1150,6 +1144,26 @@ class EpisodeOrchestrator:
                 error=f"{type(exc).__name__}: {exc}",
                 metadata={"executor_exception": True},
             )
+
+        if result.status == "PASS":
+            try:
+                validate_stage_artifacts(
+                    working,
+                    stage,
+                    result.artifacts,
+                )
+            except Exception as exc:
+                result = StageExecutionResult(
+                    stage=stage,
+                    status="FAIL",
+                    artifacts=result.artifacts,
+                    cost_usd=result.cost_usd,
+                    error=f"{type(exc).__name__}: {exc}",
+                    metadata={
+                        **result.metadata,
+                        "artifact_validation_failure": True,
+                    },
+                )
 
         actual_cost = result.cost_usd or 0.0
         final_status = result.status
