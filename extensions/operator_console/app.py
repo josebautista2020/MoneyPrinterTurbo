@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import sys
 from pathlib import Path
@@ -190,7 +191,7 @@ with tab_actions:
             use_container_width=True,
         ):
             try:
-                decoded = __import__("json").loads(
+                decoded = json.loads(
                     _uploaded_text(stage_bundle_file)
                 )
                 if not isinstance(decoded, list):
