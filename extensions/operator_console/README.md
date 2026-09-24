@@ -22,6 +22,7 @@ Commands:
 - `show`
 - `artifacts`
 - `apply-stage`
+- `apply-bundle`
 - `review`
 - `publish-dry-run`
 - `release`
