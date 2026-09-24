@@ -1,0 +1,72 @@
+{
+  "schema_version": "1.0.0",
+  "profile_id": "kids-puppies-guarded",
+  "providers": [
+    {
+      "schema_version": "1.0.0",
+      "provider_id": "kids-reference-visuals",
+      "adapter": "openai-reference-image",
+      "capabilities": [
+        "visual.image.reference"
+      ],
+      "secret_refs": [
+        {
+          "schema_version": "1.0.0",
+          "scheme": "env",
+          "key": "OPENAI_API_KEY"
+        }
+      ],
+      "options": {
+        "response_model": "gpt-5",
+        "image_model": "gpt-image-1",
+        "cost_per_generation_usd": 0.08,
+        "output_dir": "generated/kids_puppies/runtime/visuals",
+        "reference_catalog_path": "verticals/kids_puppies/consistency/reference_catalog.json"
+      },
+      "external_calls_enabled": false,
+      "paid_calls_enabled": false,
+      "max_stage_cost_usd": 2,
+      "metadata": {
+        "vertical": "kids_puppies",
+        "original_ip": true,
+        "default_deny": true,
+        "requires_materialized_references": true
+      }
+    },
+    {
+      "schema_version": "1.0.0",
+      "provider_id": "kids-media",
+      "adapter": "mpt-media",
+      "capabilities": [
+        "media.assembly"
+      ],
+      "secret_refs": [],
+      "options": {
+        "estimated_cost_usd": 0.1,
+        "voice_name": "kids-demo-voice",
+        "output_uri_template": "generated/kids_puppies/{episode_id}/r{revision}/master.mp4",
+        "subtitle_enabled": true,
+        "work_dir": "generated/kids_puppies/runtime/media"
+      },
+      "external_calls_enabled": false,
+      "paid_calls_enabled": false,
+      "max_stage_cost_usd": 0.5,
+      "metadata": {
+        "vertical": "kids_puppies",
+        "original_ip": true,
+        "default_deny": true
+      }
+    }
+  ],
+  "stage_bindings": {
+    "visuals": "kids-reference-visuals",
+    "media": "kids-media"
+  },
+  "metadata": {
+    "vertical": "kids_puppies",
+    "original_ip": true,
+    "child_safe": true,
+    "default_deny": true,
+    "live_publication": false
+  }
+}
