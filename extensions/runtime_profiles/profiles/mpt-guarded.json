@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0.0",
+  "profile_id": "mpt-guarded",
+  "providers": [
+    {
+      "schema_version": "1.0.0",
+      "provider_id": "mpt-visuals",
+      "adapter": "mpt-image",
+      "capabilities": [
+        "visual.image"
+      ],
+      "secret_refs": [],
+      "options": {
+        "cost_per_image_usd": 0.04,
+        "save_dir": "generated/runtime/mpt/visuals"
+      },
+      "external_calls_enabled": false,
+      "paid_calls_enabled": false,
+      "max_stage_cost_usd": 1,
+      "metadata": {
+        "default_deny": true
+      }
+    },
+    {
+      "schema_version": "1.0.0",
+      "provider_id": "mpt-media",
+      "adapter": "mpt-media",
+      "capabilities": [
+        "media.assembly"
+      ],
+      "secret_refs": [],
+      "options": {
+        "estimated_cost_usd": 0.1,
+        "voice_name": "en-US-AriaNeural",
+        "output_uri_template": "generated/{project_id}/{episode_id}/r{revision}/final.mp4",
+        "subtitle_enabled": true,
+        "work_dir": "generated/runtime/mpt/media"
+      },
+      "external_calls_enabled": false,
+      "paid_calls_enabled": false,
+      "max_stage_cost_usd": 0.5,
+      "metadata": {
+        "default_deny": true
+      }
+    }
+  ],
+  "stage_bindings": {
+    "visuals": "mpt-visuals",
+    "media": "mpt-media"
+  },
+  "metadata": {
+    "default_deny": true,
+    "external_calls_enabled": false,
+    "paid_calls_enabled": false,
+    "live_publication": false
+  }
+}
