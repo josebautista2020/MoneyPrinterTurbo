@@ -1,0 +1,114 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "generic-review-episode-2",
+  "project_id": "generic-demo",
+  "episode_id": "episode-2",
+  "render_uri": "generated/generic/final.mp4",
+  "safety_assessments": [
+    {
+      "schema_version": "1.0.0",
+      "request_id": "generic-safety-episode-2",
+      "reviewer": "text-rule-preflight",
+      "reviewed_modalities": [
+        "script",
+        "subtitle"
+      ],
+      "findings": [],
+      "metadata": {}
+    },
+    {
+      "schema_version": "1.0.0",
+      "request_id": "generic-safety-episode-2",
+      "reviewer": "multimodal-reviewer",
+      "reviewed_modalities": [
+        "audio",
+        "visual"
+      ],
+      "findings": [],
+      "metadata": {}
+    }
+  ],
+  "render_qa": {
+    "schema_version": "1.0.0",
+    "project_id": "generic-demo",
+    "episode_id": "episode-2",
+    "checks": [
+      {
+        "schema_version": "1.0.0",
+        "check_id": "media-success",
+        "passed": true,
+        "message": "media assembly completed successfully"
+      },
+      {
+        "schema_version": "1.0.0",
+        "check_id": "consistency",
+        "passed": true,
+        "message": "visual consistency gate passed"
+      },
+      {
+        "schema_version": "1.0.0",
+        "check_id": "audio",
+        "passed": true,
+        "message": "audio artifact is present"
+      },
+      {
+        "schema_version": "1.0.0",
+        "check_id": "subtitles",
+        "passed": true,
+        "message": "subtitle artifact is present"
+      },
+      {
+        "schema_version": "1.0.0",
+        "check_id": "resolution",
+        "passed": true,
+        "message": "render dimensions match ProjectSpec"
+      },
+      {
+        "schema_version": "1.0.0",
+        "check_id": "duration",
+        "passed": true,
+        "message": "render duration is inside configured QA bounds"
+      },
+      {
+        "schema_version": "1.0.0",
+        "check_id": "audio-video-sync",
+        "passed": true,
+        "message": "audio and video durations are synchronized"
+      },
+      {
+        "schema_version": "1.0.0",
+        "check_id": "publication-not-performed",
+        "passed": true,
+        "message": "candidate has not been published"
+      }
+    ],
+    "metadata": {
+      "example": true
+    }
+  },
+  "gate": {
+    "schema_version": "1.0.0",
+    "project_id": "generic-demo",
+    "episode_id": "episode-2",
+    "safety_complete": true,
+    "safety_blocked": false,
+    "render_qa_passed": true,
+    "eligible_for_human_review": true,
+    "publication_allowed": false,
+    "missing_safety_modalities": [],
+    "metadata": {
+      "human_approval_required": true,
+      "automatic_publication": false
+    }
+  },
+  "shot_ids": [
+    "shot-1",
+    "shot-2",
+    "shot-3",
+    "shot-4"
+  ],
+  "metadata": {
+    "example": true,
+    "publication_performed": false
+  }
+}

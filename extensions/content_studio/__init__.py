@@ -51,6 +51,14 @@ from extensions.content_studio.visual_generation import (
     build_visual_generation_plan,
     generate_visuals,
 )
+from extensions.content_studio.review import (
+    ReviewAuditTrail,
+    ReviewDecision,
+    ReviewDecisionStore,
+    ReviewPackage,
+    build_review_package,
+    validate_review_decision,
+)
 from extensions.content_studio.safety import (
     SafetyAssessment,
     SafetyFinding,
@@ -164,4 +172,10 @@ __all__ = [
     "RenderQAReport",
     "build_human_review_gate",
     "evaluate_render_qa",
+    "ReviewAuditTrail",
+    "ReviewDecision",
+    "ReviewDecisionStore",
+    "ReviewPackage",
+    "build_review_package",
+    "validate_review_decision",
 ]

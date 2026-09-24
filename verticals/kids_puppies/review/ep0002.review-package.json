@@ -1,0 +1,130 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "kids-ep0002-review",
+  "project_id": "kids-puppies-demo",
+  "episode_id": "ep0002",
+  "render_uri": "generated/kids_puppies/ep0002/master.mp4",
+  "safety_assessments": [
+    {
+      "schema_version": "1.0.0",
+      "request_id": "kids-ep0002-safety",
+      "reviewer": "text-rule-preflight",
+      "reviewed_modalities": [
+        "script",
+        "subtitle"
+      ],
+      "findings": [],
+      "metadata": {}
+    },
+    {
+      "schema_version": "1.0.0",
+      "request_id": "kids-ep0002-safety",
+      "reviewer": "multimodal-child-safety-review",
+      "reviewed_modalities": [
+        "audio",
+        "visual"
+      ],
+      "findings": [
+        {
+          "schema_version": "1.0.0",
+          "finding_id": "kids-ep0002-warning-1",
+          "category": "frightening_content",
+          "severity": "warning",
+          "modality": "visual",
+          "evidence": "Brief surprise reaction should remain gentle and non-threatening.",
+          "rule_id": null,
+          "metadata": {}
+        }
+      ],
+      "metadata": {}
+    }
+  ],
+  "render_qa": {
+    "schema_version": "1.0.0",
+    "project_id": "kids-puppies-demo",
+    "episode_id": "ep0002",
+    "checks": [
+      {
+        "schema_version": "1.0.0",
+        "check_id": "media-success",
+        "passed": true,
+        "message": "media assembly completed successfully"
+      },
+      {
+        "schema_version": "1.0.0",
+        "check_id": "consistency",
+        "passed": true,
+        "message": "Toby and Luna consistency gate passed"
+      },
+      {
+        "schema_version": "1.0.0",
+        "check_id": "audio",
+        "passed": true,
+        "message": "Spanish narration is present"
+      },
+      {
+        "schema_version": "1.0.0",
+        "check_id": "subtitles",
+        "passed": true,
+        "message": "subtitles are present"
+      },
+      {
+        "schema_version": "1.0.0",
+        "check_id": "resolution",
+        "passed": true,
+        "message": "render is 1080x1920"
+      },
+      {
+        "schema_version": "1.0.0",
+        "check_id": "duration",
+        "passed": true,
+        "message": "render is inside the 55-80 second QA window"
+      },
+      {
+        "schema_version": "1.0.0",
+        "check_id": "audio-video-sync",
+        "passed": true,
+        "message": "audio and video are within sync tolerance"
+      },
+      {
+        "schema_version": "1.0.0",
+        "check_id": "publication-not-performed",
+        "passed": true,
+        "message": "episode candidate has not been published"
+      }
+    ],
+    "metadata": {
+      "vertical": "kids_puppies"
+    }
+  },
+  "gate": {
+    "schema_version": "1.0.0",
+    "project_id": "kids-puppies-demo",
+    "episode_id": "ep0002",
+    "safety_complete": true,
+    "safety_blocked": false,
+    "render_qa_passed": true,
+    "eligible_for_human_review": true,
+    "publication_allowed": false,
+    "missing_safety_modalities": [],
+    "metadata": {
+      "human_approval_required": true,
+      "automatic_publication": false
+    }
+  },
+  "shot_ids": [
+    "ep0002-s01-a",
+    "ep0002-s02-a",
+    "ep0002-s02-b",
+    "ep0002-s03-a",
+    "ep0002-s03-b",
+    "ep0002-s04-a",
+    "ep0002-s04-b",
+    "ep0002-s05-a"
+  ],
+  "metadata": {
+    "vertical": "kids_puppies",
+    "original_ip": true,
+    "publication_performed": false
+  }
+}

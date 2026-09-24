@@ -1572,6 +1572,127 @@ SCHEMAS.update(
     }
 )
 
+
+SCHEMAS.update(
+    {
+        "ReviewPackage": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/review-package/{SCHEMA_VERSION}",
+            "title": "ReviewPackage",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "package_id",
+                "project_id",
+                "episode_id",
+                "render_uri",
+                "safety_assessments",
+                "render_qa",
+                "gate",
+                "shot_ids",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "package_id": {"type": "string", "pattern": _ID_PATTERN},
+                "project_id": {"type": "string", "pattern": _ID_PATTERN},
+                "episode_id": {"type": "string", "pattern": _ID_PATTERN},
+                "render_uri": {"type": "string", "minLength": 1},
+                "safety_assessments": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "$ref": (
+                            f"{_SCHEMA_BASE}/safety-assessment/"
+                            f"{SCHEMA_VERSION}"
+                        )
+                    },
+                },
+                "render_qa": {
+                    "$ref": f"{_SCHEMA_BASE}/render-qa-report/{SCHEMA_VERSION}"
+                },
+                "gate": {
+                    "$ref": f"{_SCHEMA_BASE}/human-review-gate/{SCHEMA_VERSION}"
+                },
+                "shot_ids": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": True,
+                    "items": {"type": "string", "pattern": _ID_PATTERN},
+                },
+                "metadata": _METADATA,
+            },
+        },
+        "ReviewDecision": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/review-decision/{SCHEMA_VERSION}",
+            "title": "ReviewDecision",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "decision_id",
+                "package_id",
+                "reviewer_id",
+                "action",
+                "decided_at",
+                "comments",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "decision_id": {"type": "string", "pattern": _ID_PATTERN},
+                "package_id": {"type": "string", "pattern": _ID_PATTERN},
+                "reviewer_id": {"type": "string", "pattern": _ID_PATTERN},
+                "action": {
+                    "type": "string",
+                    "enum": [
+                        "approve",
+                        "reject",
+                        "regenerate_shot",
+                        "regenerate_episode",
+                    ],
+                },
+                "decided_at": {
+                    "type": "string",
+                    "format": "date-time",
+                },
+                "comments": {"type": "string", "minLength": 1},
+                "target_shot_id": {
+                    "type": ["string", "null"],
+                    "pattern": _ID_PATTERN,
+                },
+                "metadata": _METADATA,
+            },
+        },
+        "ReviewAuditTrail": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/review-audit-trail/{SCHEMA_VERSION}",
+            "title": "ReviewAuditTrail",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "package_id",
+                "decisions",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "package_id": {"type": "string", "pattern": _ID_PATTERN},
+                "decisions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": (
+                            f"{_SCHEMA_BASE}/review-decision/"
+                            f"{SCHEMA_VERSION}"
+                        )
+                    },
+                },
+                "metadata": _METADATA,
+            },
+        },
+    }
+)
+
 def schema_for(contract_name: str) -> dict[str, Any]:
     """Return an isolated JSON-compatible schema for a canonical contract."""
     try:
