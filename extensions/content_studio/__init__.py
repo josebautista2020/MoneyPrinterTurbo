@@ -75,6 +75,18 @@ from extensions.content_studio.review import (
     build_review_package,
     validate_review_decision,
 )
+from extensions.content_studio.runtime import (
+    CAP_MEDIA_ASSEMBLY,
+    CAP_RENDER_GENERAL,
+    CAP_VISUAL_IMAGE,
+    CAP_VISUAL_REFERENCE_IMAGE,
+    RuntimeProfile,
+    RuntimeProviderBinding,
+    SecretAvailability,
+    SecretReference,
+    require_capability,
+    validate_runtime_secrets,
+)
 from extensions.content_studio.safety import (
     SafetyAssessment,
     SafetyFinding,
@@ -234,4 +246,14 @@ __all__ = [
     "apply_review_decision",
     "build_release_candidate",
     "validate_stage_artifacts",
+    "CAP_MEDIA_ASSEMBLY",
+    "CAP_RENDER_GENERAL",
+    "CAP_VISUAL_IMAGE",
+    "CAP_VISUAL_REFERENCE_IMAGE",
+    "RuntimeProfile",
+    "RuntimeProviderBinding",
+    "SecretAvailability",
+    "SecretReference",
+    "require_capability",
+    "validate_runtime_secrets",
 ]
