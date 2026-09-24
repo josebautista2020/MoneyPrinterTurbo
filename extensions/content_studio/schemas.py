@@ -1693,6 +1693,277 @@ SCHEMAS.update(
     }
 )
 
+
+SCHEMAS.update(
+    {
+        "PublishGrant": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/publish-grant/{SCHEMA_VERSION}",
+            "title": "PublishGrant",
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["schema_version", "platform", "account_ref"],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "platform": {"type": "string", "pattern": _ID_PATTERN},
+                "account_ref": {"type": "string", "minLength": 1},
+            },
+        },
+        "PublishTarget": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/publish-target/{SCHEMA_VERSION}",
+            "title": "PublishTarget",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "platform",
+                "account_ref",
+                "privacy_level",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "platform": {"type": "string", "pattern": _ID_PATTERN},
+                "account_ref": {"type": "string", "minLength": 1},
+                "privacy_level": {"type": "string", "minLength": 1},
+                "youtube_privacy_status": {
+                    "type": ["string", "null"],
+                    "minLength": 1,
+                },
+                "youtube_made_for_kids": {
+                    "type": ["boolean", "null"],
+                },
+                "metadata": _METADATA,
+            },
+        },
+        "PublishingPolicy": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/publishing-policy/{SCHEMA_VERSION}",
+            "title": "PublishingPolicy",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "policy_id",
+                "allowed_targets",
+                "live_publish_enabled",
+                "max_targets_per_request",
+                "require_latest_approval",
+                "require_explicit_youtube_audience",
+                "require_synthetic_media_declaration",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "policy_id": {"type": "string", "pattern": _ID_PATTERN},
+                "allowed_targets": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": True,
+                    "items": {
+                        "$ref": (
+                            f"{_SCHEMA_BASE}/publish-grant/"
+                            f"{SCHEMA_VERSION}"
+                        )
+                    },
+                },
+                "live_publish_enabled": {"type": "boolean"},
+                "max_targets_per_request": {
+                    "type": "integer",
+                    "minimum": 1,
+                },
+                "require_latest_approval": {"type": "boolean"},
+                "require_explicit_youtube_audience": {"type": "boolean"},
+                "require_synthetic_media_declaration": {"type": "boolean"},
+                "metadata": _METADATA,
+            },
+        },
+        "PublishRequest": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/publish-request/{SCHEMA_VERSION}",
+            "title": "PublishRequest",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "request_id",
+                "package_id",
+                "decision_id",
+                "video_uri",
+                "title",
+                "targets",
+                "idempotency_key",
+                "contains_synthetic_media",
+                "dry_run",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "request_id": {"type": "string", "pattern": _ID_PATTERN},
+                "package_id": {"type": "string", "pattern": _ID_PATTERN},
+                "decision_id": {"type": "string", "pattern": _ID_PATTERN},
+                "video_uri": {"type": "string", "minLength": 1},
+                "title": {"type": "string", "minLength": 1},
+                "targets": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": True,
+                    "items": {
+                        "$ref": (
+                            f"{_SCHEMA_BASE}/publish-target/"
+                            f"{SCHEMA_VERSION}"
+                        )
+                    },
+                },
+                "idempotency_key": {
+                    "type": "string",
+                    "pattern": _ID_PATTERN,
+                },
+                "description": {"type": "string"},
+                "tags": {
+                    "type": "array",
+                    "uniqueItems": True,
+                    "items": {"type": "string", "minLength": 1},
+                },
+                "contains_synthetic_media": {"type": "boolean"},
+                "dry_run": {"type": "boolean"},
+                "metadata": _METADATA,
+            },
+        },
+        "PublishTargetResult": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": (
+                f"{_SCHEMA_BASE}/publish-target-result/"
+                f"{SCHEMA_VERSION}"
+            ),
+            "title": "PublishTargetResult",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "platform",
+                "account_ref",
+                "success",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "platform": {"type": "string", "pattern": _ID_PATTERN},
+                "account_ref": {"type": "string", "minLength": 1},
+                "success": {"type": "boolean"},
+                "external_request_id": {
+                    "type": ["string", "null"],
+                    "minLength": 1,
+                },
+                "error": {
+                    "type": ["string", "null"],
+                    "minLength": 1,
+                },
+                "metadata": _METADATA,
+            },
+        },
+        "PublishResult": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/publish-result/{SCHEMA_VERSION}",
+            "title": "PublishResult",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "request_id",
+                "publisher",
+                "success",
+                "dry_run",
+                "outcomes",
+                "idempotent_replay",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "request_id": {"type": "string", "pattern": _ID_PATTERN},
+                "publisher": {"type": "string", "minLength": 1},
+                "success": {"type": "boolean"},
+                "dry_run": {"type": "boolean"},
+                "outcomes": {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {
+                        "$ref": (
+                            f"{_SCHEMA_BASE}/publish-target-result/"
+                            f"{SCHEMA_VERSION}"
+                        )
+                    },
+                },
+                "idempotent_replay": {"type": "boolean"},
+                "error": {
+                    "type": ["string", "null"],
+                    "minLength": 1,
+                },
+                "metadata": _METADATA,
+            },
+        },
+        "PublicationRecord": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/publication-record/{SCHEMA_VERSION}",
+            "title": "PublicationRecord",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "record_id",
+                "idempotency_key",
+                "request_fingerprint",
+                "request",
+                "result",
+                "recorded_at",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "record_id": {"type": "string", "pattern": _ID_PATTERN},
+                "idempotency_key": {
+                    "type": "string",
+                    "pattern": _ID_PATTERN,
+                },
+                "request_fingerprint": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$",
+                },
+                "request": {
+                    "$ref": f"{_SCHEMA_BASE}/publish-request/{SCHEMA_VERSION}"
+                },
+                "result": {
+                    "$ref": f"{_SCHEMA_BASE}/publish-result/{SCHEMA_VERSION}"
+                },
+                "recorded_at": {
+                    "type": "string",
+                    "format": "date-time",
+                },
+                "metadata": _METADATA,
+            },
+        },
+        "PublicationAuditTrail": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": (
+                f"{_SCHEMA_BASE}/publication-audit-trail/"
+                f"{SCHEMA_VERSION}"
+            ),
+            "title": "PublicationAuditTrail",
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["schema_version", "records"],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "records": {
+                    "type": "array",
+                    "items": {
+                        "$ref": (
+                            f"{_SCHEMA_BASE}/publication-record/"
+                            f"{SCHEMA_VERSION}"
+                        )
+                    },
+                },
+                "metadata": _METADATA,
+            },
+        },
+    }
+)
+
 def schema_for(contract_name: str) -> dict[str, Any]:
     """Return an isolated JSON-compatible schema for a canonical contract."""
     try:
