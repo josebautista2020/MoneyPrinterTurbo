@@ -18,6 +18,29 @@ class JsonWorkflowCheckpointStore(WorkflowCheckpointStore):
     def __init__(self, root_dir: str | Path) -> None:
         self._root_dir = Path(root_dir)
 
+    def list_workflow_ids(self) -> tuple[str, ...]:
+        if not self._root_dir.exists():
+            return ()
+        workflow_ids = []
+        for path in sorted(self._root_dir.glob("*.json")):
+            if path.name.endswith(".tmp"):
+                continue
+            try:
+                state = EpisodeWorkflowState.from_json(
+                    path.read_text(encoding="utf-8")
+                )
+            except (OSError, UnicodeError, DomainValidationError) as exc:
+                raise DomainValidationError(
+                    f"invalid workflow checkpoint {path}: {exc}"
+                ) from exc
+            expected = self._path(state.workflow_id)
+            if expected.resolve() != path.resolve():
+                raise DomainValidationError(
+                    f"checkpoint filename does not match workflow_id: {path}"
+                )
+            workflow_ids.append(state.workflow_id)
+        return tuple(workflow_ids)
+
     def load(self, workflow_id: str) -> EpisodeWorkflowState | None:
         path = self._path(workflow_id)
         if not path.exists():
