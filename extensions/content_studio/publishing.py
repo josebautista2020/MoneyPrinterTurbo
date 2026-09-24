@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import math
 import re
 from dataclasses import dataclass, field, replace
 from datetime import datetime
@@ -176,6 +175,7 @@ class PublishingPolicy(JsonContract):
     allowed_targets: tuple[PublishGrant, ...]
     live_publish_enabled: bool = False
     max_targets_per_request: int = 3
+    max_live_publications_per_hour: int = 1
     require_latest_approval: bool = True
     require_explicit_youtube_audience: bool = True
     require_synthetic_media_declaration: bool = True
@@ -193,14 +193,19 @@ class PublishingPolicy(JsonContract):
             raise DomainValidationError("allowed_targets must be unique")
         object.__setattr__(self, "allowed_targets", grants)
 
-        if (
-            isinstance(self.max_targets_per_request, bool)
-            or not isinstance(self.max_targets_per_request, int)
-            or self.max_targets_per_request <= 0
+        for name in (
+            "max_targets_per_request",
+            "max_live_publications_per_hour",
         ):
-            raise DomainValidationError(
-                "max_targets_per_request must be a positive integer"
-            )
+            value = getattr(self, name)
+            if (
+                isinstance(value, bool)
+                or not isinstance(value, int)
+                or value <= 0
+            ):
+                raise DomainValidationError(
+                    f"{name} must be a positive integer"
+                )
         for name in (
             "live_publish_enabled",
             "require_latest_approval",
@@ -227,6 +232,7 @@ class PublishingPolicy(JsonContract):
                 "allowed_targets",
                 "live_publish_enabled",
                 "max_targets_per_request",
+                "max_live_publications_per_hour",
                 "require_latest_approval",
                 "require_explicit_youtube_audience",
                 "require_synthetic_media_declaration",
@@ -592,6 +598,9 @@ class PublicationLedger(Protocol):
     def get(self, idempotency_key: str) -> PublicationRecord | None:
         ...
 
+    def trail(self) -> PublicationAuditTrail:
+        ...
+
     def append(self, record: PublicationRecord) -> PublicationAuditTrail:
         ...
 
@@ -711,6 +720,26 @@ def execute_publishing_gateway(
                 "idempotency_key was already used for a different request"
             )
         return replace(existing.result, idempotent_replay=True)
+
+    if not request.dry_run:
+        current_text = _timestamp(recorded_at, "recorded_at")
+        current = datetime.fromisoformat(
+            current_text.replace("Z", "+00:00")
+        )
+        recent_live = 0
+        for item in ledger.trail().records:
+            if item.request.dry_run or not item.result.success:
+                continue
+            prior = datetime.fromisoformat(
+                item.recorded_at.replace("Z", "+00:00")
+            )
+            age_seconds = (current - prior).total_seconds()
+            if 0 <= age_seconds < 3600:
+                recent_live += 1
+        if recent_live >= policy.max_live_publications_per_hour:
+            raise DomainValidationError(
+                "live publication rate limit exceeded"
+            )
 
     if request.dry_run:
         result = PublishResult(
