@@ -31,6 +31,7 @@ from extensions.content_studio.review import (
     ReviewAuditTrail,
     ReviewDecision,
     ReviewPackage,
+    validate_review_decision,
 )
 from extensions.human_review_ui.store import JsonlReviewDecisionStore
 from extensions.orchestration import JsonWorkflowCheckpointStore
@@ -245,6 +246,7 @@ class OperatorConsoleService:
                 "publication_performed": False,
             },
         )
+        validate_review_decision(package, decision)
         audit = self.review_store.append(decision)
         updated = apply_review_decision(
             state,
