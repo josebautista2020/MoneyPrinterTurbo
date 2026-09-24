@@ -209,6 +209,37 @@ class RuntimeProviderRegistry:
             )
         return value
 
+    def validate_profile(
+        self,
+        profile,
+        secrets: SecretAvailability,
+    ) -> None:
+        from extensions.content_studio.runtime import RuntimeProfile
+
+        if not isinstance(profile, RuntimeProfile):
+            raise DomainValidationError(
+                "runtime profile must be a RuntimeProfile"
+            )
+        for binding in profile.providers:
+            self.validate_binding(binding, secrets)
+        for stage, provider_id in profile.stage_bindings.items():
+            binding = profile.provider(provider_id)
+            capabilities = set(binding.capabilities)
+            if stage == "visuals":
+                if not capabilities.intersection(
+                    {CAP_VISUAL_IMAGE, CAP_VISUAL_REFERENCE_IMAGE}
+                ):
+                    raise DomainValidationError(
+                        f"provider {provider_id!r} cannot serve visuals"
+                    )
+            elif stage == "media":
+                require_capability(binding, CAP_MEDIA_ASSEMBLY)
+            else:
+                raise DomainValidationError(
+                    "runtime executor wiring is not implemented for "
+                    f"stage {stage!r}"
+                )
+
     def build_visual_generator(
         self,
         binding: RuntimeProviderBinding,
