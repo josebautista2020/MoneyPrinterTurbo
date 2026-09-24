@@ -69,6 +69,20 @@ from extensions.content_studio.safety import (
     TextRuleSafetyReviewer,
     evaluate_safety_coverage,
 )
+from extensions.content_studio.publishing import (
+    PublicationAuditTrail,
+    PublicationLedger,
+    PublicationRecord,
+    PublishGrant,
+    Publisher,
+    PublishingPolicy,
+    PublishRequest,
+    PublishResult,
+    PublishTarget,
+    PublishTargetResult,
+    execute_publishing_gateway,
+    validate_publish_authorization,
+)
 from extensions.content_studio.quality import (
     HumanReviewGate,
     QACheck,
@@ -178,4 +192,16 @@ __all__ = [
     "ReviewPackage",
     "build_review_package",
     "validate_review_decision",
+    "PublicationAuditTrail",
+    "PublicationLedger",
+    "PublicationRecord",
+    "PublishGrant",
+    "Publisher",
+    "PublishingPolicy",
+    "PublishRequest",
+    "PublishResult",
+    "PublishTarget",
+    "PublishTargetResult",
+    "execute_publishing_gateway",
+    "validate_publish_authorization",
 ]
