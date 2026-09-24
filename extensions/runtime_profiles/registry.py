@@ -18,13 +18,6 @@ from extensions.content_studio.runtime import (
     SecretReference,
     require_capability,
 )
-from extensions.mpt_adapter.adapter import MPTAdapter
-from extensions.mpt_adapter.media import MPTMediaAssembler
-from extensions.mpt_adapter.visual import MPTImageVisualGenerator
-from extensions.openai_image_adapter.reference import (
-    OpenAIReferenceVisualGenerator,
-)
-
 
 @dataclass(frozen=True, slots=True)
 class AdapterDescriptor:
@@ -250,6 +243,10 @@ class RuntimeProviderRegistry:
 
         if descriptor.adapter == "mpt-image":
             require_capability(binding, CAP_VISUAL_IMAGE)
+            from extensions.mpt_adapter.visual import (
+                MPTImageVisualGenerator,
+            )
+
             return MPTImageVisualGenerator(
                 allow_paid_generation=binding.paid_calls_enabled,
                 cost_per_image_usd=self._number_option(
@@ -269,6 +266,10 @@ class RuntimeProviderRegistry:
 
         if descriptor.adapter == "openai-reference-image":
             require_capability(binding, CAP_VISUAL_REFERENCE_IMAGE)
+            from extensions.openai_image_adapter.reference import (
+                OpenAIReferenceVisualGenerator,
+            )
+
             return OpenAIReferenceVisualGenerator(
                 response_model=self._string_option(
                     options,
@@ -302,13 +303,15 @@ class RuntimeProviderRegistry:
         self,
         binding: RuntimeProviderBinding,
         secrets: SecretAvailability,
-    ) -> MPTMediaAssembler:
+    ):
         descriptor = self.validate_binding(binding, secrets)
         if descriptor.adapter != "mpt-media":
             raise DomainValidationError(
                 f"adapter {binding.adapter!r} is not a media assembler"
             )
         require_capability(binding, CAP_MEDIA_ASSEMBLY)
+        from extensions.mpt_adapter.media import MPTMediaAssembler
+
         options = dict(binding.options)
         return MPTMediaAssembler(
             allow_external_generation=binding.external_calls_enabled,
@@ -331,7 +334,7 @@ class RuntimeProviderRegistry:
         self,
         binding: RuntimeProviderBinding,
         secrets: SecretAvailability,
-    ) -> MPTAdapter:
+    ):
         descriptor = self.validate_binding(binding, secrets)
         if descriptor.adapter != "mpt-render":
             raise DomainValidationError(
@@ -342,6 +345,8 @@ class RuntimeProviderRegistry:
             raise DomainValidationError(
                 "mpt-render requires external_calls_enabled=True"
             )
+        from extensions.mpt_adapter.adapter import MPTAdapter
+
         return MPTAdapter()
 
     def capability_matrix(self) -> tuple[dict[str, Any], ...]:
