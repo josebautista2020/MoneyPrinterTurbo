@@ -12,6 +12,7 @@ from typing import Any
 from extensions.content_studio.domain import DomainValidationError
 from extensions.content_studio.orchestration import StageExecutionResult
 from extensions.content_studio.publishing import PublishingPolicy, PublishRequest
+from extensions.content_studio.runtime import RuntimeProfile
 from extensions.operator_console.service import OperatorConsoleService
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
@@ -98,6 +99,21 @@ def _build_parser() -> argparse.ArgumentParser:
     apply_bundle = sub.add_parser("apply-bundle")
     apply_bundle.add_argument("--workflow-id", required=True)
     apply_bundle.add_argument("--results", required=True)
+
+    runtime_matrix = sub.add_parser("runtime-matrix")
+    runtime_matrix.add_argument("--profile", required=True)
+
+    run_runtime = sub.add_parser("run-runtime")
+    run_runtime.add_argument("--workflow-id", required=True)
+    run_runtime.add_argument("--profile", required=True)
+    run_runtime.add_argument(
+        "--confirm-external",
+        action="store_true",
+    )
+    run_runtime.add_argument(
+        "--confirm-paid",
+        action="store_true",
+    )
 
     review = sub.add_parser("review")
     review.add_argument("--workflow-id", required=True)
@@ -188,6 +204,26 @@ def main(argv: list[str] | None = None) -> int:
             state = service.apply_stage_results(
                 args.workflow_id,
                 results,
+            )
+            _print_json(state.to_dict())
+            return 0
+
+        if args.command == "runtime-matrix":
+            profile = RuntimeProfile.from_json(
+                _read_text(args.profile)
+            )
+            _print_json(service.runtime_capability_matrix(profile))
+            return 0
+
+        if args.command == "run-runtime":
+            profile = RuntimeProfile.from_json(
+                _read_text(args.profile)
+            )
+            state = service.run_runtime_stage(
+                args.workflow_id,
+                profile,
+                confirm_external=args.confirm_external,
+                confirm_paid=args.confirm_paid,
             )
             _print_json(state.to_dict())
             return 0
