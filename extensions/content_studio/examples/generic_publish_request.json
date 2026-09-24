@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0.0",
+  "request_id": "generic-publish-episode-2",
+  "package_id": "generic-review-episode-2",
+  "decision_id": "generic-approve-1",
+  "video_uri": "generated/generic/final.mp4",
+  "title": "Generic demo episode",
+  "targets": [
+    {
+      "schema_version": "1.0.0",
+      "platform": "youtube",
+      "account_ref": "demo-account",
+      "privacy_level": "PUBLIC_TO_EVERYONE",
+      "youtube_privacy_status": "private",
+      "youtube_made_for_kids": false,
+      "metadata": {
+        "example": true
+      }
+    }
+  ],
+  "idempotency_key": "generic-episode-2-dryrun-v1",
+  "description": "Generic provider-neutral Content Studio example.",
+  "tags": [
+    "content-studio",
+    "demo"
+  ],
+  "contains_synthetic_media": true,
+  "dry_run": true,
+  "metadata": {
+    "example": true,
+    "publication_performed": false
+  }
+}

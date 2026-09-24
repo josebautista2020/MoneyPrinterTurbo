@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "policy_id": "generic-publishing-v1",
+  "allowed_targets": [
+    {
+      "schema_version": "1.0.0",
+      "platform": "youtube",
+      "account_ref": "demo-account"
+    }
+  ],
+  "live_publish_enabled": false,
+  "max_targets_per_request": 2,
+  "require_latest_approval": true,
+  "require_explicit_youtube_audience": true,
+  "require_synthetic_media_declaration": true,
+  "metadata": {
+    "example": true,
+    "default_deny": true
+  },
+  "max_live_publications_per_hour": 1
+}

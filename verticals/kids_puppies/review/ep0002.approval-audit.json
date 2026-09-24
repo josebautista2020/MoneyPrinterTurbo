@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "kids-ep0002-review",
+  "decisions": [
+    {
+      "schema_version": "1.0.0",
+      "decision_id": "kids-ep0002-approve-1",
+      "package_id": "kids-ep0002-review",
+      "reviewer_id": "kids-reviewer-1",
+      "action": "approve",
+      "decided_at": "2026-09-23T20:56:00+00:00",
+      "comments": "Child-safety, consistency and render QA evidence reviewed.",
+      "target_shot_id": null,
+      "metadata": {
+        "vertical": "kids_puppies",
+        "publication_performed": false
+      }
+    }
+  ],
+  "metadata": {
+    "vertical": "kids_puppies",
+    "original_ip": true
+  }
+}

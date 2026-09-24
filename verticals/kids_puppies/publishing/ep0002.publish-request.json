@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "request_id": "kids-ep0002-publish-dryrun",
+  "package_id": "kids-ep0002-review",
+  "decision_id": "kids-ep0002-approve-1",
+  "video_uri": "generated/kids_puppies/ep0002/master.mp4",
+  "title": "Toby y Luna devuelven la pelota",
+  "targets": [
+    {
+      "schema_version": "1.0.0",
+      "platform": "youtube",
+      "account_ref": "kids-demo-channel",
+      "privacy_level": "PUBLIC_TO_EVERYONE",
+      "youtube_privacy_status": "private",
+      "youtube_made_for_kids": true,
+      "metadata": {
+        "vertical": "kids_puppies"
+      }
+    }
+  ],
+  "idempotency_key": "kids-ep0002-youtube-dryrun-v1",
+  "description": "Una aventura original y amable sobre hacer lo correcto.",
+  "tags": [
+    "perritos",
+    "aventuras",
+    "niños"
+  ],
+  "contains_synthetic_media": true,
+  "dry_run": true,
+  "metadata": {
+    "vertical": "kids_puppies",
+    "original_ip": true,
+    "publication_performed": false
+  }
+}

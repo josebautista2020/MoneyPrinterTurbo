@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "generic-review-episode-2",
+  "decisions": [
+    {
+      "schema_version": "1.0.0",
+      "decision_id": "generic-approve-1",
+      "package_id": "generic-review-episode-2",
+      "reviewer_id": "reviewer-1",
+      "action": "approve",
+      "decided_at": "2026-09-23T20:55:00+00:00",
+      "comments": "Safety and QA evidence reviewed; approved for explicit publishing workflow.",
+      "target_shot_id": null,
+      "metadata": {
+        "example": true,
+        "publication_performed": false
+      }
+    }
+  ],
+  "metadata": {
+    "example": true
+  }
+}
