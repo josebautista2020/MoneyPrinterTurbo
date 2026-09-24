@@ -23,6 +23,7 @@ from extensions.content_studio.publishing import (  # noqa: E402
     PublishRequest,
 )
 from extensions.content_studio.review import ReviewPackage  # noqa: E402
+from extensions.content_studio.runtime import RuntimeProfile  # noqa: E402
 from extensions.operator_console.service import (  # noqa: E402
     OperatorConsoleService,
 )
@@ -171,6 +172,65 @@ with tab_actions:
             "Upload a StageExecutionResult for the exact next stage. "
             "The EpisodeOrchestrator will validate cross-stage traceability."
         )
+        if next_stage in {"visuals", "media"}:
+            st.subheader("Runtime profile execution")
+            runtime_file = st.file_uploader(
+                "RuntimeProfile JSON",
+                type=["json"],
+                key="runtime-profile",
+            )
+            runtime_profile = None
+            if runtime_file is not None:
+                try:
+                    runtime_profile = RuntimeProfile.from_json(
+                        _uploaded_text(runtime_file)
+                    )
+                    matrix = service.runtime_capability_matrix(
+                        runtime_profile
+                    )
+                except (
+                    UnicodeDecodeError,
+                    DomainValidationError,
+                ) as exc:
+                    st.error(f"Invalid runtime profile: {exc}")
+                else:
+                    st.dataframe(
+                        list(matrix["profile"]),
+                        use_container_width=True,
+                        hide_index=True,
+                    )
+
+            confirm_external = st.checkbox(
+                "I explicitly authorize external provider calls "
+                "for this runtime execution",
+                key="runtime-confirm-external",
+            )
+            confirm_paid = st.checkbox(
+                "I explicitly authorize paid provider calls "
+                "for this runtime execution",
+                key="runtime-confirm-paid",
+            )
+            if st.button(
+                f"Run {next_stage} with runtime profile",
+                disabled=runtime_profile is None,
+                type="primary",
+                use_container_width=True,
+            ):
+                try:
+                    service.run_runtime_stage(
+                        selected,
+                        runtime_profile,
+                        confirm_external=confirm_external,
+                        confirm_paid=confirm_paid,
+                    )
+                except DomainValidationError as exc:
+                    st.error(str(exc))
+                else:
+                    st.success(
+                        "Runtime stage processed and checkpoint saved."
+                    )
+                    _rerun()
+
         stage_result_file = st.file_uploader(
             "StageExecutionResult JSON",
             type=["json"],
