@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 from pathlib import Path
-from extensions.content_studio.consistency import ReferenceCatalog
+from extensions.content_studio.consistency import (
+    ReferenceAwareVisualGenerator,
+    ReferenceCatalog,
+)
 from extensions.content_studio.domain import DomainValidationError, ProjectSpec
 from extensions.content_studio.media import (
     MediaAssemblyPlan,
@@ -32,9 +35,6 @@ from extensions.content_studio.visual_generation import (
     VisualResult,
     build_visual_generation_plan,
     generate_visuals,
-)
-from extensions.openai_image_adapter.reference import (
-    OpenAIReferenceVisualGenerator,
 )
 from extensions.runtime_profiles.registry import RuntimeProviderRegistry
 
@@ -160,7 +160,7 @@ class RuntimeVisualStageExecutor(EpisodeStageExecutor):
                 )
                 if not isinstance(
                     generator,
-                    OpenAIReferenceVisualGenerator,
+                    ReferenceAwareVisualGenerator,
                 ):
                     raise DomainValidationError(
                         "reference-aware visual plan requires a "
@@ -229,7 +229,7 @@ class RuntimeVisualStageExecutor(EpisodeStageExecutor):
 
     def _generate_references(
         self,
-        generator: OpenAIReferenceVisualGenerator,
+        generator: ReferenceAwareVisualGenerator,
         plan: VisualGenerationPlan,
         binding: RuntimeProviderBinding,
     ) -> VisualGenerationReport:
