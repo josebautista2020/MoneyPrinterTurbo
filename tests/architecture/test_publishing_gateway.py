@@ -339,6 +339,60 @@ def test_live_publish_requires_both_policy_and_publisher(tmp_path) -> None:
     assert publisher.calls == 1
 
 
+def test_live_hourly_rate_limit_blocks_second_publish(tmp_path) -> None:
+    live_policy = replace(
+        policy(),
+        live_publish_enabled=True,
+        max_live_publications_per_hour=1,
+    )
+    publisher = _FakePublisher()
+    ledger = JsonlPublicationLedger(tmp_path / "publishing.jsonl")
+
+    first = replace(
+        request(),
+        request_id="generic-live-1",
+        idempotency_key="generic-live-key-1",
+        dry_run=False,
+    )
+    second = replace(
+        request(),
+        request_id="generic-live-2",
+        idempotency_key="generic-live-key-2",
+        title="Second live publish",
+        dry_run=False,
+    )
+
+    result = execute_publishing_gateway(
+        publisher,
+        ledger,
+        package(),
+        approval(),
+        review_audit(),
+        first,
+        live_policy,
+        record_id="record-live-1",
+        recorded_at="2026-09-23T21:00:00+00:00",
+    )
+    assert result.success
+    assert publisher.calls == 1
+
+    with pytest.raises(DomainValidationError, match="rate limit"):
+        execute_publishing_gateway(
+            publisher,
+            ledger,
+            package(),
+            approval(),
+            review_audit(),
+            second,
+            live_policy,
+            record_id="record-live-2",
+            recorded_at="2026-09-23T21:30:00+00:00",
+        )
+
+    assert publisher.calls == 1
+    assert len(ledger.trail().records) == 1
+
+
 def test_publish_request_must_match_exact_approved_render() -> None:
     bad = replace(request(), video_uri="generated/other.mp4")
 
