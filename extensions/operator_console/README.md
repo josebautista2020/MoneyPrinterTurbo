@@ -23,6 +23,8 @@ Commands:
 - `artifacts`
 - `apply-stage`
 - `apply-bundle`
+- `runtime-matrix`
+- `run-runtime`
 - `review`
 - `publish-dry-run`
 - `release`
@@ -47,3 +49,27 @@ governed Publishing Gateway, and the service rejects:
 - `PublishingPolicy(live_publish_enabled=True)`
 
 Provider executors remain outside this operator package.
+
+
+## Runtime profiles
+
+Inspect a profile without invoking providers:
+
+```bash
+uv run python -m extensions.operator_console.cli runtime-matrix \
+  --profile extensions/runtime_profiles/profiles/mpt-guarded.json
+```
+
+Run the current `visuals` or `media` stage through a runtime profile:
+
+```bash
+uv run python -m extensions.operator_console.cli run-runtime \
+  --workflow-id <id> \
+  --profile <profile.json>
+```
+
+If the profile enables external calls, the CLI additionally requires
+`--confirm-external`. If it enables paid calls it also requires
+`--confirm-paid`.
+
+Committed profiles keep both flags disabled by default.
