@@ -1748,6 +1748,7 @@ SCHEMAS.update(
                 "allowed_targets",
                 "live_publish_enabled",
                 "max_targets_per_request",
+                "max_live_publications_per_hour",
                 "require_latest_approval",
                 "require_explicit_youtube_audience",
                 "require_synthetic_media_declaration",
@@ -1768,6 +1769,10 @@ SCHEMAS.update(
                 },
                 "live_publish_enabled": {"type": "boolean"},
                 "max_targets_per_request": {
+                    "type": "integer",
+                    "minimum": 1,
+                },
+                "max_live_publications_per_hour": {
                     "type": "integer",
                     "minimum": 1,
                 },
