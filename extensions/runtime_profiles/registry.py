@@ -131,6 +131,10 @@ class RuntimeProviderRegistry:
                 f"provider {binding.provider_id!r} is missing options: "
                 f"{missing}"
             )
+        self._validate_option_types(
+            descriptor.adapter,
+            binding.options,
+        )
 
         refs = {item.reference for item in binding.secret_refs}
         missing_refs = sorted(
@@ -153,7 +157,6 @@ class RuntimeProviderRegistry:
                     f"secret references: {sorted(unavailable)}"
                 )
         return descriptor
-
 
     @staticmethod
     def _string_option(
@@ -201,6 +204,47 @@ class RuntimeProviderRegistry:
                 f"runtime option {name!r} must be boolean"
             )
         return value
+
+    def _validate_option_types(
+        self,
+        adapter: str,
+        options: Mapping[str, Any],
+    ) -> None:
+        if adapter == "mpt-image":
+            self._number_option(options, "cost_per_image_usd")
+            if "save_dir" in options:
+                self._string_option(options, "save_dir")
+            return
+
+        if adapter == "openai-reference-image":
+            self._string_option(options, "response_model")
+            self._string_option(options, "image_model")
+            self._string_option(options, "reference_catalog_path")
+            self._number_option(options, "cost_per_generation_usd")
+            if "output_dir" in options:
+                self._string_option(options, "output_dir")
+            return
+
+        if adapter == "mpt-media":
+            self._string_option(options, "voice_name")
+            self._string_option(options, "output_uri_template")
+            self._number_option(options, "estimated_cost_usd")
+            if "work_dir" in options:
+                self._string_option(options, "work_dir")
+            if "subtitle_enabled" in options:
+                self._bool_option(
+                    options,
+                    "subtitle_enabled",
+                    default=True,
+                )
+            return
+
+        if adapter == "mpt-render":
+            return
+
+        raise DomainValidationError(
+            f"runtime adapter is not registered: {adapter!r}"
+        )
 
     def validate_profile(
         self,
