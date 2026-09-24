@@ -23,5 +23,6 @@
     "audience": "4-9",
     "default_deny": true,
     "human_approval_required": true
-  }
+  },
+  "max_live_publications_per_hour": 1
 }
