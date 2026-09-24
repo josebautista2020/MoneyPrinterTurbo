@@ -822,6 +822,31 @@ def test_orchestration_core_has_no_provider_vertical_or_ui_imports() -> None:
     assert not violations
 
 
+def test_orchestration_examples_are_valid_and_offline() -> None:
+    generic_state = EpisodeWorkflowState.from_json(
+        _load(EXAMPLES / "generic_workflow_seed.json")
+    )
+    candidate = EpisodeReleaseCandidate.from_json(
+        _load(EXAMPLES / "generic_release_candidate.json")
+    )
+    kids_seed = EpisodeWorkflowState.from_json(
+        _load(
+            REPO_ROOT
+            / "verticals"
+            / "kids_puppies"
+            / "orchestration"
+            / "ep0002.workflow-seed.json"
+        )
+    )
+
+    assert generic_state.next_stage == "project_episode"
+    assert generic_state.metadata["live_publication"] is False
+    assert candidate.publication_status == "dry_run_validated"
+    assert candidate.metadata["publication_performed"] is False
+    assert kids_seed.project_id == "kids-puppies-demo"
+    assert kids_seed.metadata["live_publication"] is False
+
+
 def test_stage_executor_protocol() -> None:
     executor = _FixtureExecutor(
         "project_episode",
