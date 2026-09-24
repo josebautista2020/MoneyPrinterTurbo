@@ -735,7 +735,15 @@ def validate_stage_artifacts(
         episode = next(
             item for item in contracts if isinstance(item, EpisodeSpec)
         )
-        project.validate_episode(episode)
+        matching = [
+            item
+            for item in project.episodes
+            if item.episode_id == episode.episode_id
+        ]
+        if len(matching) != 1 or matching[0] != episode:
+            raise DomainValidationError(
+                "ProjectSpec must contain the exact EpisodeSpec artifact"
+            )
 
     if stage == "consistency":
         report = next(
