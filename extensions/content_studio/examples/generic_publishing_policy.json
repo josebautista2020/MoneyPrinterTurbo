@@ -16,5 +16,6 @@
   "metadata": {
     "example": true,
     "default_deny": true
-  }
+  },
+  "max_live_publications_per_hour": 1
 }
