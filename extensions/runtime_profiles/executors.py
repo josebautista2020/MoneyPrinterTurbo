@@ -85,6 +85,29 @@ class RuntimeVisualStageExecutor(EpisodeStageExecutor):
         state: EpisodeWorkflowState,
     ) -> float | None:
         binding = self._binding()
+        descriptor = self._registry.validate_binding(
+            binding,
+            self._secrets,
+        )
+        if (
+            descriptor.paid_authorization_required
+            and not binding.paid_calls_enabled
+        ):
+            return StageExecutionResult(
+                stage=self.stage_name,
+                status="BLOCKED",
+                error=(
+                    f"runtime provider {binding.provider_id!r} requires "
+                    "paid_calls_enabled=True"
+                ),
+                cost_usd=0.0,
+                metadata={
+                    "runtime_profile": self._profile.profile_id,
+                    "provider_id": binding.provider_id,
+                    "execution_key": execution_key,
+                    "provider_called": False,
+                },
+            )
         generator = self._registry.build_visual_generator(
             binding,
             self._secrets,
