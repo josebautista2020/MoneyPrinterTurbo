@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
-
 from extensions.content_studio.consistency import ReferenceCatalog
 from extensions.content_studio.domain import DomainValidationError, ProjectSpec
 from extensions.content_studio.media import (
