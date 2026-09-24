@@ -210,6 +210,25 @@ class OperatorConsoleService:
         )
         return orchestrator.run_next(state)
 
+    def apply_stage_results(
+        self,
+        workflow_id: str,
+        results: tuple[StageExecutionResult, ...],
+    ) -> EpisodeWorkflowState:
+        if not results:
+            raise DomainValidationError(
+                "stage result bundle must contain at least one result"
+            )
+        state = self.load_workflow(workflow_id)
+        for result in results:
+            if state.next_stage in {"human_review", "publish_dry_run", None}:
+                break
+            state = self.apply_stage_result(workflow_id, result)
+            latest = state.latest_record(result.stage)
+            if latest is None or latest.status != "PASS":
+                break
+        return state
+
     def record_review_decision(
         self,
         workflow_id: str,
