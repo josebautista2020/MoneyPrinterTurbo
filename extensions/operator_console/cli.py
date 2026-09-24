@@ -95,6 +95,10 @@ def _build_parser() -> argparse.ArgumentParser:
     apply_stage.add_argument("--workflow-id", required=True)
     apply_stage.add_argument("--result", required=True)
 
+    apply_bundle = sub.add_parser("apply-bundle")
+    apply_bundle.add_argument("--workflow-id", required=True)
+    apply_bundle.add_argument("--results", required=True)
+
     review = sub.add_parser("review")
     review.add_argument("--workflow-id", required=True)
     review.add_argument(
@@ -167,6 +171,23 @@ def main(argv: list[str] | None = None) -> int:
             state = service.apply_stage_result(
                 args.workflow_id,
                 result,
+            )
+            _print_json(state.to_dict())
+            return 0
+
+        if args.command == "apply-bundle":
+            decoded = json.loads(_read_text(args.results))
+            if not isinstance(decoded, list):
+                raise DomainValidationError(
+                    "stage result bundle JSON must be an array"
+                )
+            results = tuple(
+                StageExecutionResult.from_dict(item)
+                for item in decoded
+            )
+            state = service.apply_stage_results(
+                args.workflow_id,
+                results,
             )
             _print_json(state.to_dict())
             return 0
