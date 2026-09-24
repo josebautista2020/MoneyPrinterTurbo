@@ -45,6 +45,7 @@ from extensions.content_studio.visual_generation import (
     VisualGenerationPlan,
     VisualResult,
 )
+from extensions.operator_console.cli import main as cli_main
 from extensions.operator_console.service import OperatorConsoleService
 from extensions.runtime_profiles import (
     EnvironmentSecretAvailability,
@@ -402,6 +403,55 @@ def test_committed_profiles_are_default_deny(name) -> None:
         assert provider.external_calls_enabled is False
         assert provider.paid_calls_enabled is False
     assert profile.metadata["live_publication"] is False
+
+
+def test_kids_puppies_runtime_profile_is_default_deny() -> None:
+    profile = RuntimeProfile.from_json(
+        _load(
+            REPO_ROOT
+            / "verticals"
+            / "kids_puppies"
+            / "runtime"
+            / "profile-guarded.json"
+        )
+    )
+
+    assert profile.profile_id == "kids-puppies-guarded"
+    assert profile.stage_bindings == {
+        "visuals": "kids-reference-visuals",
+        "media": "kids-media",
+    }
+    for provider in profile.providers:
+        assert provider.external_calls_enabled is False
+        assert provider.paid_calls_enabled is False
+    assert profile.metadata["child_safe"] is True
+    assert profile.metadata["live_publication"] is False
+
+
+def test_cli_runtime_matrix_is_offline_and_json_serializable(
+    tmp_path,
+    capsys,
+) -> None:
+    profile_path = PROFILES / "mpt-guarded.json"
+    argv = [
+        "--workflow-dir",
+        str(tmp_path / "workflows"),
+        "--review-dir",
+        str(tmp_path / "reviews"),
+        "--publication-dir",
+        str(tmp_path / "publications"),
+        "runtime-matrix",
+        "--profile",
+        str(profile_path),
+    ]
+
+    assert cli_main(argv) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["profile_id"] == "mpt-guarded"
+    assert {row["adapter"] for row in payload["profile"]} == {
+        "mpt-image",
+        "mpt-media",
+    }
 
 
 def test_secret_reference_round_trip_contains_reference_not_value() -> None:
