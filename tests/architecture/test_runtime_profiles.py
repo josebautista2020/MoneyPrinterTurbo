@@ -31,14 +31,12 @@ from extensions.content_studio.orchestration import (
     WorkflowArtifact,
     WorkflowStageRecord,
 )
-from extensions.content_studio.prompting import PromptPlan, ShotPrompt
+from extensions.content_studio.prompting import PromptPlan
 from extensions.content_studio.runtime import (
     CAP_MEDIA_ASSEMBLY,
     CAP_VISUAL_IMAGE,
-    CAP_VISUAL_REFERENCE_IMAGE,
     RuntimeProfile,
     RuntimeProviderBinding,
-    SecretAvailability,
     SecretReference,
 )
 from extensions.content_studio.story import StoryPlan
