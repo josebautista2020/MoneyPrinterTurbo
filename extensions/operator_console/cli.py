@@ -228,7 +228,7 @@ def main(argv: list[str] | None = None) -> int:
             _print_json(candidate.to_dict())
             return 0
 
-    except (DomainValidationError, OSError, UnicodeError) as exc:
+    except (DomainValidationError, OSError, UnicodeError, ValueError) as exc:
         parser.exit(2, f"error: {exc}\n")
 
     parser.error(f"unsupported command: {args.command}")
