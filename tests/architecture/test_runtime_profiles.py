@@ -509,6 +509,24 @@ def test_registry_rejects_unknown_adapter_and_capability() -> None:
         registry.validate_binding(mismatch, _NoSecrets())
 
 
+def test_runtime_matrix_rejects_invalid_option_types() -> None:
+    registry = RuntimeProviderRegistry()
+    profile = _visual_profile(external=False, paid=False)
+    binding = replace(
+        profile.providers[0],
+        options={
+            "cost_per_image_usd": "0.01",
+            "save_dir": "generated/runtime/test",
+        },
+    )
+
+    with pytest.raises(DomainValidationError, match="must be a number"):
+        registry.validate_profile(
+            replace(profile, providers=(binding,)),
+            _NoSecrets(),
+        )
+
+
 def test_external_openai_profile_requires_declared_and_available_secret() -> None:
     registry = RuntimeProviderRegistry()
     base = RuntimeProfile.from_json(
@@ -784,6 +802,32 @@ def test_runtime_schemas_are_versioned(contract_type: type) -> None:
     assert schema["additionalProperties"] is False
     assert schema["properties"]["schema_version"]["const"] == SCHEMA_VERSION
     assert "schema_version" in schema["required"]
+
+
+def test_registry_has_no_top_level_provider_imports() -> None:
+    path = REPO_ROOT / "extensions" / "runtime_profiles" / "registry.py"
+    tree = ast.parse(path.read_text(encoding="utf-8"))
+    forbidden = (
+        "extensions.mpt_adapter",
+        "extensions.openai_image_adapter",
+        "app",
+        "openai",
+    )
+    imports = []
+    for node in tree.body:
+        modules = []
+        if isinstance(node, ast.Import):
+            modules.extend(alias.name for alias in node.names)
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            modules.append(node.module)
+        for module in modules:
+            if any(
+                module == prefix or module.startswith(prefix + ".")
+                for prefix in forbidden
+            ):
+                imports.append(module)
+
+    assert not imports
 
 
 def test_runtime_core_has_no_provider_or_operator_imports() -> None:
