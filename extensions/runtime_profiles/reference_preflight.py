@@ -34,6 +34,11 @@ def preflight_reference_images(
         for request in plan.requests
         for asset_id in request.reference_asset_ids
     }
+    if not referenced:
+        raise DomainValidationError(
+            "reference-aware visual plan has no reference_asset_ids; "
+            "bind CharacterBible and UniverseBible first"
+        )
     for asset_id in sorted(referenced):
         asset = catalog.resolve(asset_id)
         if asset.metadata.get("placeholder") or catalog.metadata.get(

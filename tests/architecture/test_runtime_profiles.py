@@ -15,6 +15,7 @@ from extensions.content_studio.consistency import (
     ConsistencyReport,
     ConsistentVisualResult,
 )
+from extensions.content_studio.bibles import CharacterBible, UniverseBible
 from extensions.content_studio.domain import (
     DomainValidationError,
     ProjectSpec,
@@ -35,6 +36,7 @@ from extensions.content_studio.prompting import PromptPlan
 from extensions.content_studio.runtime import (
     CAP_MEDIA_ASSEMBLY,
     CAP_VISUAL_IMAGE,
+    CAP_VISUAL_REFERENCE_IMAGE,
     RuntimeProfile,
     RuntimeProviderBinding,
     SecretReference,
@@ -742,6 +744,43 @@ def test_reference_plan_does_not_silently_use_basic_visual_provider(
     assert record.status == "FAIL"
     assert "visual.image.reference" in (record.error or "")
     assert fake.generate_calls == 0
+
+
+def test_reference_runtime_binds_bibles_before_generation() -> None:
+    state = _visual_ready_state("reference-binding-workflow")
+    characters = CharacterBible.from_json(
+        _load(EXAMPLES / "generic_character_bible.json")
+    )
+    universe = UniverseBible.from_json(
+        _load(EXAMPLES / "generic_universe_bible.json")
+    )
+    records = tuple(
+        replace(
+            record,
+            artifacts=(
+                WorkflowArtifact.from_contract("characters", characters),
+                WorkflowArtifact.from_contract("universe", universe),
+            ),
+        )
+        if record.stage == "bibles" else record
+        for record in state.records
+    )
+    state = replace(state, records=records)
+    binding = RuntimeProviderBinding(
+        provider_id="reference-provider",
+        adapter="openai-reference-image",
+        capabilities=(CAP_VISUAL_REFERENCE_IMAGE,),
+        options={"reference_catalog_path": "unused.json"},
+    )
+    profile = RuntimeProfile(
+        profile_id="reference-test",
+        providers=(binding,),
+        stage_bindings={"visuals": binding.provider_id},
+    )
+    executor = RuntimeVisualStageExecutor(profile, RuntimeProviderRegistry(), _NoSecrets())
+    plan = executor._plan(state, binding)
+    assert plan.metadata["consistency_references_bound"] is True
+    assert all(request.reference_asset_ids for request in plan.requests)
 
 
 def test_media_runtime_executor_wires_fake_assembler(

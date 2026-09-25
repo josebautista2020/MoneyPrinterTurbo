@@ -71,6 +71,12 @@ def test_preflight_rejects_missing_late_reference(tmp_path: Path) -> None:
         preflight_reference_images(plan, _catalog(plan, paths))
 
 
+def test_preflight_rejects_unbound_plan(tmp_path: Path) -> None:
+    source = VisualGenerationPlan.from_json(EXAMPLE.read_text(encoding="utf-8"))
+    with pytest.raises(DomainValidationError, match="no reference_asset_ids"):
+        preflight_reference_images(source, _catalog(_plan(), [tmp_path / "x.png"] * len(source.requests)))
+
+
 def test_preflight_rejects_placeholder_and_corrupt_image(tmp_path: Path) -> None:
     plan = _plan()
     paths = [tmp_path / f"reference-{index}.png" for index in range(len(plan.requests))]
@@ -149,3 +155,39 @@ def test_operator_can_preflight_without_provider_credentials(
         "--catalog", str(catalog_path),
     ]) == 0
     assert '"provider_called": false' in capsys.readouterr().out
+
+
+def test_operator_binds_kids_bibles_before_offline_preflight(
+    tmp_path: Path,
+    capsys,
+) -> None:
+    root = Path(__file__).resolve().parents[2] / "verticals/kids_puppies"
+    source = VisualGenerationPlan.from_json(
+        (root / "visuals/ep0002.visual-plan.json").read_text(encoding="utf-8")
+    )
+    assert all(not request.reference_asset_ids for request in source.requests)
+    paths = [tmp_path / f"reference-{index}.png" for index in range(3)]
+    for path in paths:
+        Image.new("RGB", (8, 8)).save(path)
+    catalog = ReferenceCatalog(
+        project_id=source.project_id,
+        assets=tuple(
+            ReferenceAsset(
+                reference_asset_id=asset_id,
+                uri=str(path),
+            )
+            for asset_id, path in zip(
+                ("toby-ref-v1", "luna-ref-v1", "park-ref-v1"), paths
+            )
+        ),
+    )
+    catalog_path = tmp_path / "catalog.json"
+    catalog_path.write_text(catalog.to_json(), encoding="utf-8")
+    assert operator_cli([
+        "preflight-references",
+        "--plan", str(root / "visuals/ep0002.visual-plan.json"),
+        "--catalog", str(catalog_path),
+        "--character-bible", str(root / "bibles/character_bible.json"),
+        "--universe-bible", str(root / "bibles/universe_bible.json"),
+    ]) == 0
+    assert '"reference_count": 3' in capsys.readouterr().out

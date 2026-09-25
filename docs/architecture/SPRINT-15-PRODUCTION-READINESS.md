@@ -43,8 +43,16 @@ call, from the repository root:
 
 ```bash
 uv run python -m extensions.operator_console.cli preflight-references \
-  --plan <visual-plan.json> --catalog <local-reference-catalog.json>
+  --plan <visual-plan.json> --catalog <local-reference-catalog.json> \
+  --character-bible <character-bible.json> \
+  --universe-bible <universe-bible.json>
 ```
+
+Both Bible arguments are supplied together to bind the current character and
+location reference IDs. An unbound plan with zero references fails explicitly.
+The runtime reference-image executor applies the same binding to workflow
+artifacts before its complete-batch preflight. A zero-reference PASS is not
+evidence of readiness.
 
 This validation does not establish image ownership or artistic quality. Those
 require an explicit asset review and the Human Review gate on the resulting

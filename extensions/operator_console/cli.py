@@ -11,6 +11,8 @@ from typing import Any
 
 from extensions.content_studio.domain import DomainValidationError
 from extensions.content_studio.consistency import ReferenceCatalog
+from extensions.content_studio.bibles import CharacterBible, UniverseBible
+from extensions.content_studio.consistency import bind_consistency_references
 from extensions.content_studio.orchestration import StageExecutionResult
 from extensions.content_studio.publishing import PublishingPolicy, PublishRequest
 from extensions.content_studio.runtime import RuntimeProfile
@@ -111,6 +113,8 @@ def _build_parser() -> argparse.ArgumentParser:
     references = sub.add_parser("preflight-references")
     references.add_argument("--plan", required=True)
     references.add_argument("--catalog", required=True)
+    references.add_argument("--character-bible")
+    references.add_argument("--universe-bible")
 
     run_runtime = sub.add_parser("run-runtime")
     run_runtime.add_argument("--workflow-id", required=True)
@@ -227,6 +231,17 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "preflight-references":
             plan = VisualGenerationPlan.from_json(_read_text(args.plan))
             catalog = ReferenceCatalog.from_json(_read_text(args.catalog))
+            if bool(args.character_bible) != bool(args.universe_bible):
+                raise DomainValidationError(
+                    "both character and universe bibles are required "
+                    "when binding references"
+                )
+            if args.character_bible:
+                plan = bind_consistency_references(
+                    plan,
+                    CharacterBible.from_json(_read_text(args.character_bible)),
+                    UniverseBible.from_json(_read_text(args.universe_bible)),
+                )
             preflight_reference_images(plan, catalog)
             _print_json({
                 "status": "PASS",
