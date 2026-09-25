@@ -135,6 +135,15 @@ class RuntimeProviderRegistry:
             descriptor.adapter,
             binding.options,
         )
+        if (
+            binding.external_calls_enabled
+            and descriptor.adapter == "mpt-media"
+            and binding.options["voice_name"] == "kids-demo-voice"
+        ):
+            raise DomainValidationError(
+                "kids-demo-voice is a placeholder; select a real "
+                "MPT voice before running media"
+            )
 
         refs = {item.reference for item in binding.secret_refs}
         missing_refs = sorted(

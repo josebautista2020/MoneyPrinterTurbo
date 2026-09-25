@@ -7,6 +7,8 @@ import os
 import re
 from pathlib import Path
 
+from PIL import Image, UnidentifiedImageError
+
 from app.models.schema import (
     VideoAspect,
     VideoConcatMode,
@@ -64,6 +66,26 @@ class MPTMediaAssembler(MediaAssembler):
             raise RuntimeError(
                 "external media generation is disabled; explicit authorization "
                 "is required before invoking MoneyPrinterTurbo TTS"
+            )
+
+        # TTS can incur a provider charge. Check the complete visual set first.
+        try:
+            for uri, kind in zip(plan.visual_uris, plan.visual_kinds):
+                path = Path(uri)
+                if not path.is_file():
+                    raise FileNotFoundError(
+                        f"visual input does not exist: {uri}"
+                    )
+                if path.stat().st_size == 0:
+                    raise ValueError(f"visual input is empty: {uri}")
+                if kind == "image":
+                    with Image.open(path) as image:
+                        image.verify()
+        except (OSError, ValueError, UnidentifiedImageError) as exc:
+            return self._failure(
+                plan,
+                f"media preflight failed: {exc}",
+                provider_called=False,
             )
 
         work_dir = Path(

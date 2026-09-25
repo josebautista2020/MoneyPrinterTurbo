@@ -49,3 +49,17 @@ uv run python -m extensions.operator_console.cli preflight-references \
 This validation does not establish image ownership or artistic quality. Those
 require an explicit asset review and the Human Review gate on the resulting
 episode. No provider call or publication is part of this implementation.
+
+## Media preflight
+
+Before invoking TTS, the MPT media adapter verifies that every visual input
+exists and is nonempty. Image inputs must also decode successfully. A missing
+visual late in the episode now fails with `provider_called=false` and zero
+reported cost, before narration starts. This preflight does not verify video
+decoding or artistic quality.
+
+The committed Kids Puppies profile uses `kids-demo-voice`. It remains a
+default-deny example; enabling its media provider for external calls with that
+placeholder voice is rejected by the runtime registry. An operator must
+select a real configured MPT voice for the pilot. Offline capability inspection
+of the guarded example remains available.

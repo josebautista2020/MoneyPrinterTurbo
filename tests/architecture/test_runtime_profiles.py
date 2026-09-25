@@ -428,6 +428,24 @@ def test_kids_puppies_runtime_profile_is_default_deny() -> None:
     assert profile.metadata["live_publication"] is False
 
 
+def test_kids_puppies_demo_voice_cannot_be_enabled_for_external_media() -> None:
+    profile = RuntimeProfile.from_json(
+        _load(
+            REPO_ROOT
+            / "verticals"
+            / "kids_puppies"
+            / "runtime"
+            / "profile-guarded.json"
+        )
+    )
+    media = profile.provider("kids-media")
+    enabled = replace(media, external_calls_enabled=True)
+    registry = RuntimeProviderRegistry()
+    with pytest.raises(DomainValidationError, match="placeholder"):
+        registry.validate_binding(enabled, _AllSecrets())
+    registry.validate_binding(media, _AllSecrets())
+
+
 def test_cli_runtime_matrix_is_offline_and_json_serializable(
     tmp_path,
     capsys,
