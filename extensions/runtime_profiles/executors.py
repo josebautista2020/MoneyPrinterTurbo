@@ -37,6 +37,9 @@ from extensions.content_studio.visual_generation import (
     generate_visuals,
 )
 from extensions.runtime_profiles.registry import RuntimeProviderRegistry
+from extensions.runtime_profiles.reference_preflight import (
+    preflight_reference_images,
+)
 
 
 def _remaining_budget(
@@ -243,6 +246,9 @@ class RuntimeVisualStageExecutor(EpisodeStageExecutor):
             raise DomainValidationError(
                 "ReferenceCatalog project_id does not match visual plan"
             )
+
+        # Validate the complete batch before the first provider request.
+        preflight_reference_images(plan, catalog)
 
         budget = binding.max_stage_cost_usd
         estimates = []
