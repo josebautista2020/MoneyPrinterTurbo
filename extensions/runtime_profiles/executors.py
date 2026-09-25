@@ -83,6 +83,8 @@ class RuntimeVisualStageExecutor(EpisodeStageExecutor):
         state: EpisodeWorkflowState,
     ) -> float | None:
         binding = self._binding()
+        if not binding.external_calls_enabled:
+            return 0.0
         generator = self._registry.build_visual_generator(
             binding,
             self._secrets,
@@ -354,6 +356,8 @@ class RuntimeMediaStageExecutor(EpisodeStageExecutor):
         state: EpisodeWorkflowState,
     ) -> float | None:
         binding = self._binding()
+        if not binding.external_calls_enabled:
+            return 0.0
         assembler = self._registry.build_media_assembler(
             binding,
             self._secrets,
