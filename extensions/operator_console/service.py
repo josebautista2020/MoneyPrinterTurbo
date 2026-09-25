@@ -33,6 +33,15 @@ from extensions.content_studio.review import (
     ReviewPackage,
     validate_review_decision,
 )
+from extensions.content_studio.runtime import (
+    RuntimeProfile,
+    SecretAvailability,
+)
+from extensions.runtime_profiles import (
+    EnvironmentSecretAvailability,
+    RuntimeExecutorFactory,
+    RuntimeProviderRegistry,
+)
 from extensions.human_review_ui.store import JsonlReviewDecisionStore
 from extensions.orchestration import JsonWorkflowCheckpointStore
 from extensions.publishing_gateway import JsonlPublicationLedger
@@ -228,6 +237,67 @@ class OperatorConsoleService:
             if latest is None or latest.status != "PASS":
                 break
         return state
+
+    def runtime_capability_matrix(
+        self,
+        profile: RuntimeProfile,
+        *,
+        registry: RuntimeProviderRegistry | None = None,
+        secrets: SecretAvailability | None = None,
+    ) -> dict[str, Any]:
+        registry = registry or RuntimeProviderRegistry()
+        secrets = secrets or EnvironmentSecretAvailability()
+        registry.validate_profile(profile, secrets)
+        return {
+            "profile_id": profile.profile_id,
+            "profile": profile.capability_matrix(),
+            "registered_adapters": registry.capability_matrix(),
+        }
+
+    def run_runtime_stage(
+        self,
+        workflow_id: str,
+        profile: RuntimeProfile,
+        *,
+        confirm_external: bool = False,
+        confirm_paid: bool = False,
+        registry: RuntimeProviderRegistry | None = None,
+        secrets: SecretAvailability | None = None,
+    ) -> EpisodeWorkflowState:
+        state = self.load_workflow(workflow_id)
+        stage = state.next_stage
+        if stage not in {"visuals", "media"}:
+            raise DomainValidationError(
+                "runtime provider execution is only available when "
+                "next_stage is visuals or media"
+            )
+        binding = profile.provider_for_stage(stage)
+        if binding.external_calls_enabled and not confirm_external:
+            raise DomainValidationError(
+                "external runtime execution requires confirm_external=True"
+            )
+        if binding.paid_calls_enabled and not confirm_paid:
+            raise DomainValidationError(
+                "paid runtime execution requires confirm_paid=True"
+            )
+
+        registry = registry or RuntimeProviderRegistry()
+        secrets = secrets or EnvironmentSecretAvailability()
+        registry.validate_profile(profile, secrets)
+        executors = RuntimeExecutorFactory(
+            registry,
+            secrets,
+        ).build(profile)
+        executor = executors.get(stage)
+        if executor is None:
+            raise DomainValidationError(
+                f"runtime profile cannot execute stage {stage!r}"
+            )
+        orchestrator = EpisodeOrchestrator(
+            {stage: executor},
+            self.workflow_store,
+        )
+        return orchestrator.run_next(state)
 
     def record_review_decision(
         self,

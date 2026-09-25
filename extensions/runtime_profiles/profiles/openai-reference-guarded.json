@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0.0",
+  "profile_id": "openai-reference-guarded",
+  "providers": [
+    {
+      "schema_version": "1.0.0",
+      "provider_id": "openai-reference-visuals",
+      "adapter": "openai-reference-image",
+      "capabilities": [
+        "visual.image.reference"
+      ],
+      "secret_refs": [
+        {
+          "schema_version": "1.0.0",
+          "scheme": "env",
+          "key": "OPENAI_API_KEY"
+        }
+      ],
+      "options": {
+        "response_model": "gpt-5",
+        "image_model": "gpt-image-1",
+        "cost_per_generation_usd": 0.08,
+        "output_dir": "generated/runtime/openai-reference",
+        "reference_catalog_path": "extensions/content_studio/examples/generic_reference_catalog.json"
+      },
+      "external_calls_enabled": false,
+      "paid_calls_enabled": false,
+      "max_stage_cost_usd": 1,
+      "metadata": {
+        "default_deny": true
+      }
+    }
+  ],
+  "stage_bindings": {
+    "visuals": "openai-reference-visuals"
+  },
+  "metadata": {
+    "default_deny": true,
+    "external_calls_enabled": false,
+    "paid_calls_enabled": false,
+    "live_publication": false
+  }
+}

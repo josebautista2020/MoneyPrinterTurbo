@@ -2162,6 +2162,124 @@ SCHEMAS.update(
     }
 )
 
+
+SCHEMAS.update(
+    {
+        "SecretReference": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/secret-reference/{SCHEMA_VERSION}",
+            "title": "SecretReference",
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["schema_version", "scheme", "key"],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "scheme": {
+                    "type": "string",
+                    "enum": ["env", "secret-manager", "file-ref"],
+                },
+                "key": {"type": "string", "minLength": 1},
+            },
+        },
+        "RuntimeProviderBinding": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": (
+                f"{_SCHEMA_BASE}/runtime-provider-binding/"
+                f"{SCHEMA_VERSION}"
+            ),
+            "title": "RuntimeProviderBinding",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "provider_id",
+                "adapter",
+                "capabilities",
+                "secret_refs",
+                "options",
+                "external_calls_enabled",
+                "paid_calls_enabled",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "provider_id": {
+                    "type": "string",
+                    "pattern": _ID_PATTERN,
+                },
+                "adapter": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9_.-]{1,127}$",
+                },
+                "capabilities": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": True,
+                    "items": {
+                        "type": "string",
+                        "pattern": "^[a-z][a-z0-9_.-]{1,127}$",
+                    },
+                },
+                "secret_refs": {
+                    "type": "array",
+                    "uniqueItems": True,
+                    "items": {
+                        "$ref": (
+                            f"{_SCHEMA_BASE}/secret-reference/"
+                            f"{SCHEMA_VERSION}"
+                        )
+                    },
+                },
+                "options": {"type": "object"},
+                "external_calls_enabled": {"type": "boolean"},
+                "paid_calls_enabled": {"type": "boolean"},
+                "max_stage_cost_usd": {
+                    "type": ["number", "null"],
+                    "minimum": 0,
+                },
+                "metadata": _METADATA,
+            },
+        },
+        "RuntimeProfile": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": f"{_SCHEMA_BASE}/runtime-profile/{SCHEMA_VERSION}",
+            "title": "RuntimeProfile",
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "schema_version",
+                "profile_id",
+                "providers",
+                "stage_bindings",
+            ],
+            "properties": {
+                "schema_version": {"const": SCHEMA_VERSION},
+                "profile_id": {
+                    "type": "string",
+                    "pattern": _ID_PATTERN,
+                },
+                "providers": {
+                    "type": "array",
+                    "uniqueItems": True,
+                    "items": {
+                        "$ref": (
+                            f"{_SCHEMA_BASE}/runtime-provider-binding/"
+                            f"{SCHEMA_VERSION}"
+                        )
+                    },
+                },
+                "stage_bindings": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string",
+                        "pattern": _ID_PATTERN,
+                    },
+                },
+                "metadata": _METADATA,
+            },
+        },
+    }
+)
+
 def schema_for(contract_name: str) -> dict[str, Any]:
     """Return an isolated JSON-compatible schema for a canonical contract."""
     try:
