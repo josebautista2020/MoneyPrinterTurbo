@@ -38,6 +38,14 @@ need a separate verification mechanism before they can be used for a paid run.
 Do not change the committed example catalog to refer to private local assets;
 use a local, uncommitted catalog and runtime profile for the pilot.
 
+An operator can validate those files offline, without a credential or a paid
+call, from the repository root:
+
+```bash
+uv run python -m extensions.operator_console.cli preflight-references \
+  --plan <visual-plan.json> --catalog <local-reference-catalog.json>
+```
+
 This validation does not establish image ownership or artistic quality. Those
 require an explicit asset review and the Human Review gate on the resulting
 episode. No provider call or publication is part of this implementation.

@@ -14,6 +14,7 @@ from extensions.content_studio.runtime import (
     RuntimeProviderBinding,
 )
 from extensions.content_studio.visual_generation import VisualGenerationPlan
+from extensions.operator_console.cli import main as operator_cli
 from extensions.runtime_profiles.executors import RuntimeVisualStageExecutor
 from extensions.runtime_profiles.reference_preflight import preflight_reference_images
 from extensions.runtime_profiles.registry import RuntimeProviderRegistry
@@ -128,3 +129,23 @@ def test_runtime_does_not_call_provider_if_late_reference_is_missing(
     with pytest.raises(DomainValidationError, match="does not exist"):
         executor._generate_references(generator, plan, binding)
     assert generator.calls == 0
+
+
+def test_operator_can_preflight_without_provider_credentials(
+    tmp_path: Path,
+    capsys,
+) -> None:
+    plan = _plan()
+    paths = [tmp_path / f"reference-{index}.png" for index in range(len(plan.requests))]
+    for path in paths:
+        Image.new("RGB", (8, 8)).save(path)
+    plan_path = tmp_path / "plan.json"
+    catalog_path = tmp_path / "catalog.json"
+    plan_path.write_text(plan.to_json(), encoding="utf-8")
+    catalog_path.write_text(_catalog(plan, paths).to_json(), encoding="utf-8")
+    assert operator_cli([
+        "preflight-references",
+        "--plan", str(plan_path),
+        "--catalog", str(catalog_path),
+    ]) == 0
+    assert '"provider_called": false' in capsys.readouterr().out
