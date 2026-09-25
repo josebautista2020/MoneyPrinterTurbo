@@ -5,46 +5,64 @@
     {
       "schema_version": "1.0.0",
       "reference_asset_id": "toby-ref-v1",
-      "uri": "asset://kids-puppies/characters/toby/v1",
+      "uri": "verticals/kids_puppies/assets/references/toby-ref-v1.png",
       "media_type": "image/png",
       "character_id": "toby",
       "location_id": null,
       "metadata": {
         "vertical": "kids_puppies",
         "original_ip": true,
-        "placeholder": true
+        "source": "project-original-ai-generated",
+        "review_status": "approved",
+        "approved_on": "2026-09-25",
+        "sha256": "f82523edd8c12a4e5d33d05ba03060502c1fa63a653d4d6e9a2f23ecb5cfbe20",
+        "width": 1312,
+        "height": 1199
       }
     },
     {
       "schema_version": "1.0.0",
       "reference_asset_id": "luna-ref-v1",
-      "uri": "asset://kids-puppies/characters/luna/v1",
+      "uri": "verticals/kids_puppies/assets/references/luna-ref-v1.png",
       "media_type": "image/png",
       "character_id": "luna",
       "location_id": null,
       "metadata": {
         "vertical": "kids_puppies",
         "original_ip": true,
-        "placeholder": true
+        "source": "project-original-ai-generated",
+        "review_status": "approved",
+        "approved_on": "2026-09-25",
+        "selection_rationale": "upright ears create a silhouette distinct from Toby",
+        "sha256": "16fe38c4817fc08e59d90a50dfbefc0813b49886963f4d9f9bb301662a35dbe7",
+        "width": 1312,
+        "height": 1199
       }
     },
     {
       "schema_version": "1.0.0",
       "reference_asset_id": "park-ref-v1",
-      "uri": "asset://kids-puppies/locations/park/v1",
+      "uri": "verticals/kids_puppies/assets/references/park-ref-v1.png",
       "media_type": "image/png",
       "character_id": null,
       "location_id": "parque",
       "metadata": {
         "vertical": "kids_puppies",
         "original_ip": true,
-        "placeholder": true
+        "source": "project-original-ai-generated",
+        "review_status": "approved",
+        "approved_on": "2026-09-25",
+        "sha256": "1444c585a9f76bade6d81cfada0375b142f06fad0a5e89d12ab19f54f8c29d52",
+        "width": 1672,
+        "height": 941
       }
     }
   ],
   "metadata": {
     "vertical": "kids_puppies",
     "original_ip": true,
-    "placeholder_uris": true
+    "placeholder_uris": false,
+    "asset_review_status": "approved",
+    "approved_on": "2026-09-25"
   }
 }

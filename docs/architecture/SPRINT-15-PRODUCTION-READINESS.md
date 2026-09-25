@@ -35,8 +35,9 @@ For the first pilot, references must be local PNG, JPEG or WebP files. A local
 path is interpreted relative to the process working directory, just as in the
 adapter. `file://` paths are also accepted. Remote HTTPS and OpenAI file IDs
 need a separate verification mechanism before they can be used for a paid run.
-Do not change the committed example catalog to refer to private local assets;
-use a local, uncommitted catalog and runtime profile for the pilot.
+Private local assets must use an uncommitted catalog. The Kids Puppies pilot
+instead uses approved project-original assets committed under the vertical;
+its catalog records provenance, dimensions, review status, and SHA-256.
 
 An operator can validate those files offline, without a credential or a paid
 call, from the repository root:
@@ -57,6 +58,14 @@ evidence of readiness.
 This validation does not establish image ownership or artistic quality. Those
 require an explicit asset review and the Human Review gate on the resulting
 episode. No provider call or publication is part of this implementation.
+
+## Approved pilot references
+
+The Sprint 15 asset review selected Toby, Parque, and the upright-ear Luna
+variant. Upright ears give Luna a silhouette that remains recognizable next to
+Toby's floppy ears. The rejected Luna variant is not committed. Character
+Bibles now treat those ear shapes as identity constraints, while the reference
+catalog provides durable repository paths and content hashes.
 
 ## Media preflight
 

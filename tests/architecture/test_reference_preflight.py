@@ -1,6 +1,7 @@
 """Offline checks for the complete paid reference-image batch."""
 
 from dataclasses import replace
+import hashlib
 from pathlib import Path
 
 import pytest
@@ -74,7 +75,9 @@ def test_preflight_rejects_missing_late_reference(tmp_path: Path) -> None:
 def test_preflight_rejects_unbound_plan(tmp_path: Path) -> None:
     source = VisualGenerationPlan.from_json(EXAMPLE.read_text(encoding="utf-8"))
     with pytest.raises(DomainValidationError, match="no reference_asset_ids"):
-        preflight_reference_images(source, _catalog(_plan(), [tmp_path / "x.png"] * len(source.requests)))
+        preflight_reference_images(
+            source, _catalog(_plan(), [tmp_path / "x.png"] * len(source.requests))
+        )
 
 
 def test_preflight_rejects_placeholder_and_corrupt_image(tmp_path: Path) -> None:
@@ -149,11 +152,18 @@ def test_operator_can_preflight_without_provider_credentials(
     catalog_path = tmp_path / "catalog.json"
     plan_path.write_text(plan.to_json(), encoding="utf-8")
     catalog_path.write_text(_catalog(plan, paths).to_json(), encoding="utf-8")
-    assert operator_cli([
-        "preflight-references",
-        "--plan", str(plan_path),
-        "--catalog", str(catalog_path),
-    ]) == 0
+    assert (
+        operator_cli(
+            [
+                "preflight-references",
+                "--plan",
+                str(plan_path),
+                "--catalog",
+                str(catalog_path),
+            ]
+        )
+        == 0
+    )
     assert '"provider_called": false' in capsys.readouterr().out
 
 
@@ -183,11 +193,55 @@ def test_operator_binds_kids_bibles_before_offline_preflight(
     )
     catalog_path = tmp_path / "catalog.json"
     catalog_path.write_text(catalog.to_json(), encoding="utf-8")
-    assert operator_cli([
-        "preflight-references",
-        "--plan", str(root / "visuals/ep0002.visual-plan.json"),
-        "--catalog", str(catalog_path),
-        "--character-bible", str(root / "bibles/character_bible.json"),
-        "--universe-bible", str(root / "bibles/universe_bible.json"),
-    ]) == 0
+    assert (
+        operator_cli(
+            [
+                "preflight-references",
+                "--plan",
+                str(root / "visuals/ep0002.visual-plan.json"),
+                "--catalog",
+                str(catalog_path),
+                "--character-bible",
+                str(root / "bibles/character_bible.json"),
+                "--universe-bible",
+                str(root / "bibles/universe_bible.json"),
+            ]
+        )
+        == 0
+    )
     assert '"reference_count": 3' in capsys.readouterr().out
+
+
+def test_committed_kids_references_are_bound_preflighted_and_traceable(
+    capsys,
+) -> None:
+    root = Path(__file__).resolve().parents[2]
+    kids = root / "verticals/kids_puppies"
+    catalog = ReferenceCatalog.from_json(
+        (kids / "consistency/reference_catalog.json").read_text(encoding="utf-8")
+    )
+
+    assert (
+        operator_cli(
+            [
+                "preflight-references",
+                "--plan",
+                str(kids / "visuals/ep0002.visual-plan.json"),
+                "--catalog",
+                str(kids / "consistency/reference_catalog.json"),
+                "--character-bible",
+                str(kids / "bibles/character_bible.json"),
+                "--universe-bible",
+                str(kids / "bibles/universe_bible.json"),
+            ]
+        )
+        == 0
+    )
+    assert '"reference_count": 3' in capsys.readouterr().out
+
+    for asset in catalog.assets:
+        path = root / asset.uri
+        assert path.is_file()
+        assert asset.metadata["review_status"] == "approved"
+        assert asset.metadata["source"] == "project-original-ai-generated"
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == asset.metadata["sha256"]
