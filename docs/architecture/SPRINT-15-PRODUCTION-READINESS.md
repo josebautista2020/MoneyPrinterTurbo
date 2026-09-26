@@ -93,6 +93,7 @@ The guarded pilot profile now selects:
 The committed profile remains default-deny: external and paid calls are false,
 and live publication is false. The voice is present in MPT's bundled voice
 catalog. The image model and explicit quality/size settings were verified
-against the official OpenAI image-generation guide on 2026-09-26. S15.4 remains
-blocked until the authorized runtime exposes `OPENAI_API_KEY`; secret values
-must never be committed.
+against the official OpenAI image-generation guide on 2026-09-26. S15.4 passed
+after GitHub Actions confirmed the repository secret and authenticated access
+to the selected model through a metadata-only smoke request. Secret values must
+never be committed.
