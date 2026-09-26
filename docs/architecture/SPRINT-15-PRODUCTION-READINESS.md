@@ -97,3 +97,25 @@ against the official OpenAI image-generation guide on 2026-09-26. S15.4 passed
 after GitHub Actions confirmed the repository secret and authenticated access
 to the selected model through a metadata-only smoke request. Secret values must
 never be committed.
+
+## Guarded ep0002 pilot workflow
+
+The manual GitHub Actions workflow
+`.github/workflows/kids-puppies-ep0002-pilot.yml` prepares the ep0002 state
+from committed project assets, applies deterministic stages through prompts,
+performs the reference preflight, creates a temporary runtime profile, and only
+then runs the visual provider.
+
+The workflow requires the operator to type exactly:
+
+```text
+RUN_EP0002_PAID_UNDER_10_USD
+```
+
+The `max_cost_usd` input must be greater than zero and no more than 10. The
+temporary profile exists only inside the Actions runner and flips external and
+paid calls on for the visual stage only. The committed profile remains
+default-deny. The workflow uploads generated visual artifacts and operator
+state for audit. It does not perform live publication, does not approve the
+episode, and does not mark S15.5 PASS until a real paid run completes and its
+artifacts are retained.
