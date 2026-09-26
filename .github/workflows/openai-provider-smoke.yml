@@ -1,0 +1,56 @@
+name: OpenAI provider smoke
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+permissions:
+  contents: read
+
+jobs:
+  validate-provider:
+    name: Validate guarded OpenAI provider
+    if: >-
+      github.head_ref == 'feat/sprint-15-production-readiness' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+    steps:
+      - name: Require configured secret
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -z "${OPENAI_API_KEY:-}" ]]; then
+            echo "OPENAI_API_KEY is not configured for this repository."
+            exit 1
+          fi
+
+      - name: Validate authentication and selected image model
+        shell: bash
+        run: |
+          set -euo pipefail
+          status="$(
+            curl \
+              --silent \
+              --show-error \
+              --max-time 30 \
+              --output /dev/null \
+              --write-out '%{http_code}' \
+              --header "Authorization: Bearer ${OPENAI_API_KEY}" \
+              https://api.openai.com/v1/models/gpt-image-2.5-sunburst
+          )"
+
+          if [[ "${status}" != "200" ]]; then
+            echo "OpenAI model metadata check failed with HTTP ${status}."
+            exit 1
+          fi
+
+          echo "OpenAI authentication and selected image model are available."
