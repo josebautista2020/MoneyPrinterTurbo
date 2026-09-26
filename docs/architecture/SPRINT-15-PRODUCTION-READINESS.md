@@ -116,6 +116,22 @@ The `max_cost_usd` input must be greater than zero and no more than 5. The
 temporary profile exists only inside the Actions runner and flips external and
 paid calls on for the visual stage only. The committed profile remains
 default-deny. The workflow uploads generated visual artifacts and operator
-state for audit. It does not perform live publication, does not approve the
-episode, and does not mark S15.5 PASS until a real paid run completes and its
-artifacts are retained.
+state for audit. It does not perform live publication or approve the episode.
+
+## Guarded ep0002 pilot evidence
+
+S15.5 passed on 2026-09-26 through GitHub Actions run `36242164777` for commit
+`1fae2d766e95865a8ca3ad7c63c4e4d19b08e7f9`.
+
+- Confirmation phrase: `RUN_EP0002_PAID_UNDER_5_USD`.
+- Maximum configured pilot cost: `$5.00`.
+- Actual recorded visual-stage estimate: `$0.80`.
+- Visual requests completed: 8 of 8.
+- Provider: OpenAI `openai-reference-image` with `gpt-image-2.5-sunburst`, low quality, `1024x1536`.
+- Artifact: `kids-puppies-ep0002-guarded-visual-pilot`, artifact ID `10905962676`, SHA-256 digest `4c730ab8bf82e0cb1a0ee3b844519930ad84ab2eb57b0d5c4637d2218052a138`, retained until 2026-10-10.
+- Workflow summary after the pilot: `next_stage=consistency`, `complete=false`, `live_publication_enabled=false`.
+
+The pilot proves paid visual generation under the approved budget. It does not
+prove final episode readiness. S15.6 must review the retained visual artifacts
+for identity continuity, render integrity, audio/subtitle readiness, and child
+safety before any human approval or publish dry-run.
