@@ -75,8 +75,24 @@ visual late in the episode now fails with `provider_called=false` and zero
 reported cost, before narration starts. This preflight does not verify video
 decoding or artistic quality.
 
-The committed Kids Puppies profile uses `kids-demo-voice`. It remains a
-default-deny example; enabling its media provider for external calls with that
-placeholder voice is rejected by the runtime registry. An operator must
-select a real configured MPT voice for the pilot. Offline capability inspection
-of the guarded example remains available.
+The Kids Puppies profile uses the bundled Colombian Spanish voice
+`es-CO-SalomeNeural-Female`. Offline capability inspection of the guarded
+profile remains available.
+
+## Pilot provider configuration
+
+The guarded pilot profile now selects:
+
+- OpenAI Responses model `gpt-6-astra`;
+- image model `gpt-image-2.5-sunburst`;
+- explicit `low` quality and `1024x1536` output;
+- `env:OPENAI_API_KEY` as the only visual-provider secret reference;
+- Microsoft Edge TTS voice `es-CO-SalomeNeural-Female`;
+- a $1 maximum visual-stage and total pilot ceiling.
+
+The committed profile remains default-deny: external and paid calls are false,
+and live publication is false. The voice is present in MPT's bundled voice
+catalog. The image model and explicit quality/size settings were verified
+against the official OpenAI image-generation guide on 2026-09-26. S15.4 remains
+blocked until the authorized runtime exposes `OPENAI_API_KEY`; secret values
+must never be committed.

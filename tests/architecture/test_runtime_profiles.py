@@ -106,21 +106,15 @@ def _visual_ready_state(
     workflow_id: str = "runtime-visual-workflow",
 ) -> EpisodeWorkflowState:
     project = _project_episode_2()
-    prompts = PromptPlan.from_json(
-        _load(EXAMPLES / "generic_prompt_plan.json")
-    )
+    prompts = PromptPlan.from_json(_load(EXAMPLES / "generic_prompt_plan.json"))
     stages = ("project_episode", "bibles", "story", "storyboard", "prompts")
     records = []
     for index, stage in enumerate(stages, start=1):
         artifacts = ()
         if stage == "project_episode":
-            artifacts = (
-                WorkflowArtifact.from_contract("project", project),
-            )
+            artifacts = (WorkflowArtifact.from_contract("project", project),)
         elif stage == "prompts":
-            artifacts = (
-                WorkflowArtifact.from_contract("prompts", prompts),
-            )
+            artifacts = (WorkflowArtifact.from_contract("prompts", prompts),)
         records.append(_record(stage, index, artifacts))
     return EpisodeWorkflowState(
         workflow_id=workflow_id,
@@ -191,9 +185,7 @@ def _media_ready_state(
     workflow_id: str = "runtime-media-workflow",
 ) -> EpisodeWorkflowState:
     project = _project_episode_2()
-    story = StoryPlan.from_json(
-        _load(EXAMPLES / "generic_story_plan.json")
-    )
+    story = StoryPlan.from_json(_load(EXAMPLES / "generic_story_plan.json"))
     consistency = _consistency_report()
     stages = (
         "project_episode",
@@ -208,13 +200,9 @@ def _media_ready_state(
     for index, stage in enumerate(stages, start=1):
         artifacts = ()
         if stage == "project_episode":
-            artifacts = (
-                WorkflowArtifact.from_contract("project", project),
-            )
+            artifacts = (WorkflowArtifact.from_contract("project", project),)
         elif stage == "story":
-            artifacts = (
-                WorkflowArtifact.from_contract("story", story),
-            )
+            artifacts = (WorkflowArtifact.from_contract("story", story),)
         elif stage == "consistency":
             artifacts = (
                 WorkflowArtifact.from_contract(
@@ -372,8 +360,7 @@ def _media_profile(*, external: bool) -> RuntimeProfile:
                     "estimated_cost_usd": 0.05,
                     "voice_name": "test-voice",
                     "output_uri_template": (
-                        "generated/{project_id}/{episode_id}/"
-                        "r{revision}/runtime.mp4"
+                        "generated/{project_id}/{episode_id}/r{revision}/runtime.mp4"
                     ),
                     "subtitle_enabled": True,
                 },
@@ -427,10 +414,30 @@ def test_kids_puppies_runtime_profile_is_default_deny() -> None:
         assert provider.external_calls_enabled is False
         assert provider.paid_calls_enabled is False
     assert profile.metadata["child_safe"] is True
+    assert profile.metadata["pilot_cost_ceiling_usd"] == pytest.approx(1)
     assert profile.metadata["live_publication"] is False
 
+    visuals = profile.provider("kids-reference-visuals")
+    assert visuals.options["response_model"] == "gpt-6-astra"
+    assert visuals.options["image_model"] == "gpt-image-2.5-sunburst"
+    assert visuals.options["image_quality"] == "low"
+    assert visuals.options["image_size"] == "1024x1536"
+    assert visuals.max_stage_cost_usd == pytest.approx(1)
+    assert [ref.reference for ref in visuals.secret_refs] == ["env:OPENAI_API_KEY"]
 
-def test_kids_puppies_demo_voice_cannot_be_enabled_for_external_media() -> None:
+    media = profile.provider("kids-media")
+    assert media.options["voice_name"] == "es-CO-SalomeNeural-Female"
+    assert media.options["estimated_cost_usd"] == pytest.approx(0)
+    bundled_voices = json.loads(
+        (REPO_ROOT / "app/services/data/azure_voices.json").read_text(encoding="utf-8")
+    )
+    assert {
+        "name": "es-CO-SalomeNeural",
+        "gender": "Female",
+    } in bundled_voices
+
+
+def test_kids_puppies_real_voice_can_be_enabled_for_external_media() -> None:
     profile = RuntimeProfile.from_json(
         _load(
             REPO_ROOT
@@ -443,8 +450,7 @@ def test_kids_puppies_demo_voice_cannot_be_enabled_for_external_media() -> None:
     media = profile.provider("kids-media")
     enabled = replace(media, external_calls_enabled=True)
     registry = RuntimeProviderRegistry()
-    with pytest.raises(DomainValidationError, match="placeholder"):
-        registry.validate_binding(enabled, _AllSecrets())
+    registry.validate_binding(enabled, _AllSecrets())
     registry.validate_binding(media, _AllSecrets())
 
 
@@ -549,9 +555,7 @@ def test_runtime_matrix_rejects_invalid_option_types() -> None:
 
 def test_external_openai_profile_requires_declared_and_available_secret() -> None:
     registry = RuntimeProviderRegistry()
-    base = RuntimeProfile.from_json(
-        _load(PROFILES / "openai-reference-guarded.json")
-    )
+    base = RuntimeProfile.from_json(_load(PROFILES / "openai-reference-guarded.json"))
     binding = replace(
         base.providers[0],
         external_calls_enabled=True,
@@ -601,9 +605,7 @@ def test_guarded_mpt_profile_blocks_before_provider_call(
     service = _service(tmp_path)
     state = _visual_ready_state("guarded-workflow")
     service.workflow_store.save(state)
-    profile = RuntimeProfile.from_json(
-        _load(PROFILES / "mpt-guarded.json")
-    )
+    profile = RuntimeProfile.from_json(_load(PROFILES / "mpt-guarded.json"))
 
     updated = service.run_runtime_stage(
         state.workflow_id,
@@ -694,9 +696,7 @@ def test_reference_plan_does_not_silently_use_basic_visual_provider(
             replace(
                 prompt,
                 reference_asset_ids=(
-                    ("guide-ref-v1",)
-                    if index == 0
-                    else prompt.reference_asset_ids
+                    ("guide-ref-v1",) if index == 0 else prompt.reference_asset_ids
                 ),
             )
         )
@@ -751,9 +751,7 @@ def test_reference_runtime_binds_bibles_before_generation() -> None:
     characters = CharacterBible.from_json(
         _load(EXAMPLES / "generic_character_bible.json")
     )
-    universe = UniverseBible.from_json(
-        _load(EXAMPLES / "generic_universe_bible.json")
-    )
+    universe = UniverseBible.from_json(_load(EXAMPLES / "generic_universe_bible.json"))
     records = tuple(
         replace(
             record,
@@ -762,7 +760,8 @@ def test_reference_runtime_binds_bibles_before_generation() -> None:
                 WorkflowArtifact.from_contract("universe", universe),
             ),
         )
-        if record.stage == "bibles" else record
+        if record.stage == "bibles"
+        else record
         for record in state.records
     )
     state = replace(state, records=records)
@@ -777,7 +776,9 @@ def test_reference_runtime_binds_bibles_before_generation() -> None:
         providers=(binding,),
         stage_bindings={"visuals": binding.provider_id},
     )
-    executor = RuntimeVisualStageExecutor(profile, RuntimeProviderRegistry(), _NoSecrets())
+    executor = RuntimeVisualStageExecutor(
+        profile, RuntimeProviderRegistry(), _NoSecrets()
+    )
     plan = executor._plan(state, binding)
     assert plan.metadata["consistency_references_bound"] is True
     assert all(request.reference_asset_ids for request in plan.requests)
@@ -826,9 +827,7 @@ def test_runtime_factory_builds_only_declared_provider_stages() -> None:
         RuntimeProviderRegistry(),
         _NoSecrets(),
     )
-    profile = RuntimeProfile.from_json(
-        _load(PROFILES / "mpt-guarded.json")
-    )
+    profile = RuntimeProfile.from_json(_load(PROFILES / "mpt-guarded.json"))
 
     executors = factory.build(profile)
 
