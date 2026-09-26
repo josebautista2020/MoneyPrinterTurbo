@@ -88,7 +88,7 @@ The guarded pilot profile now selects:
 - explicit `low` quality and `1024x1536` output;
 - `env:OPENAI_API_KEY` as the only visual-provider secret reference;
 - Microsoft Edge TTS voice `es-CO-SalomeNeural-Female`;
-- a $1 maximum visual-stage and total pilot ceiling.
+- a $10 maximum visual-stage and total pilot ceiling.
 
 The committed profile remains default-deny: external and paid calls are false,
 and live publication is false. The voice is present in MPT's bundled voice

@@ -414,7 +414,7 @@ def test_kids_puppies_runtime_profile_is_default_deny() -> None:
         assert provider.external_calls_enabled is False
         assert provider.paid_calls_enabled is False
     assert profile.metadata["child_safe"] is True
-    assert profile.metadata["pilot_cost_ceiling_usd"] == pytest.approx(1)
+    assert profile.metadata["pilot_cost_ceiling_usd"] == pytest.approx(10)
     assert profile.metadata["live_publication"] is False
 
     visuals = profile.provider("kids-reference-visuals")
@@ -422,7 +422,7 @@ def test_kids_puppies_runtime_profile_is_default_deny() -> None:
     assert visuals.options["image_model"] == "gpt-image-2.5-sunburst"
     assert visuals.options["image_quality"] == "low"
     assert visuals.options["image_size"] == "1024x1536"
-    assert visuals.max_stage_cost_usd == pytest.approx(1)
+    assert visuals.max_stage_cost_usd == pytest.approx(10)
     assert [ref.reference for ref in visuals.secret_refs] == ["env:OPENAI_API_KEY"]
 
     media = profile.provider("kids-media")

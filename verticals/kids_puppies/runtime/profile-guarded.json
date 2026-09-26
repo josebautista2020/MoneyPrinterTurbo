@@ -27,7 +27,7 @@
       },
       "external_calls_enabled": false,
       "paid_calls_enabled": false,
-      "max_stage_cost_usd": 1,
+      "max_stage_cost_usd": 10,
       "metadata": {
         "vertical": "kids_puppies",
         "original_ip": true,
@@ -71,7 +71,7 @@
     "original_ip": true,
     "child_safe": true,
     "default_deny": true,
-    "pilot_cost_ceiling_usd": 1,
+    "pilot_cost_ceiling_usd": 10,
     "live_publication": false
   }
 }

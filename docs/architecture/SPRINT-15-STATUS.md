@@ -15,4 +15,4 @@ Last update: 2026-09-26
 | S15.9 | PENDING | CI and episode evidence incomplete |
 | S15.10 | PENDING | PR and review gate incomplete |
 
-Variable provider cost so far: $0. Pilot ceiling: $1. Live publication: disabled. Next gate: make `OPENAI_API_KEY` available through the authorized runtime secret path, then run the cost-capped pilot.
+Variable provider cost so far: $0. Pilot ceiling: $10. Live publication: disabled. Next gate: make `OPENAI_API_KEY` available through the authorized runtime secret path, then run the cost-capped pilot.
