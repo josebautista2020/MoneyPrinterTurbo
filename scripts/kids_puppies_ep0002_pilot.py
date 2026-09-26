@@ -34,7 +34,8 @@ from extensions.content_studio.story import StoryPlan  # noqa: E402
 from extensions.content_studio.storyboard import StoryboardPlan  # noqa: E402
 
 VERTICAL_DIR = ROOT_DIR / "verticals" / "kids_puppies"
-CONFIRMATION_PHRASE = "RUN_EP0002_PAID_UNDER_10_USD"
+CONFIRMATION_PHRASE = "RUN_EP0002_PAID_UNDER_5_USD"
+PILOT_COST_CEILING_USD = 5.0
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -177,8 +178,8 @@ def build_initial_bundle() -> list[dict[str, Any]]:
 
 
 def build_paid_profile(source: Path, max_cost_usd: float) -> dict[str, Any]:
-    if max_cost_usd <= 0 or max_cost_usd > 10:
-        raise SystemExit("max_cost_usd must be > 0 and <= 10")
+    if max_cost_usd <= 0 or max_cost_usd > PILOT_COST_CEILING_USD:
+        raise SystemExit("max_cost_usd must be > 0 and <= 5")
     profile = RuntimeProfile.from_json(source.read_text(encoding="utf-8"))
     payload = profile.to_dict()
     visual_provider_id = payload["stage_bindings"]["visuals"]
@@ -202,8 +203,8 @@ def validate_confirmation(value: str, max_cost_usd: float) -> None:
         raise SystemExit(
             f"confirmation must exactly equal {CONFIRMATION_PHRASE!r}"
         )
-    if max_cost_usd <= 0 or max_cost_usd > 10:
-        raise SystemExit("max_cost_usd must be > 0 and <= 10")
+    if max_cost_usd <= 0 or max_cost_usd > PILOT_COST_CEILING_USD:
+        raise SystemExit("max_cost_usd must be > 0 and <= 5")
 
 
 def main() -> int:

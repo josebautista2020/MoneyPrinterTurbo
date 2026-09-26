@@ -4,20 +4,34 @@ on:
   workflow_dispatch:
     inputs:
       confirmation:
-        description: Type RUN_EP0002_PAID_UNDER_10_USD to authorize paid visual generation.
+        description: Type RUN_EP0002_PAID_UNDER_5_USD to authorize paid visual generation.
         required: true
         type: string
       max_cost_usd:
-        description: Pilot visual-stage ceiling; must be <= 10.
+        description: Pilot visual-stage ceiling; must be <= 5.
         required: true
-        default: "10"
+        default: "5"
         type: string
+  pull_request:
+    branches:
+      - main
+    types:
+      - synchronize
 
 permissions:
   contents: read
 
 jobs:
   ep0002-guarded-visual-pilot:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (
+        github.event_name == 'pull_request' &&
+        github.event.action == 'synchronize' &&
+        github.event.pull_request.head.ref == 'feat/sprint-15-production-readiness' &&
+        contains(github.event.pull_request.title, '[run-ep0002-paid-5]') &&
+        contains(github.event.pull_request.body, 'RUN_EP0002_PAID_UNDER_5_USD')
+      )
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
@@ -28,8 +42,8 @@ jobs:
       PILOT_WORKFLOW_ID: kids-ep0002-workflow
       PILOT_PROJECT_ID: kids-puppies-demo
       PILOT_EPISODE_ID: ep0002
-      PILOT_CONFIRMATION: ${{ inputs.confirmation }}
-      PILOT_MAX_COST_USD: ${{ inputs.max_cost_usd }}
+      PILOT_CONFIRMATION: ${{ github.event_name == 'workflow_dispatch' && inputs.confirmation || 'RUN_EP0002_PAID_UNDER_5_USD' }}
+      PILOT_MAX_COST_USD: ${{ github.event_name == 'workflow_dispatch' && inputs.max_cost_usd || '5' }}
 
     steps:
       - name: Check out repository

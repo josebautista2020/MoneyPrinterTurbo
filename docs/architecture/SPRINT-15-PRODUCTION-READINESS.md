@@ -88,7 +88,7 @@ The guarded pilot profile now selects:
 - explicit `low` quality and `1024x1536` output;
 - `env:OPENAI_API_KEY` as the only visual-provider secret reference;
 - Microsoft Edge TTS voice `es-CO-SalomeNeural-Female`;
-- a $10 maximum visual-stage and total pilot ceiling.
+- a $5 maximum visual-stage and total pilot ceiling.
 
 The committed profile remains default-deny: external and paid calls are false,
 and live publication is false. The voice is present in MPT's bundled voice
@@ -109,10 +109,10 @@ then runs the visual provider.
 The workflow requires the operator to type exactly:
 
 ```text
-RUN_EP0002_PAID_UNDER_10_USD
+RUN_EP0002_PAID_UNDER_5_USD
 ```
 
-The `max_cost_usd` input must be greater than zero and no more than 10. The
+The `max_cost_usd` input must be greater than zero and no more than 5. The
 temporary profile exists only inside the Actions runner and flips external and
 paid calls on for the visual stage only. The committed profile remains
 default-deny. The workflow uploads generated visual artifacts and operator
