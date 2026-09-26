@@ -11,6 +11,7 @@
       "signature_features": [
         "golden fur",
         "brown eyes",
+        "floppy ears",
         "blue hoodie",
         "red backpack"
       ],
@@ -30,6 +31,7 @@
       ],
       "forbidden_changes": [
         "do not change fur color",
+        "keep Toby's ears floppy",
         "do not remove the blue hoodie in standard episodes"
       ],
       "reference_asset_ids": [
@@ -49,6 +51,7 @@
       ],
       "signature_features": [
         "cream fur",
+        "upright triangular ears",
         "purple bandana"
       ],
       "wardrobe": [
@@ -65,6 +68,7 @@
       ],
       "forbidden_changes": [
         "do not change fur color",
+        "keep Luna's ears upright",
         "keep the purple bandana in standard episodes"
       ],
       "reference_asset_ids": [

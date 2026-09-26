@@ -10,10 +10,17 @@ from pathlib import Path
 from typing import Any
 
 from extensions.content_studio.domain import DomainValidationError
+from extensions.content_studio.consistency import ReferenceCatalog
+from extensions.content_studio.bibles import CharacterBible, UniverseBible
+from extensions.content_studio.consistency import bind_consistency_references
 from extensions.content_studio.orchestration import StageExecutionResult
 from extensions.content_studio.publishing import PublishingPolicy, PublishRequest
 from extensions.content_studio.runtime import RuntimeProfile
+from extensions.content_studio.visual_generation import VisualGenerationPlan
 from extensions.operator_console.service import OperatorConsoleService
+from extensions.runtime_profiles.reference_preflight import (
+    preflight_reference_images,
+)
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 DEFAULT_WORKFLOW_DIR = Path(
@@ -102,6 +109,12 @@ def _build_parser() -> argparse.ArgumentParser:
 
     runtime_matrix = sub.add_parser("runtime-matrix")
     runtime_matrix.add_argument("--profile", required=True)
+
+    references = sub.add_parser("preflight-references")
+    references.add_argument("--plan", required=True)
+    references.add_argument("--catalog", required=True)
+    references.add_argument("--character-bible")
+    references.add_argument("--universe-bible")
 
     run_runtime = sub.add_parser("run-runtime")
     run_runtime.add_argument("--workflow-id", required=True)
@@ -213,6 +226,33 @@ def main(argv: list[str] | None = None) -> int:
                 _read_text(args.profile)
             )
             _print_json(service.runtime_capability_matrix(profile))
+            return 0
+
+        if args.command == "preflight-references":
+            plan = VisualGenerationPlan.from_json(_read_text(args.plan))
+            catalog = ReferenceCatalog.from_json(_read_text(args.catalog))
+            if bool(args.character_bible) != bool(args.universe_bible):
+                raise DomainValidationError(
+                    "both character and universe bibles are required "
+                    "when binding references"
+                )
+            if args.character_bible:
+                plan = bind_consistency_references(
+                    plan,
+                    CharacterBible.from_json(_read_text(args.character_bible)),
+                    UniverseBible.from_json(_read_text(args.universe_bible)),
+                )
+            preflight_reference_images(plan, catalog)
+            _print_json({
+                "status": "PASS",
+                "project_id": plan.project_id,
+                "reference_count": len({
+                    asset_id
+                    for request in plan.requests
+                    for asset_id in request.reference_asset_ids
+                }),
+                "provider_called": False,
+            })
             return 0
 
         if args.command == "run-runtime":

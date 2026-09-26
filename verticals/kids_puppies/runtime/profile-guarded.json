@@ -17,15 +17,17 @@
         }
       ],
       "options": {
-        "response_model": "gpt-5",
-        "image_model": "gpt-image-1",
-        "cost_per_generation_usd": 0.08,
+        "response_model": "gpt-6-astra",
+        "image_model": "gpt-image-2.5-sunburst",
+        "image_quality": "low",
+        "image_size": "1024x1536",
+        "cost_per_generation_usd": 0.1,
         "output_dir": "generated/kids_puppies/runtime/visuals",
         "reference_catalog_path": "verticals/kids_puppies/consistency/reference_catalog.json"
       },
       "external_calls_enabled": false,
       "paid_calls_enabled": false,
-      "max_stage_cost_usd": 2,
+      "max_stage_cost_usd": 10,
       "metadata": {
         "vertical": "kids_puppies",
         "original_ip": true,
@@ -42,8 +44,8 @@
       ],
       "secret_refs": [],
       "options": {
-        "estimated_cost_usd": 0.1,
-        "voice_name": "kids-demo-voice",
+        "estimated_cost_usd": 0,
+        "voice_name": "es-CO-SalomeNeural-Female",
         "output_uri_template": "generated/kids_puppies/{episode_id}/r{revision}/master.mp4",
         "subtitle_enabled": true,
         "work_dir": "generated/kids_puppies/runtime/media"
@@ -54,7 +56,9 @@
       "metadata": {
         "vertical": "kids_puppies",
         "original_ip": true,
-        "default_deny": true
+        "default_deny": true,
+        "voice_provider": "microsoft-edge-tts",
+        "voice_locale": "es-CO"
       }
     }
   ],
@@ -67,6 +71,7 @@
     "original_ip": true,
     "child_safe": true,
     "default_deny": true,
+    "pilot_cost_ceiling_usd": 10,
     "live_publication": false
   }
 }

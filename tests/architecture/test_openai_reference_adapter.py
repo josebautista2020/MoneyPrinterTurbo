@@ -66,6 +66,8 @@ def test_paid_reference_generation_is_disabled_by_default(tmp_path) -> None:
     generator = OpenAIReferenceVisualGenerator(
         response_model="test-response-model",
         image_model="test-image-model",
+        image_quality="low",
+        image_size="1024x1536",
         output_dir=str(tmp_path),
         client=client,
     )
@@ -96,6 +98,8 @@ def test_reference_adapter_passes_multiple_images_and_saves_result(
     generator = OpenAIReferenceVisualGenerator(
         response_model="test-response-model",
         image_model="test-image-model",
+        image_quality="low",
+        image_size="1024x1536",
         allow_paid_generation=True,
         cost_per_generation_usd=0.07,
         output_dir=str(tmp_path / "generated"),
@@ -139,6 +143,8 @@ def test_reference_adapter_passes_multiple_images_and_saves_result(
         {
             "type": "image_generation",
             "model": "test-image-model",
+            "quality": "low",
+            "size": "1024x1536",
         }
     ]
     content = call["input"][0]["content"]

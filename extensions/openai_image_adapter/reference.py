@@ -40,6 +40,8 @@ class OpenAIReferenceVisualGenerator(ReferenceAwareVisualGenerator):
         *,
         response_model: str,
         image_model: str,
+        image_quality: str = "auto",
+        image_size: str = "auto",
         allow_paid_generation: bool = False,
         cost_per_generation_usd: float | None = None,
         output_dir: str = "",
@@ -53,6 +55,14 @@ class OpenAIReferenceVisualGenerator(ReferenceAwareVisualGenerator):
             image_model,
             "image_model",
         )
+        self._image_quality = self._require_text(
+            image_quality,
+            "image_quality",
+        )
+        self._image_size = self._require_text(
+            image_size,
+            "image_size",
+        )
         if cost_per_generation_usd is not None:
             if (
                 isinstance(cost_per_generation_usd, bool)
@@ -61,8 +71,7 @@ class OpenAIReferenceVisualGenerator(ReferenceAwareVisualGenerator):
                 or cost_per_generation_usd < 0
             ):
                 raise ValueError(
-                    "cost_per_generation_usd must be a non-negative "
-                    "finite number"
+                    "cost_per_generation_usd must be a non-negative finite number"
                 )
             cost_per_generation_usd = float(cost_per_generation_usd)
 
@@ -98,8 +107,7 @@ class OpenAIReferenceVisualGenerator(ReferenceAwareVisualGenerator):
         if not references:
             return self._failure(
                 request,
-                "reference-aware generation requires at least one "
-                "ReferenceAsset",
+                "reference-aware generation requires at least one ReferenceAsset",
                 provider_called=False,
             )
 
@@ -111,8 +119,7 @@ class OpenAIReferenceVisualGenerator(ReferenceAwareVisualGenerator):
                 }
             ]
             content.extend(
-                self._reference_content(reference)
-                for reference in references
+                self._reference_content(reference) for reference in references
             )
         except (OSError, ValueError) as exc:
             return self._failure(
@@ -137,14 +144,15 @@ class OpenAIReferenceVisualGenerator(ReferenceAwareVisualGenerator):
                     {
                         "type": "image_generation",
                         "model": self._image_model,
+                        "quality": self._image_quality,
+                        "size": self._image_size,
                     }
                 ],
             )
         except Exception as exc:
             return self._failure(
                 request,
-                f"OpenAI reference generation failed: "
-                f"{type(exc).__name__}: {exc}",
+                f"OpenAI reference generation failed: {type(exc).__name__}: {exc}",
                 provider_called=provider_called,
             )
 
@@ -152,8 +160,7 @@ class OpenAIReferenceVisualGenerator(ReferenceAwareVisualGenerator):
         if not image_base64:
             return self._failure(
                 request,
-                "OpenAI response did not contain an image_generation_call "
-                "result",
+                "OpenAI response did not contain an image_generation_call result",
                 provider_called=True,
             )
 
@@ -185,13 +192,12 @@ class OpenAIReferenceVisualGenerator(ReferenceAwareVisualGenerator):
             metadata={
                 "response_model": self._response_model,
                 "image_model": self._image_model,
+                "image_quality": self._image_quality,
+                "image_size": self._image_size,
                 "reference_asset_ids": [
-                    reference.reference_asset_id
-                    for reference in references
+                    reference.reference_asset_id for reference in references
                 ],
-                "response_id": str(
-                    self._field(response, "id") or ""
-                ),
+                "response_id": str(self._field(response, "id") or ""),
             },
         )
         return VisualResult(
@@ -238,14 +244,10 @@ class OpenAIReferenceVisualGenerator(ReferenceAwareVisualGenerator):
 
         path = self._local_path(uri)
         if not path.is_file():
-            raise ValueError(
-                f"local reference image does not exist: {path}"
-            )
+            raise ValueError(f"local reference image does not exist: {path}")
         data = path.read_bytes()
         media_type = (
-            reference.media_type
-            or mimetypes.guess_type(path.name)[0]
-            or "image/png"
+            reference.media_type or mimetypes.guess_type(path.name)[0] or "image/png"
         )
         encoded = base64.b64encode(data).decode("ascii")
         return {
@@ -270,9 +272,7 @@ class OpenAIReferenceVisualGenerator(ReferenceAwareVisualGenerator):
     ) -> tuple[str, int, int]:
         output_dir = Path(self._output_dir or "generated/visuals")
         output_dir.mkdir(parents=True, exist_ok=True)
-        filename = (
-            f"{request_id}-{uuid.uuid4().hex[:12]}.png"
-        )
+        filename = f"{request_id}-{uuid.uuid4().hex[:12]}.png"
         output_path = output_dir / filename
 
         with Image.open(io.BytesIO(image_bytes)) as image:
@@ -290,10 +290,13 @@ class OpenAIReferenceVisualGenerator(ReferenceAwareVisualGenerator):
         if not isinstance(output, (list, tuple)):
             return None
         for item in output:
-            if OpenAIReferenceVisualGenerator._field(
-                item,
-                "type",
-            ) != "image_generation_call":
+            if (
+                OpenAIReferenceVisualGenerator._field(
+                    item,
+                    "type",
+                )
+                != "image_generation_call"
+            ):
                 continue
             result = OpenAIReferenceVisualGenerator._field(item, "result")
             if isinstance(result, str) and result:
@@ -318,11 +321,7 @@ class OpenAIReferenceVisualGenerator(ReferenceAwareVisualGenerator):
             engine=self.engine_name,
             success=False,
             error=error,
-            cost_usd=(
-                self._cost_per_generation_usd
-                if provider_called
-                else 0.0
-            ),
+            cost_usd=(self._cost_per_generation_usd if provider_called else 0.0),
             metadata={
                 "provider_called": provider_called,
             },

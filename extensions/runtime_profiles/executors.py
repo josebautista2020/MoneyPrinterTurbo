@@ -6,7 +6,9 @@ from pathlib import Path
 from extensions.content_studio.consistency import (
     ReferenceAwareVisualGenerator,
     ReferenceCatalog,
+    bind_consistency_references,
 )
+from extensions.content_studio.bibles import CharacterBible, UniverseBible
 from extensions.content_studio.domain import DomainValidationError, ProjectSpec
 from extensions.content_studio.media import (
     MediaAssemblyPlan,
@@ -37,6 +39,9 @@ from extensions.content_studio.visual_generation import (
     generate_visuals,
 )
 from extensions.runtime_profiles.registry import RuntimeProviderRegistry
+from extensions.runtime_profiles.reference_preflight import (
+    preflight_reference_images,
+)
 
 
 def _remaining_budget(
@@ -69,14 +74,27 @@ class RuntimeVisualStageExecutor(EpisodeStageExecutor):
     def _binding(self) -> RuntimeProviderBinding:
         return self._profile.provider_for_stage(self.stage_name)
 
-    def _plan(self, state: EpisodeWorkflowState) -> VisualGenerationPlan:
+    def _plan(
+        self,
+        state: EpisodeWorkflowState,
+        binding: RuntimeProviderBinding,
+    ) -> VisualGenerationPlan:
         project = state.require_one("ProjectSpec")
         prompts = state.require_one("PromptPlan")
         if not isinstance(project, ProjectSpec):
             raise DomainValidationError("ProjectSpec artifact is invalid")
         if not isinstance(prompts, PromptPlan):
             raise DomainValidationError("PromptPlan artifact is invalid")
-        return build_visual_generation_plan(prompts, project)
+        plan = build_visual_generation_plan(prompts, project)
+        if CAP_VISUAL_REFERENCE_IMAGE in binding.capabilities:
+            characters = state.require_one("CharacterBible")
+            universe = state.require_one("UniverseBible")
+            if not isinstance(characters, CharacterBible):
+                raise DomainValidationError("CharacterBible artifact is invalid")
+            if not isinstance(universe, UniverseBible):
+                raise DomainValidationError("UniverseBible artifact is invalid")
+            plan = bind_consistency_references(plan, characters, universe)
+        return plan
 
     def estimate_cost_usd(
         self,
@@ -89,7 +107,7 @@ class RuntimeVisualStageExecutor(EpisodeStageExecutor):
             binding,
             self._secrets,
         )
-        plan = self._plan(state)
+        plan = self._plan(state, binding)
         estimates = []
         for request in plan.requests:
             estimate = generator.estimate_cost_usd(request)
@@ -149,7 +167,7 @@ class RuntimeVisualStageExecutor(EpisodeStageExecutor):
             binding,
             self._secrets,
         )
-        plan = self._plan(state)
+        plan = self._plan(state, binding)
         has_references = any(
             request.reference_asset_ids for request in plan.requests
         )
@@ -243,6 +261,9 @@ class RuntimeVisualStageExecutor(EpisodeStageExecutor):
             raise DomainValidationError(
                 "ReferenceCatalog project_id does not match visual plan"
             )
+
+        # Validate the complete batch before the first provider request.
+        preflight_reference_images(plan, catalog)
 
         budget = binding.max_stage_cost_usd
         estimates = []

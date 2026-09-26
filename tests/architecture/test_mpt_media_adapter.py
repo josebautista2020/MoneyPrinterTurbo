@@ -6,6 +6,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+from PIL import Image
 
 from extensions.content_studio.media import MediaAssemblyPlan, assemble_media
 from extensions.mpt_adapter.media import MPTMediaAssembler
@@ -14,7 +15,7 @@ from extensions.mpt_adapter.media import MPTMediaAssembler
 def plan(tmp_path: Path, subtitle_enabled: bool = True) -> MediaAssemblyPlan:
     image = tmp_path / "visual-1.png"
     video = tmp_path / "visual-2.mp4"
-    image.write_bytes(b"fake-image")
+    Image.new("RGB", (8, 8)).save(image)
     video.write_bytes(b"fake-video")
     return MediaAssemblyPlan(
         assembly_id="assembly-1",
@@ -177,12 +178,15 @@ def test_subtitles_can_be_disabled(tmp_path, monkeypatch) -> None:
     assert result.subtitle is None
 
 
-def test_missing_visual_fails_after_tts_without_render(tmp_path, monkeypatch) -> None:
+def test_missing_visual_fails_before_tts_without_render(tmp_path, monkeypatch) -> None:
     p = plan(tmp_path)
-    Path(p.visual_uris[0]).unlink()
+    Path(p.visual_uris[-1]).unlink()
     rendered = False
+    tts_called = False
 
     def fake_tts(**kwargs):
+        nonlocal tts_called
+        tts_called = True
         Path(kwargs["voice_file"]).write_bytes(b"wav")
         return SimpleNamespace(cues=[1])
 
@@ -214,6 +218,9 @@ def test_missing_visual_fails_after_tts_without_render(tmp_path, monkeypatch) ->
 
     assert not result.success
     assert "does not exist" in (result.error or "")
+    assert result.cost_usd == 0.0
+    assert result.metadata["provider_called"] is False
+    assert not tts_called
     assert not rendered
 
 
@@ -221,3 +228,21 @@ def test_mpt_media_estimate_exposes_configured_cost(tmp_path) -> None:
     assembler = MPTMediaAssembler(estimated_cost_usd=0.125)
 
     assert assembler.estimate_cost_usd(plan(tmp_path)) == pytest.approx(0.125)
+
+
+def test_corrupt_image_fails_before_tts(tmp_path, monkeypatch) -> None:
+    p = plan(tmp_path)
+    Path(p.visual_uris[0]).write_bytes(b"not a PNG")
+    calls = []
+    monkeypatch.setattr(
+        "extensions.mpt_adapter.media.voice.tts",
+        lambda **kwargs: calls.append(kwargs),
+    )
+    result = MPTMediaAssembler(
+        allow_external_generation=True,
+        estimated_cost_usd=0.02,
+    ).assemble(p)
+    assert not result.success
+    assert result.cost_usd == 0.0
+    assert result.metadata["provider_called"] is False
+    assert calls == []

@@ -19,6 +19,7 @@ from extensions.content_studio.runtime import (
     require_capability,
 )
 
+
 @dataclass(frozen=True, slots=True)
 class AdapterDescriptor:
     adapter: str
@@ -49,9 +50,7 @@ class RuntimeProviderRegistry:
             "mpt-image": AdapterDescriptor(
                 adapter="mpt-image",
                 capabilities=(CAP_VISUAL_IMAGE,),
-                allowed_options=frozenset(
-                    {"cost_per_image_usd", "save_dir"}
-                ),
+                allowed_options=frozenset({"cost_per_image_usd", "save_dir"}),
                 paid_authorization_required=True,
             ),
             "openai-reference-image": AdapterDescriptor(
@@ -61,6 +60,8 @@ class RuntimeProviderRegistry:
                     {
                         "response_model",
                         "image_model",
+                        "image_quality",
+                        "image_size",
                         "cost_per_generation_usd",
                         "output_dir",
                         "reference_catalog_path",
@@ -84,9 +85,7 @@ class RuntimeProviderRegistry:
                         "subtitle_enabled",
                     }
                 ),
-                required_options=frozenset(
-                    {"voice_name", "output_uri_template"}
-                ),
+                required_options=frozenset({"voice_name", "output_uri_template"}),
             ),
             "mpt-render": AdapterDescriptor(
                 adapter="mpt-render",
@@ -123,23 +122,28 @@ class RuntimeProviderRegistry:
         missing = sorted(descriptor.required_options - option_keys)
         if unknown:
             raise DomainValidationError(
-                f"provider {binding.provider_id!r} has unknown options: "
-                f"{unknown}"
+                f"provider {binding.provider_id!r} has unknown options: {unknown}"
             )
         if missing:
             raise DomainValidationError(
-                f"provider {binding.provider_id!r} is missing options: "
-                f"{missing}"
+                f"provider {binding.provider_id!r} is missing options: {missing}"
             )
         self._validate_option_types(
             descriptor.adapter,
             binding.options,
         )
+        if (
+            binding.external_calls_enabled
+            and descriptor.adapter == "mpt-media"
+            and binding.options["voice_name"] == "kids-demo-voice"
+        ):
+            raise DomainValidationError(
+                "kids-demo-voice is a placeholder; select a real "
+                "MPT voice before running media"
+            )
 
         refs = {item.reference for item in binding.secret_refs}
-        missing_refs = sorted(
-            set(descriptor.required_secret_refs) - refs
-        )
+        missing_refs = sorted(set(descriptor.required_secret_refs) - refs)
         if binding.external_calls_enabled and missing_refs:
             raise DomainValidationError(
                 f"provider {binding.provider_id!r} is missing required "
@@ -186,9 +190,7 @@ class RuntimeProviderRegistry:
             )
         value = float(value)
         if value < 0:
-            raise DomainValidationError(
-                f"runtime option {name!r} must be non-negative"
-            )
+            raise DomainValidationError(f"runtime option {name!r} must be non-negative")
         return value
 
     @staticmethod
@@ -200,9 +202,7 @@ class RuntimeProviderRegistry:
     ) -> bool:
         value = options.get(name, default)
         if not isinstance(value, bool):
-            raise DomainValidationError(
-                f"runtime option {name!r} must be boolean"
-            )
+            raise DomainValidationError(f"runtime option {name!r} must be boolean")
         return value
 
     def _validate_option_types(
@@ -219,6 +219,10 @@ class RuntimeProviderRegistry:
         if adapter == "openai-reference-image":
             self._string_option(options, "response_model")
             self._string_option(options, "image_model")
+            if "image_quality" in options:
+                self._string_option(options, "image_quality")
+            if "image_size" in options:
+                self._string_option(options, "image_size")
             self._string_option(options, "reference_catalog_path")
             self._number_option(options, "cost_per_generation_usd")
             if "output_dir" in options:
@@ -242,9 +246,7 @@ class RuntimeProviderRegistry:
         if adapter == "mpt-render":
             return
 
-        raise DomainValidationError(
-            f"runtime adapter is not registered: {adapter!r}"
-        )
+        raise DomainValidationError(f"runtime adapter is not registered: {adapter!r}")
 
     def validate_profile(
         self,
@@ -254,9 +256,7 @@ class RuntimeProviderRegistry:
         from extensions.content_studio.runtime import RuntimeProfile
 
         if not isinstance(profile, RuntimeProfile):
-            raise DomainValidationError(
-                "runtime profile must be a RuntimeProfile"
-            )
+            raise DomainValidationError("runtime profile must be a RuntimeProfile")
         for binding in profile.providers:
             self.validate_binding(binding, secrets)
         for stage, provider_id in profile.stage_bindings.items():
@@ -273,8 +273,7 @@ class RuntimeProviderRegistry:
                 require_capability(binding, CAP_MEDIA_ASSEMBLY)
             else:
                 raise DomainValidationError(
-                    "runtime executor wiring is not implemented for "
-                    f"stage {stage!r}"
+                    f"runtime executor wiring is not implemented for stage {stage!r}"
                 )
 
     def build_visual_generator(
@@ -322,6 +321,16 @@ class RuntimeProviderRegistry:
                 image_model=self._string_option(
                     options,
                     "image_model",
+                ),
+                image_quality=self._string_option(
+                    options,
+                    "image_quality",
+                    default="auto",
+                ),
+                image_size=self._string_option(
+                    options,
+                    "image_size",
+                    default="auto",
                 ),
                 allow_paid_generation=binding.paid_calls_enabled,
                 cost_per_generation_usd=self._number_option(
@@ -400,12 +409,8 @@ class RuntimeProviderRegistry:
                 "capabilities": list(descriptor.capabilities),
                 "allowed_options": sorted(descriptor.allowed_options),
                 "required_options": sorted(descriptor.required_options),
-                "required_secret_refs": list(
-                    descriptor.required_secret_refs
-                ),
-                "paid_authorization_required": (
-                    descriptor.paid_authorization_required
-                ),
+                "required_secret_refs": list(descriptor.required_secret_refs),
+                "paid_authorization_required": (descriptor.paid_authorization_required),
             }
             for descriptor in sorted(
                 self._descriptors.values(),

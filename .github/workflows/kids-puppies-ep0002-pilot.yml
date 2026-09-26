@@ -1,0 +1,132 @@
+name: Kids puppies ep0002 guarded pilot
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirmation:
+        description: Type RUN_EP0002_PAID_UNDER_5_USD to authorize paid visual generation.
+        required: true
+        type: string
+      max_cost_usd:
+        description: Pilot visual-stage ceiling; must be <= 5.
+        required: true
+        default: "5"
+        type: string
+  pull_request:
+    branches:
+      - main
+    types:
+      - synchronize
+
+permissions:
+  contents: read
+
+jobs:
+  ep0002-guarded-visual-pilot:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (
+        github.event_name == 'pull_request' &&
+        github.event.action == 'synchronize' &&
+        github.event.pull_request.head.ref == 'feat/sprint-15-production-readiness' &&
+        contains(github.event.pull_request.title, '[run-ep0002-paid-5]') &&
+        contains(github.event.pull_request.body, 'RUN_EP0002_PAID_UNDER_5_USD')
+      )
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      CONTENT_STUDIO_WORKFLOW_DIR: ${{ github.workspace }}/output/content_studio/workflows
+      CONTENT_STUDIO_REVIEW_LOG_DIR: ${{ github.workspace }}/output/content_studio/review_audit
+      CONTENT_STUDIO_PUBLICATION_LOG_DIR: ${{ github.workspace }}/output/content_studio/publication_audit
+      PILOT_WORKFLOW_ID: kids-ep0002-workflow
+      PILOT_PROJECT_ID: kids-puppies-demo
+      PILOT_EPISODE_ID: ep0002
+      PILOT_CONFIRMATION: ${{ github.event_name == 'workflow_dispatch' && inputs.confirmation || 'RUN_EP0002_PAID_UNDER_5_USD' }}
+      PILOT_MAX_COST_USD: ${{ github.event_name == 'workflow_dispatch' && inputs.max_cost_usd || '5' }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync --frozen --python 3.11
+
+      - name: Validate explicit paid authorization and budget
+        run: >-
+          uv run --no-sync python scripts/kids_puppies_ep0002_pilot.py confirm
+          --value "$PILOT_CONFIRMATION"
+          --max-cost-usd "$PILOT_MAX_COST_USD"
+
+      - name: Verify provider secret is configured
+        run: >-
+          uv run --no-sync python -c
+          "import os, sys; sys.exit(0 if os.getenv('OPENAI_API_KEY') else 'OPENAI_API_KEY secret is not configured')"
+
+      - name: Build ep0002 initial workflow bundle
+        run: >-
+          uv run --no-sync python scripts/kids_puppies_ep0002_pilot.py bundle
+          --output output/content_studio/ep0002-initial-bundle.json
+
+      - name: Create governed workflow state
+        run: >-
+          uv run --no-sync python -m extensions.operator_console.cli create
+          --workflow-id "$PILOT_WORKFLOW_ID"
+          --project-id "$PILOT_PROJECT_ID"
+          --episode-id "$PILOT_EPISODE_ID"
+          --max-cost-usd "$PILOT_MAX_COST_USD"
+
+      - name: Apply deterministic stages through prompts
+        run: >-
+          uv run --no-sync python -m extensions.operator_console.cli apply-bundle
+          --workflow-id "$PILOT_WORKFLOW_ID"
+          --results output/content_studio/ep0002-initial-bundle.json
+
+      - name: Preflight reference bindings
+        run: >-
+          uv run --no-sync python -m extensions.operator_console.cli preflight-references
+          --plan verticals/kids_puppies/visuals/ep0002.visual-plan.json
+          --catalog verticals/kids_puppies/consistency/reference_catalog.json
+          --character-bible verticals/kids_puppies/bibles/character_bible.json
+          --universe-bible verticals/kids_puppies/bibles/universe_bible.json
+
+      - name: Create temporary paid runtime profile
+        run: >-
+          uv run --no-sync python scripts/kids_puppies_ep0002_pilot.py paid-profile
+          --source verticals/kids_puppies/runtime/profile-guarded.json
+          --output "$RUNNER_TEMP/ep0002-paid-profile.json"
+          --max-cost-usd "$PILOT_MAX_COST_USD"
+
+      - name: Run visual provider under guarded budget
+        run: >-
+          uv run --no-sync python -m extensions.operator_console.cli run-runtime
+          --workflow-id "$PILOT_WORKFLOW_ID"
+          --profile "$RUNNER_TEMP/ep0002-paid-profile.json"
+          --confirm-external
+          --confirm-paid
+
+      - name: Show workflow summary
+        if: always()
+        run: >-
+          uv run --no-sync python -m extensions.operator_console.cli show
+          --workflow-id "$PILOT_WORKFLOW_ID"
+
+      - name: Upload pilot artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kids-puppies-ep0002-guarded-visual-pilot
+          path: |
+            generated/kids_puppies/runtime/visuals
+            output/content_studio
+          retention-days: 14

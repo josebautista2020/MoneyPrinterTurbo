@@ -6,7 +6,7 @@
   "episode_id": "ep0002",
   "script": "Toby encuentra una pelota en el parque. Luna le recuerda que alguien podría estar buscándola. Juntos encuentran a su dueño, la devuelven y aprenden que hacer lo correcto también se siente bien.",
   "language": "es-CO",
-  "voice_name": "kids-demo-voice",
+  "voice_name": "es-CO-SalomeNeural-Female",
   "visual_uris": [
     "generated/kids_puppies/ep0002-s01-a.png",
     "generated/kids_puppies/ep0002-s02-a.png",
